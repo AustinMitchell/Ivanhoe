@@ -1,0 +1,202 @@
+Feature: Winning a Tournament
+	# As a player
+	# I want to be the last player to withdraw from tournaments
+	# So that I can earn tokens, and win the game
+	
+	Scenario: Player wins a tournament and receives their fifth token with less than four players
+		Given a player has won a colour tournament they have not already won
+			And there are less than four players total
+		When the player takes a token
+			And the player now has five tokens 
+		Then the player has won the game
+
+	Scenario: Player wins a tournament and receives their fourth token with at least four players
+		Given a player has won a colour tournament they have not already won
+			And there are at least four players total
+		When the player takes a token
+			And the player now has four tokens 
+		Then the player has won the game
+
+	Scenario: Player wins any non purple tournament have not won this tournament yet
+		Given a player is the last one to withdraw from a tournament
+		When the player wins the tournament
+			And the tournament was not purple
+			And they have not won this colour tournament
+		Then the token the player recieves is the colour of the tournament
+
+	Scenario: Player wins any non purple tournament have already won
+		Given a player is the last one to withdraw from a tournament
+		When the player wins the tournament
+			And the tournament was not purple
+			And the player has already won this colour tournament
+		Then the player does not receive a token
+
+	Scenario: Player wins a purple tournament and has not done so yet
+		Given a player is the last one to withdraw from a purple tournament
+		When the player wins the tournament
+			And the player has not already won a purple tournament 
+		Then the player may receive any token they do not already have
+
+	Scenario: Player wins a purple tournament and has already won a purple tournament
+		Given a player is the last one to withdraw from a purple tournament
+		When the player wins the tournament
+			And the player has already won a purple tournament 
+		Then the player may receive any non-purple token they do not already have
+
+
+
+Feature: Starting A Tournament
+	# As a player
+	# I want to choose a colour for the tournament
+	# So that the rules for the tournament can be established
+
+	Scenario: Player has coloured cards of each colour and no supporters
+		Given the player starts a tournament
+		When the player draws a card
+			And the player has coloured cards of each colour
+			And the player has no supporter cards
+			And the last tournament was not purple
+		Then the player can start a tournament in any colour
+
+	Scenario: Player has coloured cards of each colour and no supporters after a purple tournament finished
+		Given the player starts a tournament
+		When the player draws a card
+			And the player has coloured cards in each colour
+			And the player has no supporter cards
+			And the last tournament was purple
+		Then the player only start a tournament in any non-purple colour
+
+	Scenario: Player has coloured cards and no supporters
+		Given the player starts a tournament
+		When the player draws a card
+			And the player has coloured cards
+			And the player has no supporter cards
+			And the last tournament was not purple
+		Then the player can start a tournament in any colour they have
+
+	Scenario: Player has coloured cards and no supporters after a purple tournament finished
+		Given the player starts a tournament
+		When the player draws a card
+			And the player has coloured cards in at least one non-purple colour
+			And the player has no supporter cards
+			And the last tournament was purple
+		Then the player only start a tournament in any non-purple colour they have
+
+	Scenario: Player's coloured cards are only purple and no supporters after a purple tournament finished
+		Given the player starts a tournament
+		When the player draws a card
+			And the player has coloured cards of only purple
+			And the player has no supporter cards
+			And the last tournament was purple
+		Then the player cannot start a tournament
+			And the next player starts a tournament
+
+	Scenario: Player has supporter cards
+		Given the player starts a tournament
+		When the player draws a card
+			And the player has a supporter card
+			And the last tournament was not purple
+		Then the player can start a tournament in any colour
+
+	Scenario: Player has supporter cards after a purple tournament finished
+		Given the player starts a tournament
+		When the player draws a card
+			And the player has a supporter card
+			And the last tournament was was purple
+		Then the player can start a tournament in any non-purple colour
+
+	Scenario: Player has no coloured cards and no supporters
+		Given the player starts a tournament
+		When the player draws a card
+			And the player has no cards of any colour
+			And the player has no supporters
+		Then the player cannot start a tournament
+			And the next player starts a tournament
+
+
+
+Feature: Starting a new game
+	# As a player
+	# I want the game to be initialized properly
+	# So that play can begin
+
+	Scenario: Player draws a non-purple token when deciding the first player
+		Given that a new game is beginning
+		When a player draws a token at random
+			And the drawn token is not purple
+		Then the player is not the first to start a tournament
+			And the token is placed back into the pool
+
+	Scenario: Player draws a purple token when deciding the first player
+		Given that a new game is beginning
+		When a player draws a token at random
+			And the drawn token is purple
+		Then the player is the first to start a tournament
+			And the token is placed back into the pool
+
+
+
+Feature: Taking a turn after a tournament has started with normal and supporter cards
+	
+	Scenario: Player can play a number of coloured cards
+		Given it is the player's turn
+		When the player draws a card
+			And the player has a number of the same color as the tournament color
+		Then the player can play one or more cards of that color in the same turn
+
+	Scenario: Player can play a number of supporter cards with no Maiden in player's display
+		Given it is the player's turn
+		When the player draws a card
+			And the player has a number of supporter cards
+			And the player does not have a maiden in his/her display
+		Then the player can play a number of supporter cards
+
+	Scenario: Player can play a number of supporter cards and a Maiden is in the player's display
+		Given it is the player's turn
+		When the player draws a card
+			And the player has a number of supporter cards
+			And the player has a maiden in his/her display
+		Then The player can play a number of non-maiden supporter cards
+
+	Scenario: Player cannot play any cards
+		Given it is the player's turn
+		When the player draws a card
+			And the player does not have cards of the same color as the tournament
+			And the player does not have supporter cards
+			And the player does not have special cards that can be played
+		Then the player withdraws from the tournament
+
+
+
+Feature: Player wishes to play a special card
+	# As a player
+	# I want to use special cards to my advantage 
+	# So I can help myself win tournaments or prevent opponents from doing the same
+
+	Scenario: Player plays Unhorse
+		Given it's a players turn
+			And the tournament is purple
+		When the player plays Unhorse
+		Then the player can change the tournament to red, yellow or blue
+
+	Scenario: Player plays Change Weapon
+		Given it's a players turn
+			And the tournament is red, yellow or blue
+		When the player plays Change Weapon
+		Then the player may change the tournament to red, yellow or blue
+			And the resulting tournament colour is different from the original
+
+	Scenario: Player plays Drop Weapon
+		Given it's a players turn
+			And the tournament is red, yellow or blue
+		When the player plays Drop Weapon
+		Then the tournament colour becomes green
+			And the new values for player displays will reflect this
+
+
+Feature: Player wishes to play colour or supporter cards
+	# As a player
+	# I want to increase my display area's value
+	# So that I can remain in the tournament 
+	Given it's a player's turn
+		And the
