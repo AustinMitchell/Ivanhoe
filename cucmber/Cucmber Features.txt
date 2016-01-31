@@ -135,9 +135,9 @@ Feature: Starting a new game
 			And the token is placed back into the pool
 
 
-Feature: Player wishes to play a special card
+Feature: Player wishes to play a action card
 	# As a player
-	# I want to use special cards to my advantage 
+	# I want to use action cards to my advantage 
 	# So I can help myself win tournaments or prevent opponents from doing the same
 
 	Scenario: Player plays Unhorse
@@ -164,6 +164,7 @@ Feature: Player wishes to play a special card
 		Given it's a player's turn 
 			And it is a purple tournament
 		When the player plays Break Lance
+			And the opponent does not have Shield
 		Then the player selects one opponent
 			And the opponent's display contains purple and non-purple cards
 			And the opponent discards all purple cards in his/her display
@@ -171,6 +172,7 @@ Feature: Player wishes to play a special card
 	Scenario: Player plays Riposte
 		Given it's a player's turn
 		When the player plays Riposte 
+			And the opponent does not have Shield
 		Then the player selects one opponent
 			And the opponent loses the last played card in his/her display
 			And the player adds that card to his/her display
@@ -178,6 +180,7 @@ Feature: Player wishes to play a special card
 	Scenario: Player plays Dodge
 		Given it's a player's turn
 		When the player plays Dodge
+			And the opponent does not have Shield
 		Then the player selects an opponent
 			And the player selects a card to discard from the opponent's display
 
@@ -191,6 +194,7 @@ Feature: Player wishes to play a special card
 	Scenario: Player plays Knock Down
 		Given it's a player's turn
 		When the player plays Knock Down
+			And the opponent does not have Shield
 		Then the player selects one opponent
 			And a random card is removed from the opponent's hand
 			And the card is added to the player's hand
@@ -199,28 +203,33 @@ Feature: Player wishes to play a special card
 	Scenario: Player plays Outmaneuver
 		Given it's a player's turn
 		When the player playes Outmaneuver
+			And the opponent does not have Shield
 		Then each opponent loses the last card played in his/her display
 
 	Scenario: Player plays Charge
 		Given it's a player's turn
 		When the player plays Charge
+			And the opponent does not have Shield
 		Then the lowest value card throughout all displays is identified
 			And all opponents must discard all cards of this value from their displays
 
 	Scenario: Player plays Countercharge
 		Given it's a player's turn
 		When the player plays Countercharge
+			And the opponent does not have Shield
 		Then the highest value card throughout all displays is identified
 			And all opponents must discard all cards of this value from their displays
 
 	Scenario: Player plays Disgrace
 		Given it's a player's turn
 		When the player plays Disgrace
+			And the opponent does not have Shield
 		Then all supporter cards are removed from all opponents' displays
 
 	Scenario: Player plays Adapt
 		Given it's a player's turn
 		When the player plays Adapt
+			And the opponent does not have Shield
 		Then each opponent must keep only one card of each value in their display
 			And all other cards are discarded
 
@@ -230,6 +239,31 @@ Feature: Player wishes to play a special card
 		Then the player any of his/her faceup cards infront of any opponent
 			And the player takes any one card from that opponents faceup cards
 
+
+Feature: Player wishes to play a Special Action card
+	# As a player
+	# I want to use Special Action cards
+	# So that it helps me win the tournament and protects me from losing
+
+	Scenario: Player plays Shield
+		Given it's the player's turn
+		When the player plays Shield
+		Then Shield is placed faceup separately from the player's display
+			And the player is not affected by any Action card except the Outwit card
+
+	Scenario: Player plays Stunned card
+		Given it's the player's turn
+		When the player plays a Stunnned card against an opponent
+		Then the card is placed infront of the opponent faceup separately from the opponent's display
+			And the opponent is unable to play more than one card in each turn
+			And no action card can remove Stunned except the Outwit card
+
+	Scenario: Player plays Ivanhoe
+		Given it is the opponent's turn
+			And the player has an Ivanhoe card
+		When the opponent plays an action card against the player
+		Then the player can instatnly play Ivanhoe
+			And the action card played against the player will not have any effect
 
 
 Feature: Player wishes to play colour or supporter cards
@@ -290,27 +324,27 @@ Feature: Player wishes to play colour or supporter cards
 		When the player draws a card
 			And the player does not have cards of the same color as the tournament
 			And the player does not have supporter cards
-			And the player does not have special cards that can be played
+			And the player does not have action cards that can be played
 		Then the player is forced to withdraw from the tournament
 
 
-Feature: Player has a special card played against him/her
+Feature: Player has a action card played against him/her
 	# As a player
-	# I had a special card played against me
-	# The special card would remove some cards in my display
+	# I had a action card played against me
+	# The action card would remove some cards in my display
 
-	Scenario: Special card played against the player where it does not remove all the display cards
-		Given a special card is played against the player
-		When the special card would remove one or more cards from the display
-			And the special card would not leave the display empty
-		Then the special card function normally
+	Scenario: action card played against the player where it does not remove all the display cards
+		Given a action card is played against the player
+		When the action card would remove one or more cards from the display
+			And the action card would not leave the display empty
+		Then the action card function normally
 
-	Scenario: Special card played against the player where it removes all the display cards
-		Given a special card is played against the player
-		When the special card would remove one or more cards from the display
-			And the special card would cause the player's display to be empty
-		Then the special card cannot remove the earliest played value card in the player's display
-			And the special card would remove everything else
+	Scenario: action card played against the player where it removes all the display cards
+		Given a action card is played against the player
+		When the action card would remove one or more cards from the display
+			And the action card would cause the player's display to be empty
+		Then the action card cannot remove the earliest played value card in the player's display
+			And the action card would remove everything else
 
 	Scenario: Outwit card played against the player where it can swap his/her only card in the display area
 		Given an Outwit card is played against the player
@@ -322,4 +356,4 @@ Feature: Player has a special card played against him/her
 		Given an Outwit card is played against the player
 		When the player only has one card in display area
 			And the opponent chose to swap a non-value card with the player's card
-		Then the opponent cannot successfully swap cards	
+		Then the opponent cannot successfully swap cards
