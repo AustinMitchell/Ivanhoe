@@ -135,13 +135,114 @@ Feature: Starting a new game
 			And the token is placed back into the pool
 
 
+Feature: Player wishes to play a special card
+	# As a player
+	# I want to use special cards to my advantage 
+	# So I can help myself win tournaments or prevent opponents from doing the same
 
-Feature: Taking a turn after a tournament has started with normal and supporter cards
+	Scenario: Player plays Unhorse
+		Given it's a player's turn
+			And the tournament is purple
+		When the player plays Unhorse
+		Then the player can change the tournament to red, yellow or blue
+
+	Scenario: Player plays Change Weapon
+		Given it's a player's turn
+			And the tournament is red, yellow or blue
+		When the player plays Change Weapon
+		Then the player may change the tournament to red, yellow or blue
+			And the resulting tournament colour is different from the original
+
+	Scenario: Player plays Drop Weapon
+		Given it's a player's turn
+			And the tournament is red, yellow or blue
+		When the player plays Drop Weapon
+		Then the tournament colour becomes green
+			And the new values for player displays will reflect this
+
+	Scenario: Player plays Break Lance
+		Given it's a player's turn 
+			And it is a purple tournament
+		When the player plays Break Lance
+		Then the player selects one opponent
+			And the opponent's display contains purple and non-purple cards
+			And the opponent discards all purple cards in his/her display
+
+	Scenario: Player plays Riposte
+		Given it's a player's turn
+		When the player plays Riposte 
+		Then the player selects one opponent
+			And the opponent loses the last played card in his/her display
+			And the player adds that card to his/her display
+
+	Scenario: Player plays Dodge
+		Given it's a player's turn
+		When the player plays Dodge
+		Then the player selects an opponent
+			And the player selects a card to discard from the opponent's display
+
+	Scenario: Player plays Retreat
+		Given it's a player's turn
+		When the player plays Retreat
+			And the player has more than one card in his/her display
+		Then the player selects any one card from his/her display
+			And the player gets that one card back to his/her hand
+
+	Scenario: Player plays Knock Down
+		Given it's a player's turn
+		When the player plays Knock Down
+		Then the player selects one opponent
+			And a random card is removed from the opponent's hand
+			And the card is added to the player's hand
+			And the card is not shown to the other players
+
+	Scenario: Player plays Outmaneuver
+		Given it's a player's turn
+		When the player playes Outmaneuver
+		Then each opponent loses the last card played in his/her display
+
+	Scenario: Player plays Charge
+		Given it's a player's turn
+		When the player plays Charge
+		Then the lowest value card throughout all displays is identified
+			And all opponents must discard all cards of this value from their displays
+
+	Scenario: Player plays Countercharge
+		Given it's a player's turn
+		When the player plays Countercharge
+		Then the highest value card throughout all displays is identified
+			And all opponents must discard all cards of this value from their displays
+
+	Scenario: Player plays Disgrace
+		Given it's a player's turn
+		When the player plays Disgrace
+		Then all supporter cards are removed from all opponents' displays
+
+	Scenario: Player plays Adapt
+		Given it's a player's turn
+		When the player plays Adapt
+		Then each opponent must keep only one card of each value in their display
+			And all other cards are discarded
+
+	Scenario: player plays Outwit
+		Given it's a player's turn
+		When the player plays Outwit
+		Then the player any of his/her faceup cards infront of any opponent
+			And the player takes any one card from that opponents faceup cards
+
+
+
+Feature: Player wishes to play colour or supporter cards
+	# As a player
+	# I want to increase my display area's value
+	# So that I can remain in the tournament 
 	
 	Scenario: Player can play a number of coloured cards
 		Given it is the player's turn
 		When the player draws a card
-			And the player has a number of the same color as the tournament color
+			And the player has a number of cards of the same color as the tournament color
+			And the player does not have a faceup Stunned card
+			And the sum of the player's display combined with playable caoloured cards create the highest display value
 		Then the player can play one or more cards of that color in the same turn
 
 	Scenario: Player can play a number of supporter cards with no Maiden in player's display
@@ -149,6 +250,8 @@ Feature: Taking a turn after a tournament has started with normal and supporter 
 		When the player draws a card
 			And the player has a number of supporter cards
 			And the player does not have a maiden in his/her display
+			And the player does not have a faceup Stunned card
+			And the sum of the player's display combined with playable supporter cards create the highest display value 
 		Then the player can play a number of supporter cards
 
 	Scenario: Player can play a number of supporter cards and a Maiden is in the player's display
@@ -156,7 +259,31 @@ Feature: Taking a turn after a tournament has started with normal and supporter 
 		When the player draws a card
 			And the player has a number of supporter cards
 			And the player has a maiden in his/her display
-		Then The player can play a number of non-maiden supporter cards
+			And the player does not have a faceup Stunned card
+			And the sum of the player's display combined with playable non-maiden supporter cards create the highest display value 
+		Then the player can play one or more non-maiden supporter cards
+
+	Scenario: The player stays in the tournament with a faceup Stunned card infront of him/her
+		When the player has one or more playable cards 
+			And the player has a faceup card infront of him/her
+			And the player has a playable card that would render his/her display the highest value  
+		Then the player is able to play that one card and stay in the tournament
+			And the player cannot play more than one card
+
+	Scenario: The player cannot stay in the tournament with a faceup Stunned card infront of him/her
+		When the player has one or more playable cards 
+			And the player has a faceup card infront of him/her
+			And the player does not have a playable card that would render his/her display the highest value
+		Then the player has no choice but to withdraw from the tournament
+
+	Scenario: Player plays cards but cannot continute in the tournament
+		Given it is the player's turn
+		When the player draws a card
+			And the player does not have a faceup Stunned card
+			And the player plays one or more playable cards
+			And the total display value of the player is still less than the highest display value 
+		Then the player has no choice but to withdraw from the tournament
+			And the player loses all cards that s/he has played in the display
 
 	Scenario: Player cannot play any cards
 		Given it is the player's turn
@@ -164,39 +291,35 @@ Feature: Taking a turn after a tournament has started with normal and supporter 
 			And the player does not have cards of the same color as the tournament
 			And the player does not have supporter cards
 			And the player does not have special cards that can be played
-		Then the player withdraws from the tournament
+		Then the player is forced to withdraw from the tournament
 
 
-
-Feature: Player wishes to play a special card
+Feature: Player has a special card played against him/her
 	# As a player
-	# I want to use special cards to my advantage 
-	# So I can help myself win tournaments or prevent opponents from doing the same
+	# I had a special card played against me
+	# The special card would remove some cards in my display
 
-	Scenario: Player plays Unhorse
-		Given it's a players turn
-			And the tournament is purple
-		When the player plays Unhorse
-		Then the player can change the tournament to red, yellow or blue
+	Scenario: Special card played against the player where it does not remove all the display cards
+		Given a special card is played against the player
+		When the special card would remove one or more cards from the display
+			And the special card would not leave the display empty
+		Then the special card function normally
 
-	Scenario: Player plays Change Weapon
-		Given it's a players turn
-			And the tournament is red, yellow or blue
-		When the player plays Change Weapon
-		Then the player may change the tournament to red, yellow or blue
-			And the resulting tournament colour is different from the original
+	Scenario: Special card played against the player where it removes all the display cards
+		Given a special card is played against the player
+		When the special card would remove one or more cards from the display
+			And the special card would cause the player's display to be empty
+		Then the special card cannot remove the earliest played value card in the player's display
+			And the special card would remove everything else
 
-	Scenario: Player plays Drop Weapon
-		Given it's a players turn
-			And the tournament is red, yellow or blue
-		When the player plays Drop Weapon
-		Then the tournament colour becomes green
-			And the new values for player displays will reflect this
-
-
-Feature: Player wishes to play colour or supporter cards
-	# As a player
-	# I want to increase my display area's value
-	# So that I can remain in the tournament 
-	Given it's a player's turn
-		And the
+	Scenario: Outwit card played against the player where it can swap his/her only card in the display area
+		Given an Outwit card is played against the player
+		When the player only has one card in display area
+			And the opponent chose to swap a value card with the player's card
+		Then the Outwit card can function normally
+	
+	Scenario: Outwit card played against the player where it cannot swap his/her only card in the display area
+		Given an Outwit card is played against the player
+		When the player only has one card in display area
+			And the opponent chose to swap a non-value card with the player's card
+		Then the opponent cannot successfully swap cards	
