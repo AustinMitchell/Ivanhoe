@@ -81,7 +81,7 @@ public class GameState {
 		return player;
 	}
 	
-	public ArrayList getAllPlayers() {
+	public ArrayList<Player> getAllPlayers() {
 		return players;
 	}
 	
