@@ -18,10 +18,12 @@ public class GameStateTest {
 	@Before
 	public void setupPlayers() {
 		player1 = new Player("Ahmed");
+		player1.enterTournament();
 		player2 = new Player("Nick");
+		player2.enterTournament();
 		player3 = new Player("Austin");
+		player3.enterTournament();
 		players = new ArrayList();
-		
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
@@ -36,7 +38,7 @@ public class GameStateTest {
 	
 	@Test
 	public void testDrawDeck() {
-		assertEquals(game.getDrawDeck(), 86);
+		assertEquals(game.getDrawDeck().deckSize(), 86);
 	}
 	
 	@Test
@@ -46,7 +48,16 @@ public class GameStateTest {
 		game.getDrawDeck().draw(game.getDiscardDeck());
 		game.renewDrawDeck();
 		assertEquals(3, game.getDrawDeck().deckSize());
-		
 	}
-
+	
+	@Test
+	public void playerTurnTest() {
+		for(int i = 0; i <= game.getAllPlayers().size(); i++) {
+			if(i == game.getAllPlayers().size()) {
+				assertEquals(0, game.getTurn());
+			}
+			else assertEquals(i, game.getTurn());
+			game.nextTurn();
+		}
+	}
 }

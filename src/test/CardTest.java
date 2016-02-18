@@ -34,6 +34,7 @@ public class CardTest {
 	@Test
 	public void ivanhoeCardTest() {
 		assertTrue(ivanhoe.isIvanhoe());
+		assertFalse(charge.isIvanhoe());
 	}
 	
 	@Test
