@@ -28,6 +28,7 @@ public class RulesEngineValueCardsTest {
 		players.add(player1);
 		players.add(player2);
 		game = new GameState(players);
+		game.setTournamentColour(Type.PURPLE);
 		engine = new RulesEngine();
 		
 	}
@@ -40,11 +41,10 @@ public class RulesEngineValueCardsTest {
 				int cardType = game.getAllPlayers().get(game.getTurn()).getHand().getCard(i).getCardType();
 				int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(i).getCardValue();
 				int cardPos = i;
-				returnString = ("" + playerPos + ":" + cardType + ":" + cardValue + ":" + cardPos);
+				returnString = ("card:" + playerPos + ":" + cardType + ":" + cardValue + ":" + cardPos);
 				assertEquals(returnString, engine.playValueCard(game, i));
 				break;
 			}
 		}
 	}
-
 }
