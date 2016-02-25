@@ -12,6 +12,7 @@ public class GameStateTest {
 	Player player2;
 	Player player3;
 	ArrayList<Player> players;
+	
 	GameState game;
 
 	

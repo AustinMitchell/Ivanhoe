@@ -10,6 +10,7 @@ public class GameState {
 	private ArrayList<Player> players;
 	private Deck drawDeck;
 	private Deck discardDeck;
+	private boolean gameOver;
 	
 	private static final int[] cardTypeData = {Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
 												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
@@ -60,6 +61,9 @@ public class GameState {
 	public GameState(ArrayList<Player> newPlayers) {
 		players = newPlayers;
 		drawDeck = new Deck();
+		for(int i = 0; i < players.size(); i++) {
+			players.get(i).enterTournament();
+		}
 		for(int i = 0; i < 110; i++) {
 			Card card = new Card(cardTypeData[i], cardValueData[i]);
 			drawDeck.add(card);
@@ -91,6 +95,14 @@ public class GameState {
 	
 	public int getTournamentColour() {
 		return tournamentColour;
+	}
+	
+	public boolean isGameOver() {
+		for(int i = 0; i < players.size(); i++) {
+			if(players.get(i).hasWon()) gameOver = true;
+			else gameOver = false;
+		}
+		return gameOver;
 	}
 	
 	public void incrementTournamentNumber() {

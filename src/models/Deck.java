@@ -30,6 +30,14 @@ public class Deck {
 		newDeck.add(card);
 	}
 	
+	public void emptyDeck(Deck discardDeck) {
+		for(int i = 0; i < deck.size(); i++) {
+			Card card = deck.get(i);
+			deck.remove(i);
+			discardDeck.add(card);
+		}
+	}
+	
 	public void draw(Deck newDeck) {
 		moveCardTo(deck.size()-1, newDeck);
 	}

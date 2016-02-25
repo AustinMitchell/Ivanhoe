@@ -5,11 +5,13 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import models.GameState;
 import models.Player;
 import rulesengine.RulesEngine;
+import rulesengine.Type;
 
 public class StartingGameTest {
 	Player player1;
@@ -22,7 +24,7 @@ public class StartingGameTest {
 	RulesEngine engine = new RulesEngine();
 
 	
-	//@Before
+	@Before
 	public void setupPlayers() {
 		player1 = new Player("Ahmed");
 		player1.enterTournament();
@@ -55,15 +57,18 @@ public class StartingGameTest {
 		players.add(player2);
 		game = new GameState(players);
 		
-		engine.drawToken(game);
+		engine.startGame(game);
+		int playerIndex = -1;
 		int purples = 0;
 		
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(game.getAllPlayers().get(i).checkToken(0) == true) {
+			if(game.getAllPlayers().get(i).getDrawnToken() == Type.PURPLE) {
 				purples++;
+				playerIndex = i;
 			}
 		}
 		assertEquals(1, purples);
+		assertEquals(playerIndex, game.getTurn());
 	}
 	
 	@Test
@@ -81,14 +86,17 @@ public class StartingGameTest {
 		game = new GameState(players);
 		
 		engine.drawToken(game);
+		int playerIndex = -1;
 		int purples = 0;
 		
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(game.getAllPlayers().get(i).checkToken(0) == true) {
+			if(game.getAllPlayers().get(i).getDrawnToken() == Type.PURPLE) {
 				purples++;
+				playerIndex = i;
 			}
 		}
 		assertEquals(1, purples);
+		assertEquals(playerIndex, game.getTurn());
 	}
 	
 	@Test
@@ -108,14 +116,17 @@ public class StartingGameTest {
 		game = new GameState(players);
 		
 		engine.drawToken(game);
+		int playerIndex = -1;
 		int purples = 0;
 		
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(game.getAllPlayers().get(i).checkToken(0) == true) {
+			if(game.getAllPlayers().get(i).getDrawnToken() == Type.PURPLE) {
 				purples++;
+				playerIndex = i;
 			}
 		}
 		assertEquals(1, purples);
+		assertEquals(playerIndex, game.getTurn());
 	}
 
 	@Test
@@ -139,14 +150,17 @@ public class StartingGameTest {
 		game = new GameState(players);
 		
 		engine.drawToken(game);
+		int playerIndex = -1;
 		int purples = 0;
 		
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(game.getAllPlayers().get(i).checkToken(0) == true) {
+			if(game.getAllPlayers().get(i).getDrawnToken() == Type.PURPLE) {
 				purples++;
+				playerIndex = i;
 			}
 		}
 		assertEquals(1, purples);
+		assertEquals(playerIndex, game.getTurn());
 	}
 
 }

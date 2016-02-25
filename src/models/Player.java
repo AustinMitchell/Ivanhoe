@@ -11,6 +11,7 @@ public class Player {
 	private boolean inTournament;
 	private boolean[] tokens;
 	private boolean[] status;
+	private int drawnToken;
 	
 	public Player(String playerName) {
 		name = playerName;
@@ -103,7 +104,12 @@ public class Player {
 		}
 	}
 	
+	public void setDrawnToken(int token) {
+		drawnToken = token;
+	}
 	
-	
+	public int getDrawnToken() {
+		return drawnToken;
+	}
 	
 }
