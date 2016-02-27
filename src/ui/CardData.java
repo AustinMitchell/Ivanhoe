@@ -17,6 +17,8 @@ public class CardData {
 		{6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {6, 5}, {6, 6}, {6, 7}, {6, 8},
 		{6, 9}, {6, 10}, {6, 11}, {6, 12}, {6, 13}, {6, 14}, {6, 15}, {6, 16}};
 	
+	private static final Image BACK_IMAGE = new Image("res/cards/back.jpeg");
+	
 	private static final String DESCRIPTION_PATH = "res/descriptions.txt";
 	private static final String VALUE_PATH = "res/cards/value/";
 	private static final String ACTION_PATH = "res/cards/action/";
@@ -115,7 +117,9 @@ public class CardData {
 			add(action);
 		}};
 		
-		
+	public static Image getBackImage() { 
+		return BACK_IMAGE;
+	}
 	public static Image getCardImage(int type, int value) {
 		return CARD_IMAGE_MAP.get(type).get(value).image;
 	}

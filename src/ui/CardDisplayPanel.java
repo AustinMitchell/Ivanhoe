@@ -24,6 +24,26 @@ public class CardDisplayPanel extends Panel {
 	@Override
 	public void setHeight(int h) { setSize(this.w, h); }
 	
+	@Override
+	public void blockWidget() {
+		super.blockWidget();
+		for (Widget w: widgetList) {
+			w.blockWidget();
+		}
+	}
+	
+	@Override 
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled; 
+		if (!enabled) {
+			this.hovering = false;
+			this.clicking = false;
+			this.clicked = false;
+		}
+	}
+	public void setAllEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+	}
 	
 	public CardDisplayPanel(Image.Orientation orientation) {
 		this(0, 0, 10, 10, orientation);
@@ -103,11 +123,28 @@ public class CardDisplayPanel extends Panel {
 	@Override
 	public CardWidget removeIndex(int widgetID) {
 		Widget removedWidget = super.removeIndex(widgetID);
-		for (int i=widgetID+1; i<widgetList.size(); i++) {
+		for (int i=widgetID; i<widgetList.size(); i++) {
 			setWidgetPriority(widgetList.get(i), i);
 		}
 		setCardPositions();
+		
+		if (drawnOnTop == widgetID) {
+			drawnOnTop = -1;
+		}
+		
 		return (CardWidget)removedWidget;
+	}
+	public CardWidget removeCard(int type, int value) {
+		int removeIndex = -1;
+		for (int i=0; i<widgetList.size(); i++) {
+			CardWidget c = (CardWidget)widgetList.get(i);
+			if (c.getType() == type && c.getValue() == value) {
+				removeIndex = i;
+				break;
+			}
+		}
+		
+		return (removeIndex == -1 ? null : removeIndex(removeIndex));
 	}
 
 	@Override
@@ -129,7 +166,7 @@ public class CardDisplayPanel extends Panel {
 					w.blockWidget();
 				}
 				w.update();
-				if (w.containsMouse()) {
+				if (w.isHovering()) {
 					setFlag = true;
 				}
 			}
@@ -144,7 +181,7 @@ public class CardDisplayPanel extends Panel {
 	@Override
 	public void draw() {
 		super.draw();
-		if (drawnOnTop != -1) {
+		if (drawnOnTop != -1 && drawnOnTop < widgetList.size()) {
 			widgetList.get(drawnOnTop).draw();
 		}
 	}
