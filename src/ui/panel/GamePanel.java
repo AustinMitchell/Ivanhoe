@@ -1,6 +1,7 @@
 package ui.panel;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.*;
 
 import simple.gui.*;
@@ -10,15 +11,18 @@ import ui.CardData;
 import ui.CardDisplayPanel;
 import ui.CardWidget;
 import ui.DescriptionBox;
+import ui.GameController;
 import ui.panel.overlay.OverlayPanel;
 
 public class GamePanel extends ScaledPanel {
+	GameController controller;
+	
 	CardDisplayPanel[] display;
 	ScrollDialogBox messageScrollBox;
 	DescriptionBox descriptionBox;
 	ScaledPanel mainGamePanel, sidePanel;
 	CardWidget deck, discard;
-	Button endTurn;
+	Button endTurn, exitGame;
 	OverlayPanel currentOverlay;
 	
 	int numPlayers;
@@ -30,9 +34,11 @@ public class GamePanel extends ScaledPanel {
 	int currentTurn;
 	boolean turnStart;
 	
-	public GamePanel(final int numPlayers) {
+	public GamePanel(final int numPlayers, GameController controller) {
 		super();
-				
+		
+		this.controller = controller;
+		
 		this.numPlayers = numPlayers;
 		currentTurn = 0;
 		turnStart = true;
@@ -65,14 +71,14 @@ public class GamePanel extends ScaledPanel {
 			}
 			
 			for (int d=0; d<display.length; d++) {
-				display[d].setAllEnabled(false);
-				display[d].setDrawContainingPanel(true);
-				display[d].setFillColor(null);
 				for (int i=0; i<8; i++) {
 					int[] v = CardData.ALL_CARD_VALUES[(int)(Math.random()*CardData.ALL_CARD_VALUES.length)];
 					CardWidget c = new CardWidget(v[0], v[1]);
 					display[d].addCard(c);
 				}
+				display[d].setEnabled(false);
+				display[d].setDrawContainingPanel(true);
+				display[d].setFillColor(null);
 			}
 			
 			CardDisplayPanel deckPlaceHolder = new CardDisplayPanel(Image.Orientation.UP);
@@ -120,18 +126,28 @@ public class GamePanel extends ScaledPanel {
 				}});
 			
 			messageScrollBox = new ScrollDialogBox();
+			
 			descriptionBox = new DescriptionBox();
+			
 			endTurn = new Button("End Turn");
 			endTurn.setEnabled(false);
+			
+			exitGame = new Button("Exit Game");
+			exitGame.setFillColor(Color.RED);
+			exitGame.setBorderColor(Color.WHITE);
+			exitGame.setTextColor(Color.WHITE);
+			exitGame.setFont(new Font("Arial", Font.PLAIN, 10));
 			
 			addWidget(messageScrollBox, 3, 3, 94, 45);
 			addWidget(descriptionBox, 3, 50, 94, 20);	
 			addWidget(endTurn, 20, 85, 60, 8);
+			addWidget(exitGame, 77, 97, 18, 2);
 		}};
 		
 		
 		addWidget(mainGamePanel, 0, 0, 80, 100, 1);
 		addWidget(sidePanel, 80, 0, 20, 100, 0);
+		
 	}
 	
 	public void update() {
@@ -144,6 +160,8 @@ public class GamePanel extends ScaledPanel {
 		handleHand();
 		
 		checkTurnChange();
+		
+		handleExitGame();
 	}
 	
 	private void findCardInteraction() {
@@ -171,7 +189,7 @@ public class GamePanel extends ScaledPanel {
 		}
 	}
 	private void changeTurn() {
-		display[currentTurn].setAllEnabled(false);
+		display[currentTurn].setEnabled(false);
 		endTurn.setEnabled(false);
 		deck.setEnabled(true);
 		turnStart = true;
@@ -182,6 +200,12 @@ public class GamePanel extends ScaledPanel {
 		}
 		messageScrollBox.addRepeatedTextLine("-");
 		messageScrollBox.addLine("It is now Player " + (currentTurn+1) + "'s turn.");
+	}
+	
+	private void handleExitGame() {
+		if (exitGame.isClicked()) {
+			controller.mainScreen();
+		}
 	}
 	
 	private void handleDescriptionBox() {
@@ -196,7 +220,7 @@ public class GamePanel extends ScaledPanel {
 	
 	private void handleDeck() {
 		if (deck.isClicked()) {
-			display[currentTurn].setAllEnabled(true);
+			display[currentTurn].setEnabled(true);
 			deck.setEnabled(false);
 			endTurn.setEnabled(true);
 			turnStart = false;

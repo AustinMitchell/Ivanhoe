@@ -32,18 +32,6 @@ public class CardDisplayPanel extends Panel {
 		}
 	}
 	
-	@Override 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled; 
-		if (!enabled) {
-			this.hovering = false;
-			this.clicking = false;
-			this.clicked = false;
-		}
-	}
-	public void setAllEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-	}
 	
 	public CardDisplayPanel(Image.Orientation orientation) {
 		this(0, 0, 10, 10, orientation);
