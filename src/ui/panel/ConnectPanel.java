@@ -7,7 +7,7 @@ import simple.gui.*;
 import simple.gui.panel.ScaledPanel;
 import ui.GameController;
 
-public class ConnectPanel extends ScaledPanel {
+public class ConnectPanel extends ScaledPanel {	
 	private ImageBox ivanhoeImage;
 	private Color bgColor;
 	
@@ -26,14 +26,14 @@ public class ConnectPanel extends ScaledPanel {
 	
 	public ConnectPanel(GameController controller) {
 		super();
-		
+				
 		ivanhoeImage = new ImageBox(new Image("res/ivanhoe_cover.jpg"));
 		bgColor = new Color(40, 40, 30);
 				
 		this.controller = controller;
 		
 		addressEntryPanel = new ScaledPanel() {{
-			setWidgetColors(new Color(0, 0, 0, 200), Color.BLACK, null, null);
+			setWidgetColors(new Color(0, 0, 0, 200), new Color(0, 0, 0, 150), null, null);
 			setDrawContainingPanel(true);
 			
 			addressEntryLabel = new Label("Enter IP address of Ivanhoe server:");
@@ -43,10 +43,10 @@ public class ConnectPanel extends ScaledPanel {
 			addressEntry = new TextEntryBox();
 			addressEntry.setAlignment(TextArea.Alignment.CENTER);
 			addressEntry.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			addressEntry.setWidgetColors(null, new Color(200, 200, 200), new Color(120, 120, 120), Color.YELLOW);
+			addressEntry.setWidgetColors(null, new Color(200, 200, 200, 100), new Color(120, 120, 120, 200), Color.YELLOW);
 			
 			addressEntryFailed = new Label();
-			addressEntryFailed.setFont(new Font("Arial", Font.PLAIN, 14));
+			addressEntryFailed.setFont(new Font("Arial", Font.PLAIN, 16));
 			addressEntryFailed.setTextColor(Color.RED);
 			
 			addWidget(addressEntryLabel, 0, 0, 100, 40);
@@ -66,7 +66,7 @@ public class ConnectPanel extends ScaledPanel {
 		draw.rect(0, 0, draw.windowWidth(), draw.windowHeight());
 		ivanhoeImage.draw();
 		
-		super.draw();
+		super.draw();		
 	}
 	
 	@Override

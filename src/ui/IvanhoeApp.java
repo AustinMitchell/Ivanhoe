@@ -1,10 +1,6 @@
 package ui;
 
-import java.awt.Color;
-
 import simple.run.*;
-import simple.gui.*;
-import simple.gui.panel.*;
 
 public class IvanhoeApp extends SimpleGUIApp {
 	public static void main(String[] args) { start(new IvanhoeApp(), "Ivanhoe"); }

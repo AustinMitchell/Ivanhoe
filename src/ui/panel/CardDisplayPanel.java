@@ -1,15 +1,16 @@
-package ui;
+package ui.panel;
 
-import java.awt.Color;
 import java.util.*;
 
 import simple.gui.Image;
 import simple.gui.Widget;
 import simple.gui.panel.*;
+import ui.CardWidget;
 
 public class CardDisplayPanel extends Panel {
 	private int drawnOnTop;
 	Image.Orientation orientation;
+	boolean faceUp, cardMoveOnHover;
 	
 	@Override
 	public void setSize(int w, int h) {
@@ -32,11 +33,17 @@ public class CardDisplayPanel extends Panel {
 		}
 	}
 	
-	
-	public CardDisplayPanel(Image.Orientation orientation) {
-		this(0, 0, 10, 10, orientation);
+	public void setCardMoveOnHover(boolean cardMoveOnHover) {
+		this.cardMoveOnHover = cardMoveOnHover;
+		for (Widget w: widgetList) {
+			((CardWidget)w).setMoveOnHover(cardMoveOnHover);
+		}
 	}
-	public CardDisplayPanel(int x, int y, int w, int h, Image.Orientation orientation) {
+	
+	public CardDisplayPanel(Image.Orientation orientation, boolean faceUp) {
+		this(0, 0, 10, 10, orientation, faceUp);
+	}
+	public CardDisplayPanel(int x, int y, int w, int h, Image.Orientation orientation, boolean faceUp) {
 		super(x, y, w, h);
 		drawnOnTop = -1;
 		this.orientation = orientation;
@@ -45,6 +52,9 @@ public class CardDisplayPanel extends Panel {
 					return i2-i1;
 				}
 			});
+		
+		this.faceUp = faceUp;
+		cardMoveOnHover = true;
 	}
 	
 	private void setCardPositions() {
@@ -105,6 +115,8 @@ public class CardDisplayPanel extends Panel {
 	public void addCard(CardWidget card) {
 		addWidgetToCollection(card, widgetList.size());	
 		card.setOrientation(orientation);
+		card.setFaceUp(faceUp);
+		card.setMoveOnHover(cardMoveOnHover);
 		setCardSize(card);
 		setCardPositions();
 	}

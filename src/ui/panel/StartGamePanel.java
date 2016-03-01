@@ -20,23 +20,25 @@ public class StartGamePanel extends ScaledPanel {
 		this.controller = controller;
 		
 		playerSelectPanel = new ScaledPanel() {{
-			setWidgetColors(new Color(0, 0, 255, 40), Color.BLACK, null, null);
+			setWidgetColors(new Color(0, 0, 0, 200), new Color(0, 0, 0, 150), null, null);
 			setDrawContainingPanel(true);
 			
-			playerSelectLabel = new Label("Enter number of players:");
-			playerSelectLabel.setFont(new Font("Arial", Font.BOLD, 40));
+			playerSelectLabel = new Label("Enter number of players (2 - 5):");
+			playerSelectLabel.setFont(new Font("Arial", Font.BOLD, 25));
+			playerSelectLabel.setTextColor(Color.WHITE);
 			
 			playerSelectTextbox = new TextEntryBox();
-			playerSelectTextbox.setFont(new Font("Arial", Font.BOLD, 25));
 			playerSelectTextbox.setAlignment(TextArea.Alignment.CENTER);
+			playerSelectTextbox.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			playerSelectTextbox.setWidgetColors(null, new Color(200, 200, 200, 100), new Color(120, 120, 120, 200), Color.YELLOW);
 			
 			entryError = new Label();
-			entryError.setFont(new Font("Arial", Font.PLAIN, 17));
-			entryError.setTextColor(new Color(200, 0, 0));
+			entryError.setFont(new Font("Arial", Font.PLAIN, 16));
+			entryError.setTextColor(Color.RED);
 			
-			addWidget(playerSelectLabel, 0, 0, 100, 40);
-			addWidget(playerSelectTextbox, 35, 35, 30, 25);
-			addWidget(entryError, 0, 60, 100, 40);
+			addWidget(playerSelectLabel,    0,  0, 100, 40);
+			addWidget(playerSelectTextbox, 35, 35,  30, 25);
+			addWidget(entryError, 			0, 60, 100, 40);
 		}};
 		
 		addWidget(playerSelectPanel, 35, 15, 30, 20);

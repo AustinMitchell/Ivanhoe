@@ -12,7 +12,7 @@ public class GameController {
 	
 	public GameController(SimpleGUIApp mainApp) {
 		this.mainApp = mainApp;
-		mainApp.setBackgroundColor(new Color(195, 195, 180));
+		mainApp.setBackgroundColor(new Color(175,117,68));
 		screen = new PanelCollection(0, 0, mainApp.getWidth(), mainApp.getHeight());
 		
 		mainScreen();

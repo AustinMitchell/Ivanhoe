@@ -17,6 +17,8 @@ public class CardWidget extends ImageBox {
 	public int getType() { return type; }
 	public int getValue() { return value; }
 	
+	public boolean isFaceUp() { return faceUp; }
+	
 	@Override
 	public void setImage(Image image) {
 		super.setImage(image);
@@ -82,9 +84,9 @@ public class CardWidget extends ImageBox {
 	}
 	public void setFaceUp(boolean faceUp) { 
 		if (image != null) {
-			if (faceUp && this.faceUp != faceUp) {
+			if (faceUp){
 				setImage(CardData.getCardImage(type, value));
-			} else if (!faceUp && this.faceUp == faceUp) {
+			} else {
 				setImage(CardData.getBackImage());
 			}
 		}
