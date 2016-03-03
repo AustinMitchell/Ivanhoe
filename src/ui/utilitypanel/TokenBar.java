@@ -1,4 +1,4 @@
-package ui;
+package ui.utilitypanel;
 
 import java.awt.Color;
 
@@ -27,11 +27,11 @@ public class TokenBar extends ScaledPanel{
 	private static final CustomDraw EMPTY_TOKEN = 
 			ovalDrawObject(new Color(180, 180, 180), new Color(120, 120, 120), new Color(180, 180, 180), new Color(120, 120, 120));
 	private static final CustomDraw[] TOKEN_DRAW = {
-			ovalDrawObject(new Color(255,   0, 255), new Color(180,   0, 180), new Color(255, 100, 255), new Color(180,  50, 180)),
-			ovalDrawObject(new Color(255,   0,   0), new Color(180,   0,   0), new Color(255, 100, 100), new Color(180,  50,  50)),
-			ovalDrawObject(new Color(255, 255,   0), new Color(180, 180,   0), new Color(255, 255, 180), new Color(180, 180, 100)),
-			ovalDrawObject(new Color(0,     0, 255), new Color(0,     0, 180), new Color(100, 100, 255), new Color(50,   50, 180)),
-			ovalDrawObject(new Color(0,   255,   0), new Color(0,   180,   0), new Color(100, 255, 100), new Color(50,  180,  50))
+			ovalDrawObject(new Color(156, 114, 178), new Color(100,  70, 120), new Color(120,  90, 150), new Color(100,  70, 120)),
+			ovalDrawObject(new Color(250,  94, 108), new Color(200,  70,  80), new Color(200,  70,  80), new Color(180,  50,  60)),
+			ovalDrawObject(new Color(249, 235, 172), new Color(210, 200, 150), new Color(210, 200, 150), new Color(180, 170, 120)),
+			ovalDrawObject(new Color(147, 163, 214), new Color(110, 120, 180), new Color(110, 120, 180), new Color( 90, 100, 160)),
+			ovalDrawObject(new Color(142, 190, 148), new Color(125, 170, 130), new Color(125, 170, 130), new Color(110, 155, 120))
 		};
 	
 	private boolean[] tokenActive;
@@ -44,6 +44,11 @@ public class TokenBar extends ScaledPanel{
 	public void enableToken(int type) {
 		tokenActive[type] = true;
 		tokenUI[type].setCustomDraw(TOKEN_DRAW[type]);
+	}
+	public void enableAllTokens() {
+		for (int i=0; i<5; i++) {
+			enableToken(i);
+		}
 	}
 	public void disableToken(int type) {
 		tokenActive[type] = false;
@@ -62,5 +67,9 @@ public class TokenBar extends ScaledPanel{
 		}
 		
 		setDrawContainingPanel(true);
+	}
+	
+	public boolean isClicked(int type) {
+		return tokenActive[type] && tokenUI[type].isClicked();
 	}
 }
