@@ -73,6 +73,10 @@ public class ConnectPanel extends ScaledPanel {
 	public void update() {
 		super.update();
 		
+		handleIPEntry();
+	}
+	
+	private void handleIPEntry() {
 		if (addressEntry.hasTextEntered()) {
 			addressEntryFailed.clear();
 			controller.connectToServer(this, addressEntry.getEnteredText());

@@ -75,6 +75,7 @@ public class CardWidget extends ImageBox {
 		super.setEnabled(enabled);
 	}
 	
+	// Set the card this widget represents. If faceup, the image will change.
 	public void setCard(int type, int value) {
 		if ((this.type != type || this.value != value) && faceUp) {
 			setImage(CardData.getCardImage(type, value));
@@ -82,6 +83,7 @@ public class CardWidget extends ImageBox {
 		this.type = type;
 		this.value = value;
 	}
+	// Sets the card to faceup or facedown. Will change image accordingly.
 	public void setFaceUp(boolean faceUp) { 
 		if (image != null) {
 			if (faceUp){
@@ -92,7 +94,8 @@ public class CardWidget extends ImageBox {
 		}
 		this.faceUp = faceUp;
 	}
-		
+	
+	// Sets whether the card will move when hovered over or not. Moves according to orientation.
 	public void setMoveOnHover(boolean moveOnHover) { this.moveOnHover = moveOnHover; }
 	
 	public CardWidget(int type, int value) {

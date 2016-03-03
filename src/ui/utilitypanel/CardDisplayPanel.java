@@ -1,4 +1,4 @@
-package ui.panel;
+package ui.utilitypanel;
 
 import java.util.*;
 

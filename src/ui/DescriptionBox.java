@@ -30,19 +30,23 @@ public class DescriptionBox extends Widget {
 	@Override
 	public void setHeight(int h) { setSize(this.w, h); }
 	
+	// Sets positions for label widgets
 	private void setLabelPositions() {
 		name.setLocation(x, y);
 		description.setLocation(x, y+NAME_LABEL_HEIGHT);
 	}
+	// Sets size for label widgets
 	private void setLabelSizes() {
 		name.setSize(w, NAME_LABEL_HEIGHT);
 		description.setSize(w, h-NAME_LABEL_HEIGHT);
 	}
 	
+	// Set the display to the desired card
 	public void setDisplay(int type, int value) {
 		name.setText(CardData.getCardName(type, value));
 		description.setText(CardData.getCardDescription(type, value));
 	}
+	// Empty out display
 	public void clearDisplay() {
 		name.setText("");
 		description.setText("");

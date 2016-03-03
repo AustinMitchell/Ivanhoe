@@ -22,6 +22,7 @@ public class CardData {
 	private static final String DESCRIPTION_PATH = "res/descriptions.txt";
 	private static final String VALUE_PATH = "res/cards/value/";
 	private static final String ACTION_PATH = "res/cards/action/";
+	// Stores image object, name and description for a card
 	private static class Data {
 		Image image;
 		String name, description;
@@ -30,7 +31,8 @@ public class CardData {
 			return this;
 		}
 	}
-	// This is terrible I'm pretty sure. I'm sorry to everyone.
+	
+	// Creates a data structure that maps two integers to an image, name and description
 	private static final ArrayList<HashMap<Integer, Data>> CARD_IMAGE_MAP = new ArrayList<HashMap<Integer, Data>>() {{
 			final Queue<Data> descriptions = new LinkedList<Data>() {{
 					try {
@@ -117,6 +119,7 @@ public class CardData {
 			add(action);
 		}};
 		
+	// Rrturns image object for the back of cards
 	public static Image getBackImage() { 
 		return BACK_IMAGE;
 	}

@@ -18,17 +18,20 @@ public class GameController {
 		mainScreen();
 	}
 	
+	// Called from IvanhoeApp to update the current UI and draw it to the screen
 	public void loop() {
 		screen.update();
 		screen.draw();
 	}
 	
+	// Sets up a new UI with the opening screen
 	public void mainScreen() {
 		screen.clear();
 		screen.addPanel(new ConnectPanel(this));
 		screen.setCurrentPanel(0);
 	}
 	
+	// Either sets up a new UI, or leaves the current panel and tells it the connection failed
 	public void connectToServer(ConnectPanel connectPanel, String address) {
 		if (isValidIPAddress(address)) {
 			setupGame();
@@ -36,7 +39,12 @@ public class GameController {
 			connectPanel.connectFailed();
 		}
 	}
+	// Checks if address is a valid IP string
 	private boolean isValidIPAddress (String ip) {
+		if (ip.equals("localhost")) {
+			return true;
+		}
+		
 	    try {
 	        if ( ip == null || ip.isEmpty() ) {
 	            return false;
@@ -63,12 +71,14 @@ public class GameController {
 	    }
 	}
 	
+	// Creates a new UI panel for setting up a game
 	public void setupGame() {
 		screen.clear();
 		screen.addPanel(new StartGamePanel(this));
 		screen.setCurrentPanel(0);
 	}
 	
+	// Creates a new game with the given number of players (2 to 5)
 	public void startNewGame(int numPlayers) {
 		screen.clear();
 		screen.addPanel(new GamePanel(numPlayers, this));
