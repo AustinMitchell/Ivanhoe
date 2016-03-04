@@ -29,7 +29,8 @@ public class GameStateTest {
 		players.add(player2);
 		players.add(player3);
 		
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 	}
 	
 	@Test

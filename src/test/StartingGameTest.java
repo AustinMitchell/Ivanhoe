@@ -43,7 +43,8 @@ public class StartingGameTest {
 		players.add(player4);
 		players.add(player5);
 		
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 	}
 	
 	@Test
@@ -55,9 +56,10 @@ public class StartingGameTest {
 		players = new ArrayList();
 		players.add(player1);
 		players.add(player2);
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 		
-		engine.startGame(game);
+		engine.drawToken(game);
 		int playerIndex = -1;
 		int purples = 0;
 		
@@ -83,7 +85,8 @@ public class StartingGameTest {
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 		
 		engine.drawToken(game);
 		int playerIndex = -1;
@@ -113,7 +116,8 @@ public class StartingGameTest {
 		players.add(player2);
 		players.add(player3);
 		players.add(player4);
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 		
 		engine.drawToken(game);
 		int playerIndex = -1;
@@ -147,7 +151,8 @@ public class StartingGameTest {
 		players.add(player3);
 		players.add(player4);
 		players.add(player5);
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 		
 		engine.drawToken(game);
 		int playerIndex = -1;

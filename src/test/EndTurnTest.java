@@ -38,14 +38,15 @@ public class EndTurnTest {
 		players = new ArrayList();
 		players.add(player1);
 		players.add(player2);
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 		
 		//ending turn after starting from index 0 (which is the current turn)
 		assertEquals("endTurn:1", engine.endTurn(game, "false"));
 		
 		//ending a turn with the withdrawal of index 1 (which is the current turn)
 		//since there are only 2 players, the winning player is at index 0
-		assertEquals("endTournament:0", engine.endTurn(game, "true"));
+		assertEquals("endTurn:0", engine.endTurn(game, "true"));
 	}
 	
 	
@@ -55,7 +56,8 @@ public class EndTurnTest {
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 		
 		//ending turn after starting from index 0 (which is the current turn)
 		assertEquals("endTurn:1", engine.endTurn(game, "false"));
@@ -67,7 +69,7 @@ public class EndTurnTest {
 		assertEquals("endTurn:0", engine.endTurn(game, "false"));
 		
 		//player at index 0 withdrew from the game leaving only 1 winner at index 2
-		assertEquals("endTournament:2", engine.endTurn(game, "true"));
+		assertEquals("endTurn:2", engine.endTurn(game, "true"));
 	}
 	
 	
@@ -78,7 +80,8 @@ public class EndTurnTest {
 		players.add(player2);
 		players.add(player3);
 		players.add(player4);
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 		
 		//ending turn after starting from index 0 (which is the current turn)
 		assertEquals("endTurn:1", engine.endTurn(game, "false"));
@@ -96,7 +99,7 @@ public class EndTurnTest {
 		assertEquals("endTurn:2", engine.endTurn(game, "false"));
 		
 		//player at index 2 withdrew from the game leaving only 1 winner at index 0
-		assertEquals("endTournament:0", engine.endTurn(game, "true"));
+		assertEquals("endTurn:0", engine.endTurn(game, "true"));
 	}
 
 	
@@ -108,7 +111,8 @@ public class EndTurnTest {
 		players.add(player3);
 		players.add(player4);
 		players.add(player5);
-		game = new GameState(players);
+		game = new GameState();
+		game.initializeServer(players);
 		
 		//ending turn after starting from index 0 (which is the current turn)
 		assertEquals("endTurn:1", engine.endTurn(game, "false"));
@@ -129,6 +133,6 @@ public class EndTurnTest {
 		assertEquals("endTurn:2", engine.endTurn(game, "true"));
 		
 		//player at index 2 withdrew from the game leaving winning player at index 4
-		assertEquals("endTournament:4", engine.endTurn(game, "true"));
+		assertEquals("endTurn:4", engine.endTurn(game, "true"));
 	}
 }
