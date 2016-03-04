@@ -2,14 +2,16 @@ package rulesengine;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 import models.Card;
 import models.GameState;
 import rulesengine.Type;
 
 public class RulesEngine {
+	private static final String NEW_COM = "$";
 	
 	
-	public void drawToken(GameState game) {
+	public static void drawToken(GameState game) {
 		ArrayList tokens = new ArrayList();
 		tokens.add(Type.PURPLE);
 		tokens.add(Type.RED);
@@ -31,22 +33,27 @@ public class RulesEngine {
 		setInitialTurn(game);
 	}
 	
-	public void setInitialTurn(GameState game) {
+	public static String setInitialTurn(GameState game) {
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(game.getAllPlayers().get(i).getDrawnToken() == Type.PURPLE) {
 				game.setTurn(i);
 			}
 		}
+		return("setTurn:" + game.getTurn());
 	}
 	
-	public void startGame(GameState game) {
-		drawToken(game);
-		startTournament(game);
+	public static String startGame(GameState game) {
+		//drawToken(game);
+		String startTournament = startTournament(game);
+		return ("startGame" + NEW_COM + startTournament);
 	}
 	
+	public static String drawCard(GameState game) {
+		game.getDrawDeck().draw(game.getAllPlayers().get(game.getTurn()).getHand());
+		return("drawCard:" + game.getTurn());
+	}
 	
-	
-	public boolean isTournamentOver(GameState game) {
+	public static boolean isTournamentOver(GameState game) {
 		int playersInTournament = 0;
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(game.getAllPlayers().get(i).isInTournament()) {
@@ -57,9 +64,11 @@ public class RulesEngine {
 		else return false;
 	}
 	
-	public String endTournament(GameState game) {
+	public static String endTournament(GameState game) {
 		for(int j = 0; j < game.getAllPlayers().size(); j++) {
 			game.getAllPlayers().get(j).getDisplay().emptyDeck(game.getDiscardDeck());
+			game.getAllPlayers().get(j).getStunDeck().emptyDeck(game.getDiscardDeck());
+			game.getAllPlayers().get(j).getShieldDeck().emptyDeck(game.getDiscardDeck());
 		}
 		int playerPos = game.getTurn();
 		String result = "endTournament:" + playerPos;
@@ -67,60 +76,63 @@ public class RulesEngine {
 	}
 	
 	
-	/*public void endTournament(GameState game) {
-		if(isTournamentOver(game)) {
-			for(int i = 0; i< game.getAllPlayers().size(); i++) {
-				if(game.getAllPlayers().get(i).isInTournament()) {
-					game.setTurn(i);
-					
-					if(game.getTournamentColour() == Type.PURPLE) {
-						//IMPLEMENT FEATURE FOR CHOOSING A TOKEN
-					} else {
-						game.getAllPlayers().get(i).setToken(game.getTournamentColour(), true);
-						if(!game.isGameOver()) {
-							for(int j = 0; j < game.getAllPlayers().size(); j++) {
-								game.getAllPlayers().get(j).getDisplay().emptyDeck(game.getDiscardDeck());
-								game.getAllPlayers().get(j).enterTournament();
-							}
-						}
-					}
-					break;
-				}
-			}
-		}
-	}*/
+	public static boolean endGame(GameState game) {
+		return game.isGameOver();
+	}
 	
-	
-	public String endTurn(GameState game, String withdrawState) {
+	public static String endTurn(GameState game, String withdrawState) {
 		if(withdrawState.equalsIgnoreCase("true")) withdraw(game);
 		if(!isTournamentOver(game)) {
 			game.nextTurn();
-			return "endTurn:" + game.getTurn();
 		}
-		else{
-			game.incrementTournamentNumber();
-			return endTournament(game);
+		else {
+			game.nextTurn();
+			endTournament(game);
 		}
+		return "endTurn:" + game.getTurn();
 	}
 	
-	public void withdraw(GameState game) {
+	public static String withdraw(GameState game) {
 		int playerPos = game.getTurn();
 		game.getAllPlayers().get(playerPos).exitTournament();
+		return("withdraw:" + playerPos);
 	}
 	
-	public void startTournament(GameState game) {
+	public static String startTournament(GameState game) {
 		for(int j = 0; j < game.getAllPlayers().size(); j++) {
 			game.getAllPlayers().get(j).enterTournament();
 		}
+		game.incrementTournamentNumber();
+		String result;
+		if(game.getTournamentNumber() > 0) {
+			result = ("startTournament:" + game.getTurn());
+		}
+		
+		else
+			result = ("startTournament:-1");
+		return result;
+		
 	}
 	
-	public void setColour(GameState game, String colour) {
+	public static String setColour(GameState game, String colour) {
 		if(colour.equals("-1")) endTurn(game, "false");
-		game.setTournamentColour(Integer.valueOf(colour));
+		else game.setTournamentColour(Integer.valueOf(colour));
+		return("setColour:"  + colour);
 	}
 	
+	public static boolean remainInTournament(GameState game) {
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(game.getTurn() != i) {
+				if(game.getAllPlayers().get(game.getTurn()).getDisplayValue(game.getTournamentColour()) <= 
+				game.getAllPlayers().get(i).getDisplayValue(game.getTournamentColour())) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 	
-	public String playValueCard(GameState game, int cardPos) {
+	public static String playValueCard(GameState game, int cardPos) {
 		String returnString;
 		
 		int playerPos = game.getTurn();
@@ -129,13 +141,10 @@ public class RulesEngine {
 		returnString = ("card:" + playerPos + ":" + cardType + ":" + cardValue + ":" + cardPos);
 		
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getAllPlayers().get(playerPos).getDisplay());
-		
 		return returnString;
 	}
 	
-	
-	
-	public String unhorse(GameState game, int cardPos, int colour) {
+	public static String unhorse(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
@@ -146,7 +155,7 @@ public class RulesEngine {
 		return returnString;
 	}
 	
-	public String changeWeapon(GameState game, int cardPos, int colour) {
+	public static String changeWeapon(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
@@ -157,7 +166,7 @@ public class RulesEngine {
 		return returnString;
 	}
 	
-	public String dropWeapon(GameState game, int cardPos) {
+	public static String dropWeapon(GameState game, int cardPos) {
 		String returnString;
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
