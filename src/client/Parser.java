@@ -3,6 +3,8 @@ package client;
 import java.util.Queue;
 
 import models.GameState;
+import rulesengine.RulesEngine;
+import rulesengine.Validator;
 
 public class Parser {
 	
@@ -43,11 +45,61 @@ public class Parser {
 	}
 	
 	
+	
 	public static String parse (String[] command, GameState game) {
 		
+		String result = "";
+		synchronized(game) {
+			switch (command[0]) {
+			
+				case  "startGame":
+					result = RulesEngine.startGame(game);	
+					break;
+				
+				case "drawCard": //TODO: account for starting tournaments here
+					result = RulesEngine.drawCard(game);
+					if(!game.hasTournamentStarted()) {
+						if(Validator.canStartTournament(game)) {
+							result += RulesEngine.NEW_COM + "canStartTournament:true";
+						}
+						else {
+							result += RulesEngine.NEW_COM + "canStartTournament:false";
+						}
+					}
+					break;
+					
+				case "endTurn":
+					result = RulesEngine.endTurn(game, command[1]);
+					break;
+					
+				case "startTournament":
+					result = RulesEngine.startTournament(game);
+					break;
+					
+				case "setColour":
+					result = RulesEngine.setColour(game, command[1]);
+					break;
+					
+				case "card":
+					result = RulesEngine.playValueCard(game, Integer.getInteger(command[1]));
+					break;
+					
+				case "unhorseCard":
+					result = RulesEngine.unhorse(game, Integer.getInteger(command[1]), Integer.getInteger(command[2]));
+					break;
+					
+				case "changeWeaponCard":
+					result = RulesEngine.changeWeapon(game, Integer.getInteger(command[1]), Integer.getInteger(command[2]));
+					break;
+					
+				case "dropWeaponCard":
+					result = RulesEngine.dropWeapon(game, Integer.getInteger(command[1]));
+					break;
+					
+			}
+		}
 		
-		
-		return null;
+		return result;
 	}
 
 }
