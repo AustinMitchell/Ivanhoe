@@ -58,21 +58,37 @@ public class GameState {
 												Card.COUNTERCHARGE, Card.DISGRACE, Card.ADAPT, Card.OUTWIT, Card.SHIELD, 
 												Card.STUNNED, Card.IVANHOE, Card.RIPOSTE, Card.RIPOSTE, Card.KNOCKDOWN};
 	
-	public GameState(ArrayList<Player> newPlayers) {
+	public GameState() {
+		discardDeck = new Deck();
+		tournamentNumber = 0;
+		//setUpStartingHands();
+	}
+	
+	public void initializeServer(ArrayList<Player> newPlayers) {
 		players = newPlayers;
 		drawDeck = new Deck();
 		for(int i = 0; i < players.size(); i++) {
 			players.get(i).enterTournament();
 		}
+		setTurn(0);
 		for(int i = 0; i < 110; i++) {
 			Card card = new Card(cardTypeData[i], cardValueData[i]);
 			drawDeck.add(card);
 		}
 		drawDeck.shuffle();
-		discardDeck = new Deck();
-		tournamentNumber = 1;
+	}
+	
+	public void initializeClient(ArrayList<Player> newPlayers, int[][] cardData) {
+		players = newPlayers;
+		drawDeck = new Deck();
+		for(int i = 0; i < players.size(); i++) {
+			players.get(i).enterTournament();
+		}
 		setTurn(0);
-		setUpStartingHands();
+		for(int i = 0; i < 110; i++) {
+			Card card = new Card(cardData[i][0], cardData[i][1]);
+			drawDeck.add(card);
+		}
 	}
 	
 	public Player getPlayer(String pName) {
