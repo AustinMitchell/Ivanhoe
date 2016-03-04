@@ -11,6 +11,8 @@ public class GameState {
 	private Deck drawDeck;
 	private Deck discardDeck;
 	private boolean gameOver;
+	private boolean tournamentStarted;
+	private int prevTournamentColour;
 	
 	private static final int[] cardTypeData = {Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
 												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
@@ -61,6 +63,9 @@ public class GameState {
 	public GameState() {
 		discardDeck = new Deck();
 		tournamentNumber = 0;
+		tournamentColour = -1;
+		tournamentStarted = false;
+		prevTournamentColour = -1;
 		//setUpStartingHands();
 	}
 	
@@ -101,6 +106,16 @@ public class GameState {
 		return player;
 	}
 	
+	
+	
+	public boolean hasTournamentStarted() {
+		return tournamentStarted;
+	}
+	
+	public void setTournamentStarted(boolean tournamentStarted) {
+		this.tournamentStarted = tournamentStarted;
+	}
+	
 	public ArrayList<Player> getAllPlayers() {
 		return players;
 	}
@@ -113,12 +128,24 @@ public class GameState {
 		return tournamentColour;
 	}
 	
-	public boolean isGameOver() {
+	public void setPrevTournamentColour(int colour) {
+		prevTournamentColour = colour;
+	}
+	
+	public int getPrevTournamentColour() {
+		return prevTournamentColour;
+	}
+	
+	/*public boolean isGameOver() {
 		for(int i = 0; i < players.size(); i++) {
 			if(players.get(i).hasWon()) gameOver = true;
 			else gameOver = false;
 		}
 		return gameOver;
+	}*/
+	
+	public void setGameOver(boolean status) {
+		gameOver = status;
 	}
 	
 	public void incrementTournamentNumber() {
