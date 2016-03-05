@@ -4,6 +4,71 @@ import models.*;
 
 public class Validator {
 	
+	public static boolean canStartTournament(GameState game) {
+		Deck hand = game.getAllPlayers().get(game.getTurn()).getHand();
+		for(int i = 0; i < hand.deckSize(); i++) {
+			int type = hand.getCard(i).getCardType();
+			if (type >= 1 && type <= 5) {
+				return true;
+			}
+			else if (type == 0 && game.getPrevTournamentColour() != 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public boolean[] cardsAbleToStart(GameState game) {
+		Deck hand = game.getAllPlayers().get(game.getTurn()).getHand();
+		boolean[] playableCards = new boolean[hand.deckSize()];
+		
+		for(int i = 0; i < hand.deckSize(); i++) {
+			if(hand.getCard(i).getCardType() == game.getTournamentColour() || 
+					hand.getCard(i).getCardType() == Type.WHITE) {
+				playableCards[i] = true;
+			}
+			else {
+				playableCards[i] = false;
+			}
+		}
+		return playableCards;
+	}
+	
+	
+	public boolean[] cardsAbleToPlay(GameState game) {
+		Deck hand = game.getAllPlayers().get(game.getTurn()).getHand();
+		int tournamentColour = game.getTournamentColour();
+		boolean[] playableCards = new boolean[hand.deckSize()];
+		
+		for(int i = 0; i < hand.deckSize(); i++) {
+			if(hand.getCard(i).getCardType() == game.getTournamentColour() || 
+					hand.getCard(i).getCardType() == Type.WHITE) {
+				playableCards[i] = true;
+			}
+			else {
+				playableCards[i] = false;
+			}
+		}
+		return playableCards;
+	}
+	
+	
+	public static boolean isGameOver(GameState game) {
+		for(Player p: game.getAllPlayers()) {
+			if(p.hasWon()) {
+				game.setGameOver(true);
+				return true;
+			}
+			else {
+				game.setGameOver(false);
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	
 	public static boolean validateValueCard (GameState game, int cardPos) {
 		Card card = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos);
 		int colour = card.getCardType();
