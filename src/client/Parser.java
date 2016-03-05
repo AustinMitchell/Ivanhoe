@@ -1,8 +1,10 @@
 package client;
 
+import java.util.ArrayList;
 import java.util.Queue;
 
 import models.GameState;
+import models.Player;
 import rulesengine.RulesEngine;
 import rulesengine.Validator;
 
@@ -51,6 +53,24 @@ public class Parser {
 		String result = "";
 		synchronized(game) {
 			switch (command[0]) {
+			
+				case "initClient": //initializes draw deck on the client side
+					int i = 1;
+					ArrayList<Player> players = new ArrayList();
+					while(!command[i].equals("cards")) {
+						players.add(new Player(command[i]));
+						i++;
+					}
+					i++;
+					int[][] cardData = new int[(command.length-i) / 2][2];
+					for(int j = 0; j < cardData.length; j++) {
+						cardData[j][0] = Integer.getInteger(command[j*2 + i]);
+						cardData[j][1] = Integer.getInteger(command[j*2 + i + 1]);
+					}
+					game.initializeClient(players, cardData);
+					break;
+					
+					
 			
 				case  "startGame":
 					result = RulesEngine.startGame(game);	
