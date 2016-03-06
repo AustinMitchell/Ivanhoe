@@ -129,7 +129,6 @@ public class Validator {
 			}
 			else {
 				game.setGameOver(false);
-				return false;
 			}
 		}
 		return false;

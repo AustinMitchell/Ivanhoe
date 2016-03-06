@@ -191,6 +191,14 @@ public class GameState {
 		discardDeck = new Deck();
 	}
 	
+	public void renewDrawDeck(int[][] cardData) {
+		for(int i = 0; i < cardData.length; i++) {
+			Card card = new Card(cardData[i][0], cardData[i][1]);
+			drawDeck.add(card);
+		}
+		discardDeck = new Deck();
+	}
+	
 	public void nextTurn() {
 		if(turn==players.size()-1) turn = 0;
 		else turn++;

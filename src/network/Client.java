@@ -19,6 +19,7 @@ public class Client implements Runnable {
 	private int id;
 	private String updateIn;
 	private String updateOut;
+	
 	private String serverName;
 	private String username;
 	
@@ -133,14 +134,22 @@ public class Client implements Runnable {
 		}
 	}
 
-	// this function will remove the first flag as soon as it is read
+	
+	
+	public Queue<String> getGuiFlags() {
+		synchronized(guiFlags) {
+			return guiFlags;
+		}
+	}
+	
 	public String readGuiFlag() {
 		synchronized (guiFlags) {
 			String flag = guiFlags.remove();
 			return flag;
 		}
 	}
-
+	
+	
 	/*
 	 * End of Flags preparation
 	 * ==================================================

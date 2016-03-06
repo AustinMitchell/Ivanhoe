@@ -58,7 +58,7 @@ public class Parser {
 		synchronized(game) {
 			switch (command[0]) {
 			
-				case "initClient": //initializes draw deck on the client side
+				case "initClient": { //initializes draw deck on the client side
 					int i = 1;
 					ArrayList<Player> players = new ArrayList();
 					while(!command[i].equals("cards")) {
@@ -74,6 +74,21 @@ public class Parser {
 						cardData[j][1] = Integer.parseInt(command[j*2 + i + 1]);
 					}
 					game.initializeClient(players, cardData);
+					break;
+				}
+					
+				case "renewDeck":
+					
+					int[][] cardData = new int[(command.length-1) / 2][2];
+					for(int j = 0; j < cardData.length; j++) {
+						cardData[j][0] =
+								Integer.parseInt(
+								command[j*2 + 1]);
+						cardData[j][1] = Integer.parseInt(command[j*2 + 2]);
+					}
+					
+					game.renewDrawDeck(cardData);
+					
 					break;
 					
 			
@@ -106,7 +121,7 @@ public class Parser {
 					break;
 					
 				case "card":
-					result = RulesEngine.playValueCard(game, Integer.getInteger(command[1]));
+					result = RulesEngine.playValueCard(game, Integer.parseInt(command[1]));
 					int currPlayer = game.getTurn();
 					int type = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardType();
 					int value = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardValue();

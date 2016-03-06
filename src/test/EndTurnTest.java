@@ -20,7 +20,6 @@ public class EndTurnTest {
 	Player player5;
 	ArrayList<Player> players;
 	GameState game;
-	RulesEngine engine = new RulesEngine();
 
 	
 	@Before
@@ -42,11 +41,11 @@ public class EndTurnTest {
 		game.initializeServer(players);
 		
 		//ending turn after starting from index 0 (which is the current turn)
-		assertEquals("endTurn:1", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//ending a turn with the withdrawal of index 1 (which is the current turn)
 		//since there are only 2 players, the winning player is at index 0
-		assertEquals("endTurn:0", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 	}
 	
 	
@@ -60,16 +59,16 @@ public class EndTurnTest {
 		game.initializeServer(players);
 		
 		//ending turn after starting from index 0 (which is the current turn)
-		assertEquals("endTurn:1", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//ending a turn with the withdrawal of index 1 (which is the current turn)
-		assertEquals("endTurn:2", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 		
 		//player at index 2 ended their turn normally
-		assertEquals("endTurn:0", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//player at index 0 withdrew from the game leaving only 1 winner at index 2
-		assertEquals("endTurn:2", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 	}
 	
 	
@@ -84,22 +83,22 @@ public class EndTurnTest {
 		game.initializeServer(players);
 		
 		//ending turn after starting from index 0 (which is the current turn)
-		assertEquals("endTurn:1", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//ending a turn with the withdrawal of index 1 (which is the current turn)
-		assertEquals("endTurn:2", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 		
 		//player at index 2 ended their turn normally
-		assertEquals("endTurn:3", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//player at index 3 withdrew from the game
-		assertEquals("endTurn:0", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 		
 		//player at index 0 ends their turn normally
-		assertEquals("endTurn:2", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//player at index 2 withdrew from the game leaving only 1 winner at index 0
-		assertEquals("endTurn:0", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 	}
 
 	
@@ -115,24 +114,24 @@ public class EndTurnTest {
 		game.initializeServer(players);
 		
 		//ending turn after starting from index 0 (which is the current turn)
-		assertEquals("endTurn:1", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//ending a turn with the withdrawal of index 1 (which is the current turn)
-		assertEquals("endTurn:2", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 		
 		//player at index 2 ended their turn normally
-		assertEquals("endTurn:3", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//player at index 3 withdraws from tournament
-		assertEquals("endTurn:4", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 		
 		//player at index 4 ended their turn normally
-		assertEquals("endTurn:0", engine.endTurn(game, "false"));
+		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
 		
 		//player at index 0 withdrew from the game
-		assertEquals("endTurn:2", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 		
 		//player at index 2 withdrew from the game leaving winning player at index 4
-		assertEquals("endTurn:4", engine.endTurn(game, "true"));
+		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
 	}
 }

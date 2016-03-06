@@ -13,7 +13,8 @@ import models.Player;
 import rulesengine.RulesEngine;
 import rulesengine.Type;
 
-public class StartingGameTest {
+
+public class DrawTokenTest {
 	Player player1;
 	Player player2;
 	Player player3;
@@ -21,45 +22,23 @@ public class StartingGameTest {
 	Player player5;
 	ArrayList<Player> players;
 	GameState game;
-	RulesEngine engine = new RulesEngine();
 
-	
-	@Before
-	public void setupPlayers() {
-		player1 = new Player("Ahmed");
-		player1.enterTournament();
-		player2 = new Player("Nick");
-		player2.enterTournament();
-		player3 = new Player("Austin");
-		player3.enterTournament();
-		player4 = new Player("Mike");
-		player4.enterTournament();
-		player5 = new Player("Malik");
-		player5.enterTournament();
-		players = new ArrayList();
-		players.add(player1);
-		players.add(player2);
-		players.add(player3);
-		players.add(player4);
-		players.add(player5);
-		
-		game = new GameState();
-		game.initializeServer(players);
-	}
 	
 	@Test
 	public void twoPlayerDrawTokenTest() {
 		player1 = new Player("Ahmed");
-		player1.enterTournament();
 		player2 = new Player("Nick");
-		player2.enterTournament();
 		players = new ArrayList();
 		players.add(player1);
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
 		
-		engine.drawToken(game);
+		RulesEngine.drawToken(game);
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			assertTrue(game.getAllPlayers().get(i).isInTournament());
+		}
+		
 		int playerIndex = -1;
 		int purples = 0;
 		
@@ -76,19 +55,19 @@ public class StartingGameTest {
 	@Test
 	public void threePlayerDrawTokenTest() {
 		player1 = new Player("Ahmed");
-		player1.enterTournament();
 		player2 = new Player("Nick");
-		player2.enterTournament();
 		player3 = new Player("Austin");
-		player3.enterTournament();
 		players = new ArrayList();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			assertTrue(game.getAllPlayers().get(i).isInTournament());
+		}
 		
-		engine.drawToken(game);
+		RulesEngine.drawToken(game);
 		int playerIndex = -1;
 		int purples = 0;
 		
@@ -105,11 +84,8 @@ public class StartingGameTest {
 	@Test
 	public void fourPlayerDrawTokenTest() {
 		player1 = new Player("Ahmed");
-		player1.enterTournament();
 		player2 = new Player("Nick");
-		player2.enterTournament();
 		player3 = new Player("Austin");
-		player3.enterTournament();
 		player4 = new Player("Mike");
 		players = new ArrayList();
 		players.add(player1);
@@ -118,8 +94,11 @@ public class StartingGameTest {
 		players.add(player4);
 		game = new GameState();
 		game.initializeServer(players);
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			assertTrue(game.getAllPlayers().get(i).isInTournament());
+		}
 		
-		engine.drawToken(game);
+		RulesEngine.drawToken(game);
 		int playerIndex = -1;
 		int purples = 0;
 		
@@ -136,15 +115,10 @@ public class StartingGameTest {
 	@Test
 	public void fivePlayerDrawTokenTest() {
 		player1 = new Player("Ahmed");
-		player1.enterTournament();
 		player2 = new Player("Nick");
-		player2.enterTournament();
 		player3 = new Player("Austin");
-		player3.enterTournament();
 		player4 = new Player("Mike");
-		player4.enterTournament();
 		player5 = new Player("Malik");
-		player5.enterTournament();
 		players = new ArrayList();
 		players.add(player1);
 		players.add(player2);
@@ -153,8 +127,11 @@ public class StartingGameTest {
 		players.add(player5);
 		game = new GameState();
 		game.initializeServer(players);
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			assertTrue(game.getAllPlayers().get(i).isInTournament());
+		}
 		
-		engine.drawToken(game);
+		RulesEngine.drawToken(game);
 		int playerIndex = -1;
 		int purples = 0;
 		
