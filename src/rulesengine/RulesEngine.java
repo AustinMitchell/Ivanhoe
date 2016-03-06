@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import models.Card;
+import models.Deck;
 import models.GameState;
 import models.Player;
 import rulesengine.Type;
 
 public class RulesEngine {
-	public static final String NEW_COM = "$";
+	public static final String NEW_COM = "~";
 	
 	
 	public static void drawToken(GameState game) {
@@ -52,8 +53,22 @@ public class RulesEngine {
 	}
 	
 	public static String drawCard(GameState game) {
+		String result = "";
+		Deck drawDeck = game.getDrawDeck();
+		if(drawDeck.deckSize() == 0) {
+			game.renewDrawDeck();
+			result += "renewDeck";
+			for (int i = 0; i < game.getDrawDeck().deckSize(); i++) {
+				int type = game.getDrawDeck().getCard(i).getCardType();
+				int value = game.getDrawDeck().getCard(i).getCardValue();
+				result += ":" + type + ":" + value;
+			}
+			result += NEW_COM;
+		}
+		
 		game.getDrawDeck().draw(game.getAllPlayers().get(game.getTurn()).getHand());
-		return("drawCard:" + game.getTurn());
+		
+		return result + "drawCard:" + game.getTurn();
 	}
 	
 	public static boolean isTournamentOver(GameState game) {
@@ -109,6 +124,9 @@ public class RulesEngine {
 	public static void withdraw(GameState game) {
 		int playerPos = game.getTurn();
 		game.getAllPlayers().get(playerPos).exitTournament();
+		game.getAllPlayers().get(game.getTurn()).getDisplay().emptyDeck(game.getDiscardDeck());
+		game.getAllPlayers().get(game.getTurn()).getStunDeck().emptyDeck(game.getDiscardDeck());
+		game.getAllPlayers().get(game.getTurn()).getShieldDeck().emptyDeck(game.getDiscardDeck());
 		//return("withdraw:" + playerPos);
 	}
 	
