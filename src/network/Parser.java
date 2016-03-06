@@ -121,7 +121,6 @@ public class Parser {
 					break;
 					
 				case "card":
-					result = RulesEngine.playValueCard(game, Integer.parseInt(command[1]));
 					int currPlayer = game.getTurn();
 					int type = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardType();
 					int value = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardValue();

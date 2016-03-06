@@ -60,6 +60,7 @@ public class StatusBar extends ScaledPanel {
 	private TokenBar tokens;
 	private ConstantRatioImageBox shield, stun;
 	private Label name;
+	private Label displayValue;
 	
 	public StatusBar(String name) {
 		super(); 
@@ -68,14 +69,26 @@ public class StatusBar extends ScaledPanel {
 		this.name.setFont(new Font("Arial", Font.PLAIN, 12));
 		this.name.setAlignment(TextArea.Alignment.WEST);
 		
+		this.displayValue = new Label("-");
+		this.displayValue.setFont(new Font("Impact", Font.BOLD, 20));
+		
 		tokens = new TokenBar();
 		shield = new ConstantRatioImageBox(SHIELD_EMPTY);
 		stun = new ConstantRatioImageBox(STUN_EMPTY);
 				
-		addWidget(this.name, 0,  0, 40, 30);
-		addWidget(tokens,    0, 30, 70, 70);
-		addWidget(shield,   71, 31, 13, 68);
-		addWidget(stun,     86, 31, 13, 68);
+		addWidget(displayValue, 0, 30, 20, 70);
+		addWidget(this.name,    0,  0, 40, 30);
+		addWidget(tokens,      20, 30, 50, 70);
+		addWidget(shield,      71, 31, 13, 68);
+		addWidget(stun,        86, 31, 13, 68);
+	}
+	
+	public void setDisplayValue(int value) {
+		if (value == 0) {
+			displayValue.setText("-");
+		} else {
+			displayValue.setText("" + value);
+		}
 	}
 	
 	public void collectToken(int type) {

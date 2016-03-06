@@ -19,7 +19,7 @@ public class Validator {
 	}
 	
 	
-	public boolean[] cardsAbleToStart(GameState game) {
+	public static boolean[] cardsAbleToStart(GameState game) {
 		Deck hand = game.getAllPlayers().get(game.getTurn()).getHand();
 		boolean[] playableCards = new boolean[hand.deckSize()];
 		
@@ -37,7 +37,7 @@ public class Validator {
 	
 	
 	
-	public boolean[] cardsAbleToPlay(GameState game) {
+	public static boolean[] cardsAbleToPlay(GameState game) {
 		Deck hand = game.getAllPlayers().get(game.getTurn()).getHand();
 		Card card;
 		boolean displayHasMaiden = game.getAllPlayers().get(game.getTurn()).displayHasMaiden();
@@ -68,7 +68,7 @@ public class Validator {
 		return playableCards;
 	}
 	
-	public boolean validateValueCard(GameState game, Card card, boolean displayHasMaiden) {
+	public static boolean validateValueCard(GameState game, Card card, boolean displayHasMaiden) {
 		if(card.getCardType() == game.getTournamentColour()) {
 			return true;
 		}
@@ -88,7 +88,7 @@ public class Validator {
 		return false;
 	}
 	
-	public boolean validateUnhorse(GameState game) {
+	public static boolean validateUnhorse(GameState game) {
 		
 		if(game.getTournamentColour() == Type.PURPLE) {
 			return true;
@@ -99,7 +99,7 @@ public class Validator {
 		}
 	}
 	
-	public boolean validateChangeWeapon(GameState game) {
+	public static boolean validateChangeWeapon(GameState game) {
 		
 		if (game.getTournamentColour() != Type.PURPLE && game.getTournamentColour() != Type.GREEN) {
 			return true;
@@ -110,7 +110,7 @@ public class Validator {
 		}
 	}
 	
-	public boolean validateDropWeapon(GameState game) {
+	public static boolean validateDropWeapon(GameState game) {
 		if (game.getTournamentColour() != Type.PURPLE && game.getTournamentColour() != Type.GREEN) {
 			return true;
 		}

@@ -82,7 +82,7 @@ public class RulesEngine {
 		else return false;
 	}
 	
-	public static String endTournament(GameState game) {
+	public static String endTournament(GameState game) { 
 		for(int j = 0; j < game.getAllPlayers().size(); j++) {
 			game.getAllPlayers().get(j).getDisplay().emptyDeck(game.getDiscardDeck());
 			game.getAllPlayers().get(j).getStunDeck().emptyDeck(game.getDiscardDeck());
@@ -137,12 +137,7 @@ public class RulesEngine {
 		
 		game.incrementTournamentNumber();
 		String result;
-		if(game.getTournamentNumber() > 0) {
-			result = ("startTournament:" + game.getTurn());
-		}
-		
-		else
-			result = ("startTournament:-1");
+		result = ("startTournament:" + game.getTurn());
 		return result;
 		
 	}
