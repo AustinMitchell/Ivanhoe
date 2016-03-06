@@ -47,7 +47,7 @@ public class RulesEngine {
 	
 	public static String startGame(GameState game) {
 		//drawToken(game);
-		String startTournament = startTournament(game);
+		startTournament(game);
 		return ("startGame");
 	}
 	
@@ -67,7 +67,7 @@ public class RulesEngine {
 		else return false;
 	}
 	
-	public static void endTournament(GameState game) {
+	public static String endTournament(GameState game) {
 		for(int j = 0; j < game.getAllPlayers().size(); j++) {
 			game.getAllPlayers().get(j).getDisplay().emptyDeck(game.getDiscardDeck());
 			game.getAllPlayers().get(j).getStunDeck().emptyDeck(game.getDiscardDeck());
@@ -77,8 +77,9 @@ public class RulesEngine {
 		game.setTournamentColour(-1);
 		game.setTournamentStarted(false);
 		//int playerPos = game.getTurn();
-		//String result = "endTournament:" + playerPos;
-		//return result;
+		int winningColour = game.getTournamentColour();
+		String result = "endTournament:" + winningColour;
+		return result;
 	}
 	
 	
@@ -88,15 +89,18 @@ public class RulesEngine {
 	}
 	
 	public static String endTurn(GameState game, String withdrawState) {
+		String result = "";
 		if(withdrawState.equalsIgnoreCase("true")) withdraw(game);
 		if(!isTournamentOver(game)) {
 			game.nextTurn();
+			result = "endTurn:" + withdrawState ; 
 		}
 		else {
 			game.nextTurn();
-			endTournament(game);
+			String endTournamentCommand = endTournament(game);
+			result = "endTurn:" + withdrawState + NEW_COM + endTournamentCommand;
 		}
-		return "endTurn:" + withdrawState;
+		return result;
 	}
 	
 	public static void withdraw(GameState game) {
