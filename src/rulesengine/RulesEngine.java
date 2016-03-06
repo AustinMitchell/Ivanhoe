@@ -35,8 +35,6 @@ public class RulesEngine {
 	}
 	
 	
-	
-	
 	public static String setInitialTurn(GameState game) {
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(game.getAllPlayers().get(i).getDrawnToken() == Type.PURPLE) {
@@ -163,19 +161,18 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("unhorseCard:" + cardPos + colour);
+		returnString = ("card:" + cardPos + ":" + colour);
 		game.setTournamentColour(colour);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
 	}
-	
 	
 	public static String changeWeapon(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("changeWeaponCard:" + cardPos + colour);
+		returnString = ("card:" + cardPos + ":" + colour);
 		game.setTournamentColour(colour);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
@@ -186,14 +183,14 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("dropWeaponCard:" + cardPos);
+		returnString = ("card:" + cardPos);
 		game.setTournamentColour(Type.GREEN);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
 	}
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {
-		String result = ("dummyCard:" + cardPos);
+		String result = ("card:" + cardPos);
 		int playerPos = game.getTurn();
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return result;
