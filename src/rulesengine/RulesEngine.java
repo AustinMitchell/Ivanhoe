@@ -79,6 +79,9 @@ public class RulesEngine {
 		//int playerPos = game.getTurn();
 		int winningColour = game.getTournamentColour();
 		String result = "endTournament:" + winningColour;
+		if(endGame(game)) {
+			result += NEW_COM + "endGame";
+		}
 		return result;
 	}
 	
