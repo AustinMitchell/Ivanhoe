@@ -74,11 +74,11 @@ public class RulesEngine {
 			game.getAllPlayers().get(j).getShieldDeck().emptyDeck(game.getDiscardDeck());
 		}
 		game.setPrevTournamentColour(game.getTournamentColour());
+		int winningColour = game.getTournamentColour();
+		String result = "endTournament:" + winningColour;
 		game.setTournamentColour(-1);
 		game.setTournamentStarted(false);
 		//int playerPos = game.getTurn();
-		int winningColour = game.getTournamentColour();
-		String result = "endTournament:" + winningColour;
 		if(endGame(game)) {
 			result += NEW_COM + "endGame";
 		}
