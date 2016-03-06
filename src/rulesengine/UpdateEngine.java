@@ -2,6 +2,8 @@ package rulesengine;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import models.Card;
 import models.GameState;
 import rulesengine.Type;
 
@@ -54,6 +56,7 @@ public class UpdateEngine {
 		if(playersInTournament == 1) return true;
 		else return false;
 	}*/
+	
 	
 	
 	//Might need to comment out this function later on
@@ -134,10 +137,10 @@ public class UpdateEngine {
 	
 	public String playValueCard(GameState game, int cardPos) {
 		String returnString;
-		int playerPos = game.getTurn();
+		/*int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("card:" + playerPos + ":" + cardType + ":" + cardValue + ":" + cardPos);
+		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();*/
+		returnString = ("card:" + cardPos);
 		
 		return returnString;
 	}
@@ -147,7 +150,7 @@ public class UpdateEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("card:" + playerPos + ":" + cardType + ":" + cardValue + ":" + cardPos);
+		returnString = ("card:" + cardPos + ":" + colour);
 		
 		return returnString;
 	}
@@ -157,7 +160,7 @@ public class UpdateEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("card:" + playerPos + ":" + cardType + ":" + cardValue + ":" + cardPos);
+		returnString = ("card:"  + cardPos + ":" + colour);
 		
 		return returnString;
 	}
@@ -171,4 +174,11 @@ public class UpdateEngine {
 		
 		return returnString;
 	}
+	
+	public static String unimplementedActionCard(GameState game, int cardPos) {
+		String result = ("card:" + cardPos);
+		return result;
+	}
+	
+	
 }
