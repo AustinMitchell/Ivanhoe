@@ -1,7 +1,10 @@
 package ui;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
+import network.Client;
+import network.Server;
 import simple.gui.panel.*;
 import simple.run.SimpleGUIApp;
 import ui.panel.*;;
@@ -9,14 +12,18 @@ import ui.panel.*;;
 public class GameController {
 	private SimpleGUIApp mainApp;
 	private PanelCollection screen;
+	private Client client;
 	
 	public GameController(SimpleGUIApp mainApp) {
 		this.mainApp = mainApp;
+		client = new Client();
 		mainApp.setBackgroundColor(new Color(175,117,68));
 		screen = new PanelCollection(0, 0, mainApp.getWidth(), mainApp.getHeight());
 		
 		mainScreen();
 	}
+	
+	public Client getClient() { return client; }
 	
 	// Called from IvanhoeApp to update the current UI and draw it to the screen
 	public void loop() {
@@ -63,14 +70,22 @@ public class GameController {
 		screen.setCurrentPanel(0);
 	}
 	// Either sets up a new UI, or leaves the current panel and tells it the connection failed
-	public void connectToServer(ConnectPanel connectPanel, String address) {
-		if (isValidIPAddress(address)) {
-			String msg = "first";
-			if (msg.equals("first")) {
-				setupGame();
+	public void connectToServer(ConnectPanel connectPanel, String address, String username) {
+		if (!username.trim().equals("")) {
+			if (isValidIPAddress(address)) {
+				client.connect(address, username);
+				while (client.waitingForConnection()) {}
+				if (client.connectPassed()) {
+					// TODO: Implement game being set up
+					waitForGame(Server.NUM_PLAYERS);
+				} else {
+					connectPanel.connectFailed();
+				}
+			} else {
+				connectPanel.invalidIP();
 			}
 		} else {
-			connectPanel.connectFailed();
+			connectPanel.invalidUsername();
 		}
 	}
 	
@@ -89,9 +104,9 @@ public class GameController {
 	}
 	
 	// Creates a new game with the given number of players (2 to 5)
-	public void startNewGame(int numPlayers) {
+	public void startNewGame(ArrayList<String> playerNames) {
 		screen.clear();
-		screen.addPanel(new GamePanel(numPlayers, this, 0));
+		screen.addPanel(new GamePanel(this, playerNames));
 		screen.setCurrentPanel(0);
 	}
 }

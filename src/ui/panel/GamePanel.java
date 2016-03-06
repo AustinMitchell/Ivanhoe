@@ -4,23 +4,29 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.*;
 
+import models.Card;
+import models.GameState;
+import models.Player;
+import network.Client;
+import rulesengine.RulesEngine;
+import rulesengine.UpdateEngine;
 import simple.gui.*;
 import simple.gui.panel.*;
 import simple.gui.scrollbox.ScrollDialogBox;
 import ui.*;
-import ui.panel.overlay.NewTournamentOverlay;
-import ui.panel.overlay.OverlayPanel;
-import ui.utilitypanel.CardDisplayPanel;
-import ui.utilitypanel.StatusBar;
+import ui.panel.overlay.*;
+import ui.utilitypanel.*;
 
 public class GamePanel extends ScaledPanel {
 	public enum OverlayCommand {
-		START_TOURNAMENT, END_TURN
+		START_TOURNAMENT
 	}
 	
 	public static final int THIS_PLAYER = 0;
 	
 	GameController controller;
+	Client client;
+	GameState game;
 	
 	CardDisplayPanel[] hand, display;
 	StatusBar[] playerStatus;
@@ -29,11 +35,15 @@ public class GamePanel extends ScaledPanel {
 	ScaledPanel mainGamePanel, sidePanel;
 	CardWidget deck, discard;
 	Image emptyDiscard;
-	Button endTurn, exitGame;
+	Button endTurn;
+	Label tournamentColourLabel;
+	TokenBar tournamentColourBar;
 	
 	OverlayPanel currentOverlay;
 	OverlayCommand overlayCommand;
 	boolean startNewOverlay;
+	
+	ArrayList<String> playerNames;
 	
 	int numPlayers;
 	int realPlayerIndex;
@@ -44,22 +54,17 @@ public class GamePanel extends ScaledPanel {
 	
 	int currentTurn;
 	boolean turnStart;
-	
-	int aiTimer;
-	int aiActions;
-	
 
-	public GamePanel(final int numPlayers, GameController controller, int realPlayerIndex) {
+	public GamePanel(GameController controller, final ArrayList<String> playerNames) {
 		super();
 		
-		aiTimer = 0;
-		aiActions = 0;
-		
-		this.realPlayerIndex = realPlayerIndex;
-		
 		this.controller = controller;
+		this.playerNames = playerNames;
+		client = controller.getClient();
+		game = client.getGame();
+		realPlayerIndex = client.getID();
 		
-		this.numPlayers = numPlayers;
+		numPlayers = playerNames.size();
 		currentTurn = 0;
 		turnStart = true;
 		
@@ -103,30 +108,35 @@ public class GamePanel extends ScaledPanel {
 					display[4] = new CardDisplayPanel(Image.Orientation.LEFT, true);
 					break;
 				default:
-					throw new RuntimeException("Initialized game with a bad number of players (not within 2 an 5)");
+					throw new RuntimeException("Initialized game with a bad number of players (not within 2 and 5)");
 			}
 			
 			// TODO: Fix, adds random cards for testing
-			for (int d=0; d<hand.length; d++) {
-				for (int i=0; i<8; i++) {
-					int[] v = CardData.ALL_CARD_VALUES[(int)(Math.random()*CardData.ALL_CARD_VALUES.length)];
-					CardWidget c = new CardWidget(v[0], v[1]);
-					hand[d].addCard(c);
+			for (int i=0; i<hand.length; i++) {
+				for (Card c: game.getAllPlayers().get(toGameTurn(i)).getHand().getAllCards()) {
+					CardWidget cw = new CardWidget(c.getCardType(), c.getCardValue());
+					hand[i].addCard(cw);
 				}
-				if (d != THIS_PLAYER) {
-					hand[d].setCardMoveOnHover(false);
+				if (i != THIS_PLAYER) {
+					hand[i].setCardMoveOnHover(false);
 				} else {
-					hand[d].setEnabled(false);
+					for (Widget w: hand[i].getWidgetList()) {
+						w.setEnabled(false);
+					}
 				}
-				display[d].setDrawContainingPanel(true);
-				display[d].setFillColor(null);
+				display[i].setDrawContainingPanel(true);
+				display[i].setFillColor(null);
 			}
+			
 			
 			// Panel to get the deck and discard in the right spot. Panel background is invisible
 			CardDisplayPanel deckPlaceHolder = new CardDisplayPanel(Image.Orientation.UP, false);
 			
 			// Card widget for the deck
 			deck = new CardWidget(0, 0, false);
+			if (realPlayerIndex != THIS_PLAYER) {
+				deck.setEnabled(false);
+			}
 			
 			// Same for discard pile
 			discard = new CardWidget(0, 0, false);
@@ -140,6 +150,7 @@ public class GamePanel extends ScaledPanel {
 			draw.rect(emptyDiscard, 0, 0, 144, 200);
 			discard.setImage(emptyDiscard);
 			discard.setMoveOnHover(false);
+			
 			
 			// Layouts for player displays and hands according to number of players
 			// Represents relative x and y positions on panel, and width and height variables
@@ -187,6 +198,7 @@ public class GamePanel extends ScaledPanel {
 			}
 			
 			addWidget(deckPlaceHolder, 0, 32, 100, 14);
+			
 		}};
 		
 		// Panel on the side for other useful widgets like a descriptionbox for cards, end turn button,
@@ -200,12 +212,16 @@ public class GamePanel extends ScaledPanel {
 			
 			messageScrollBox = new ScrollDialogBox();
 			
+			tournamentColourLabel = new Label("Tournament Colour");
+			tournamentColourLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+			tournamentColourBar = new TokenBar();
+			
 			descriptionBox = new DescriptionBox();
 			
 			ScaledPanel playerStatusPanel = new ScaledPanel(1, numPlayers) {{
 				playerStatus = new StatusBar[numPlayers];
 				for (int i=0; i<numPlayers; i++) {
-					playerStatus[i] = new StatusBar("Player " + (i+1));
+					playerStatus[i] = new StatusBar(playerNames.get(i));
 					addWidget(playerStatus[i], 0, i, 1, 1);
 				}
 			}};
@@ -213,90 +229,157 @@ public class GamePanel extends ScaledPanel {
 			endTurn = new Button("End Turn");
 			endTurn.setEnabled(false);
 			
-			// TODO: remove or modify, here for testing purposes
-			exitGame = new Button("Exit Game");
-			exitGame.setFillColor(Color.RED);
-			exitGame.setBorderColor(Color.WHITE);
-			exitGame.setTextColor(Color.WHITE);
-			exitGame.setFont(new Font("Arial", Font.PLAIN, 10));
-			
-			addWidget(messageScrollBox,  3,  3, 94, 35);
-			addWidget(descriptionBox, 	 3, 40, 94, 20);
-			addWidget(playerStatusPanel, 3, 62, 94, 23);
-			addWidget(endTurn, 		    20, 87, 60,  8);			
-			addWidget(exitGame, 	    77, 97, 18,  2);
+			addWidget(messageScrollBox,      3,  1, 94, 32);
+			addWidget(tournamentColourLabel, 0, 34, 30,  5);
+			addWidget(tournamentColourBar,  30, 34, 67,  5);
+			addWidget(descriptionBox, 	     3, 40, 94, 20);
+			addWidget(playerStatusPanel,     3, 62, 94, 23);
+			addWidget(endTurn, 		        20, 87, 60,  8);			
 			
 		}};		
+		
 		
 		addWidget(mainGamePanel, 0, 0, 80, 100, 1);
 		addWidget(sidePanel, 	80, 0, 20, 100, 0);
 		
-		// TODO: Remove, here for testing
-		prepareOverlay(OverlayCommand.START_TOURNAMENT);
-		
+		messageScrollBox.addLine("Welcome to IVANHOE");
+		if (realPlayerIndex == THIS_PLAYER) {
+			messageScrollBox.addLine("The first player is you.");
+		} else {
+			messageScrollBox.addLine("The first player is " + playerNames.get(0));
+		}
 	}
 	
 	@Override
 	public void update() {
 		super.update();
 				
+		handleClientMessages();
+		
 		handleDescriptionBox();
 		
 		// Check this player interaction
 		findCardInteraction();
-		handleDeck();
+		handleDeckObject();
 		handleHand();
 		checkTurnChange();
 		
 		// Handles any overlay stuff
-		handleOverlay();
-		
-		// Handle turns if it's AI's turn
-		handleAITurn();
-		
-		handleExitGame();
+		handleOverlay();	
 	}
 	@Override
 	public void draw() {
 		// Display panel for the current player's turn
-		CardDisplayPanel p = hand[currentTurn];
+		CardDisplayPanel p = hand[toGUITurn(game.getTurn())];
 		draw.setColors(null, new Color(0, 200, 0), 4);
 		draw.rect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
 		super.draw();
 	}
 	
-	private void handleIncomingClientMessages() {
-		Queue<String> messageQueue = new LinkedList<String>();
-		if (!messageQueue.isEmpty()) {
-			String[] commands = messageQueue.poll().split(":");
+	private int toGameTurn(int turn) {
+		return Math.floorMod((turn+realPlayerIndex), numPlayers);
+	}
+	private int toGUITurn(int turn) {
+		return Math.floorMod((turn-realPlayerIndex), numPlayers);
+	}
+	
+	private void handleClientMessages() {
+		if (client.hasFlags()) {
+			String[] commands = client.readGuiFlag().split(":");
+			System.out.println("Got new GUI flag: " + commands[0]);
+			int gameTurn = game.getTurn();
+			int guiTurn = toGUITurn(gameTurn);
+			Player player = client.getGame().getAllPlayers().get(gameTurn);
 			switch(commands[0]) {
-			case  "startGame":
-				break;
-			case "drawCard":
-				// Check hand
-				break;
-			case "endTurn":
-				break;
-			case "startTournament":
-				break;
-			case "setColour":
-				// Check tournament color
-				break;
-			case "card":
-				// Check display
-				// Check display value
-				// Check end turn button
-				break;
-			case "unhorseCard":
-				// Check tournament color
-				break;
-			case "changeWeaponCard":
-				// Check tournament color
-				break;
-			case "dropWeaponCard":
-				// Check end turn
-				// Check display values
-				break;
+				case  "startGame":
+					break;
+				case "canStartTournament" :
+					switch(commands[1]) {
+						case "true":
+							if (guiTurn == THIS_PLAYER) {
+								messageScrollBox.addLine("You can start a new tournament");
+								prepareOverlay(OverlayCommand.START_TOURNAMENT);
+							} else {
+								messageScrollBox.addLine(playerNames.get(gameTurn) + " can start a tournament");
+							}
+							break;
+						case "false":
+							if (guiTurn == THIS_PLAYER) {
+								messageScrollBox.addLine("You cannot start a new tournament");
+							} else {
+								messageScrollBox.addLine(playerNames.get(gameTurn) + " cannot start a new tournament");
+								client.sendMessage("endTurn:false");
+							}
+							break;
+					
+					}
+					break;
+				case "drawCard":
+					Card newCard = player.getHand().getCard(player.getHand().deckSize()-1);
+					CardWidget newCardWidget = new CardWidget(newCard.getCardType(), newCard.getCardValue());
+					hand[guiTurn].addCard(newCardWidget);
+					if (guiTurn == THIS_PLAYER) {
+						newCardWidget.setEnabled(false);
+						if (game.hasTournamentStarted()) {
+							hand[THIS_PLAYER].setEnabled(true);
+							endTurn.setEnabled(true);
+						}
+					}
+					if (guiTurn == THIS_PLAYER) {
+						messageScrollBox.addLine("You drew: " + CardData.getCardName(newCard.getCardType(), newCard.getCardValue()));
+					} else {
+						messageScrollBox.addLine(playerNames.get(gameTurn) + " drew a card");
+					}
+					break;
+				case "endTurn":
+					break;
+				case "startTournament":
+					messageScrollBox.addLine("-- New Tournament --");
+					break;
+				case "setColour":
+					String colour = "";
+					int type = Integer.parseInt(colour);
+					switch(commands[1]) {
+						case "0":
+							colour = "PURPLE";
+							break;
+						case "1":
+							colour = "RED";
+							break;
+						case "2":
+							colour = "YELLOW";
+							break;
+						case "3":
+							colour = "BLUE";
+							break;
+						case "4":
+							colour = "GREEN";
+							break;
+					}
+					messageScrollBox.addLine("Tournament colour was set to " + colour);
+					tournamentColourBar.disableAllTokens();
+					tournamentColourBar.enableToken(type);
+					
+					
+					break;
+				case "card":
+					// Check display
+					// Check display value
+					// Check end turn button
+					break;
+				case "unhorseCard":
+					// Check tournament color
+					break;
+				case "changeWeaponCard":
+					// Check tournament color
+					break;
+				case "dropWeaponCard":
+					// Check end turn
+					// Check display values
+					break;
+				case "dummyCard":
+					// Same as play card
+					break;
 			}
 		}
 	}
@@ -354,12 +437,6 @@ public class GamePanel extends ScaledPanel {
 		}
 	}
 	
-	private void handleExitGame() {
-		if (exitGame.isClicked()) {
-			controller.mainScreen();
-		}
-	}
-	
 	private void handleDescriptionBox() {
 		if (currentOverlay == null) {
 			if (interactionCard != null && interactionCard.isFaceUp()) {
@@ -371,23 +448,10 @@ public class GamePanel extends ScaledPanel {
 	}
 	
 	/** DECK OPERATIONS **/
-	private void drawFromDeck(int player) {
-		turnStart = false;
-		int[] v = CardData.ALL_CARD_VALUES[(int)(Math.random()*CardData.ALL_CARD_VALUES.length)];
-		hand[player].addCard(new CardWidget(v[0], v[1]));
-		if (currentTurn == THIS_PLAYER) {
-			messageScrollBox.addLine(" > You drew a card.");
-		} else {
-			messageScrollBox.addLine(" > Player " + (currentTurn+1) + " drew a card.");
-		}
-	}
-	
-	private void handleDeck() {
+	private void handleDeckObject() {
 		if (deck.isClicked()) {
-			hand[0].setEnabled(true);
 			deck.setEnabled(false);
-			endTurn.setEnabled(true);
-			drawFromDeck(0);
+			client.sendMessage("drawCard");
 		}
 	}
 	
@@ -420,25 +484,6 @@ public class GamePanel extends ScaledPanel {
 		}
 	}
 	
-	/** AI CONTROLLER **/
-	private void handleAITurn() {
-		if (aiTimer > 0) {
-			aiTimer--;
-		}
-		if (currentTurn != 0 && aiTimer <= 0) {
-			aiTimer = 45;
-			if (turnStart) {
-				aiActions = (int)Math.min((Math.random()*2)+1, hand[currentTurn].getWidgetList().size());
-				drawFromDeck(currentTurn);
-			} else if (aiActions > 0) {
-				aiActions--;
-				playCard((int)(Math.random()*hand[currentTurn].numWidgets()));
-			} else {
-				changeTurn();
-			}
-		}
-	}
-	
 	private void prepareOverlay(OverlayCommand oc) {
 		startNewOverlay = true;
 		overlayCommand = oc;
@@ -451,14 +496,19 @@ public class GamePanel extends ScaledPanel {
 				case START_TOURNAMENT:
 					currentOverlay = new NewTournamentOverlay(descriptionBox, hand[THIS_PLAYER]);
 					break;
-				case END_TURN:
-					break;
 			}
 			startNewOverlay = false;
 			mainGamePanel.addWidget(currentOverlay, 2, 2, 96, 96, 0);
 		// Otherwise, check on the status of the current overlay if one exists
 		} else if (currentOverlay != null) {
 			if (currentOverlay.isOverlayActionComplete()) {
+				String result = currentOverlay.getFinalCommandString();
+				switch(overlayCommand) {
+					case START_TOURNAMENT:
+						client.sendMessage("setColour:" + result + RulesEngine.NEW_COM + "startTournament");
+						break;
+				}
+				
 				mainGamePanel.removeWidget(currentOverlay);
 				currentOverlay = null;
 			}

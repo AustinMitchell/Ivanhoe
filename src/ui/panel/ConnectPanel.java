@@ -14,8 +14,8 @@ public class ConnectPanel extends ScaledPanel {
 	private GameController controller;
 	
 	private ScaledPanel addressEntryPanel;
-	private Label addressEntryLabel, addressEntryFailed;
-	private TextEntryBox addressEntry;
+	private Label addressEntryLabel, entryFailed, usernameEntryLabel;
+	private TextEntryBox addressEntry, usernameEntry;
 		
 	@Override
 	public void setSize(int w, int h) {
@@ -36,28 +36,47 @@ public class ConnectPanel extends ScaledPanel {
 			setWidgetColors(new Color(0, 0, 0, 200), new Color(0, 0, 0, 150), null, null);
 			setDrawContainingPanel(true);
 			
-			addressEntryLabel = new Label("Enter IP address of Ivanhoe server:");
-			addressEntryLabel.setFont(new Font("Arial", Font.BOLD, 25));
+			addressEntryLabel = new Label("Enter server IP address:");
+			addressEntryLabel.setFont(new Font("Arial", Font.BOLD, 20));
 			addressEntryLabel.setTextColor(Color.WHITE);
 			
 			addressEntry = new TextEntryBox();
+			addressEntry.setText("localhost");
 			addressEntry.setAlignment(TextArea.Alignment.CENTER);
 			addressEntry.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			addressEntry.setWidgetColors(null, new Color(200, 200, 200, 100), new Color(120, 120, 120, 200), Color.YELLOW);
 			
-			addressEntryFailed = new Label();
-			addressEntryFailed.setFont(new Font("Arial", Font.PLAIN, 16));
-			addressEntryFailed.setTextColor(Color.RED);
+			usernameEntryLabel = new Label("Enter Username:");
+			usernameEntryLabel.setFont(new Font("Arial", Font.BOLD, 20));
+			usernameEntryLabel.setTextColor(Color.WHITE);
 			
-			addWidget(addressEntryLabel, 0, 0, 100, 40);
-			addWidget(addressEntry, 5, 35, 90, 25);
-			addWidget(addressEntryFailed, 0, 60, 100, 40);
+			usernameEntry = new TextEntryBox();
+			usernameEntry.setText("Player");
+			usernameEntry.setAlignment(TextArea.Alignment.CENTER);
+			usernameEntry.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			usernameEntry.setWidgetColors(null, new Color(200, 200, 200, 100), new Color(120, 120, 120, 200), Color.YELLOW);
+			
+			entryFailed = new Label();
+			entryFailed.setFont(new Font("Arial", Font.PLAIN, 16));
+			entryFailed.setTextColor(Color.RED);
+			
+			addWidget(addressEntryLabel,   0,  0,  40, 40);
+			addWidget(addressEntry,       40,  7,  55, 26);
+			addWidget(usernameEntryLabel,  0, 40,  40, 40);
+			addWidget(usernameEntry,      40, 47,  55, 26);
+			addWidget(entryFailed,  0, 73, 100, 20);
 		}};
-		addWidget(addressEntryPanel, 35, 60, 30, 25);
+		addWidget(addressEntryPanel, 35, 55, 30, 35);
 	}
 	
 	public void connectFailed() {
-		addressEntryFailed.setText("Address entered is an invalid IP address");
+		entryFailed.setText("Connection to server failed (possibly invalid IP)");
+	}
+	public void invalidIP() {
+		entryFailed.setText("Address entered is an invalid IP address");
+	}
+	public void invalidUsername() {
+		entryFailed.setText("Invalid username");
 	}
 	
 	@Override
@@ -77,9 +96,11 @@ public class ConnectPanel extends ScaledPanel {
 	}
 	
 	private void handleIPEntry() {
-		if (addressEntry.hasTextEntered()) {
-			addressEntryFailed.clear();
-			controller.connectToServer(this, addressEntry.getEnteredText());
+		if (addressEntry.hasTextEntered() || usernameEntry.hasTextEntered()) {
+			entryFailed.clear();
+			controller.connectToServer(this, addressEntry.getText(), usernameEntry.getText());
+			addressEntry.clear();
+			usernameEntry.clear();
 		}
 	}
 }

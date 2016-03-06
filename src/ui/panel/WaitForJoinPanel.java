@@ -1,16 +1,17 @@
 package ui.panel;
 
 import java.util.*;
-
 import java.awt.Color;
 import java.awt.Font;
 
+import network.Client;
 import simple.gui.panel.ScaledPanel;
 import simple.gui.*;
 import ui.GameController;
 
 public class WaitForJoinPanel extends ScaledPanel {
 	GameController controller;
+	Client client;
 	
 	ScaledPanel messagePanel;
 	Label message, currentPlayersMessage;
@@ -23,6 +24,7 @@ public class WaitForJoinPanel extends ScaledPanel {
 		super();
 		
 		this.controller = gc;
+		client = gc.getClient();
 		
 		this.numPlayers = numPlayers;
 		currentPlayers = 1;
@@ -51,32 +53,33 @@ public class WaitForJoinPanel extends ScaledPanel {
 	
 	@Override
 	public void update() {
-		handleJoinTimer();
+		handleClientMessages();
 	}
 	
 	private void updateCurrentPlayersMessage() {
-		
+		currentPlayersMessage.setText("Waiting for players to join...");
+		/*
 		if (numPlayers - currentPlayers > 1) {
 			currentPlayersMessage.setText("Waiting for " + (numPlayers-currentPlayers) + " more players...");
 		} else {
 			currentPlayersMessage.setText("Waiting for 1 more player");
-		}
+		}*/
 	}
 	
-	private void handleJoinTimer() {
-		joinTimer -= 1;
-		if (joinTimer <= 0) {
-			joinTimer = 120;
-			playerJoined();
-		}
-	}
-	
-	private void playerJoined() {
-		currentPlayers += 1;
-		if (numPlayers - currentPlayers <= 0) {
-			controller.startNewGame(numPlayers);
-		} else {
-			updateCurrentPlayersMessage();
+	private void handleClientMessages() {
+		if (client.hasFlags()) {
+			String[] command = client.readGuiFlag().split(":");
+			switch (command[0]) {
+				case "initClient":
+					ArrayList<String> playerNames = new ArrayList<String>();
+					int i=1;
+					while (!command[i].equals("cards")) {
+						playerNames.add(command[i]);
+						i++;
+					}
+					controller.startNewGame(playerNames);
+					break;
+			}
 		}
 	}
 }

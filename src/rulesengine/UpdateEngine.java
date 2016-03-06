@@ -60,7 +60,7 @@ public class UpdateEngine {
 	
 	
 	//Might need to comment out this function later on
-	public String endTournament(GameState game) {
+	public static String endTournament(GameState game) {
 		for(int j = 0; j < game.getAllPlayers().size(); j++) {
 			game.getAllPlayers().get(j).getDisplay().emptyDeck(game.getDiscardDeck());
 		}
@@ -101,7 +101,7 @@ public class UpdateEngine {
 	
 	
 	
-	public String endTurn(GameState game, String withdrawState) {
+	public static String endTurn(GameState game, String withdrawState) {
 		return ("endTurn:" + withdrawState);
 	}
 	
@@ -135,7 +135,7 @@ public class UpdateEngine {
 		return true;
 	}*/
 	
-	public String playValueCard(GameState game, int cardPos) {
+	public static String playValueCard(GameState game, int cardPos) {
 		String returnString;
 		/*int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardType();
@@ -145,7 +145,7 @@ public class UpdateEngine {
 		return returnString;
 	}
 	
-	public String unhorse(GameState game, int cardPos, int colour) {
+	public static String unhorse(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
@@ -155,7 +155,7 @@ public class UpdateEngine {
 		return returnString;
 	}
 	
-	public String changeWeapon(GameState game, int cardPos, int colour) {
+	public static String changeWeapon(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
@@ -165,7 +165,7 @@ public class UpdateEngine {
 		return returnString;
 	}
 	
-	public String dropWeapon(GameState game, int cardPos) {
+	public static String dropWeapon(GameState game, int cardPos) {
 		String returnString;
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
@@ -179,6 +179,4 @@ public class UpdateEngine {
 		String result = ("card:" + cardPos);
 		return result;
 	}
-	
-	
 }

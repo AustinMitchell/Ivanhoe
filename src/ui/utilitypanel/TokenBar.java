@@ -30,10 +30,15 @@ public class TokenBar extends ScaledPanel{
 			ovalDrawObject(new Color(180, 180, 180), new Color(120, 120, 120), new Color(180, 180, 180), new Color(120, 120, 120));
 	// Drawing functions for each type of token
 	public static final CustomDraw[] TOKEN_DRAW = {
+			// Purple
 			ovalDrawObject(new Color(156, 114, 178), new Color(100,  70, 120), new Color(120,  90, 150), new Color(100,  70, 120)),
+			// Red
 			ovalDrawObject(new Color(250,  94, 108), new Color(200,  70,  80), new Color(200,  70,  80), new Color(180,  50,  60)),
+			// Yellow
 			ovalDrawObject(new Color(249, 235, 172), new Color(210, 200, 150), new Color(210, 200, 150), new Color(180, 170, 120)),
+			// Blue
 			ovalDrawObject(new Color(147, 163, 214), new Color(110, 120, 180), new Color(110, 120, 180), new Color( 90, 100, 160)),
+			// Green
 			ovalDrawObject(new Color(142, 190, 148), new Color(125, 170, 130), new Color(125, 170, 130), new Color(110, 155, 120))
 		};
 	
@@ -60,6 +65,12 @@ public class TokenBar extends ScaledPanel{
 	public void disableToken(int type) {
 		tokenActive[type] = false;
 		tokenUI[type].setCustomDraw(EMPTY_TOKEN);
+	}
+	// Disables all tokens
+	public void disableAllTokens() {
+		for (int i=0; i<5; i++) {
+			disableToken(i);
+		}
 	}
 	
 	public TokenBar() {

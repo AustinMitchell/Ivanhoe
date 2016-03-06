@@ -9,7 +9,7 @@ import models.Player;
 import rulesengine.Type;
 
 public class RulesEngine {
-	public static final String NEW_COM = "$";
+	public static final String NEW_COM = "~";
 	
 	
 	public static void drawToken(GameState game) {
