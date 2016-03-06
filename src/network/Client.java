@@ -15,6 +15,7 @@ public class Client implements Runnable{
 	private int id;
 	private String updateIn;
 	private String updateOut;
+	private Queue<String> guiFlags;
 	
 	
 	//constructor
@@ -96,7 +97,6 @@ public class Client implements Runnable{
 	 * Creating guiFlags using a Queue where the flags will be stored
 	 */
 	
-	private Queue<String> guiFlags;
 	
 	//check if the flag queue is empty
 	//this is used by the GUI to figure out whether there is a need
@@ -104,6 +104,13 @@ public class Client implements Runnable{
 	public boolean isFlagQueueEmpty() {
 		synchronized(guiFlags) {
 			return guiFlags.isEmpty();
+		}
+	}
+	
+	
+	public Queue<String> getGuiFlags() {
+		synchronized(guiFlags) {
+			return guiFlags;
 		}
 	}
 	
@@ -116,7 +123,8 @@ public class Client implements Runnable{
 			return flag;
 		}
 	}
-
+	
+	
 	/*
 	 * End of Flags preparation
 	 * ======================================================================================

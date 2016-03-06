@@ -4,7 +4,6 @@ import models.*;
 import rulesengine.*; // does contain parser, etc?
 import java.net.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.io.*;
 
 public class Server{
@@ -57,7 +56,8 @@ public class Server{
 		return sockets.get(player).getInetAddress();
 	}
 	
-	public void acceptPlayer() {
+	public InetAddress acceptPlayer() {
+		InetAddress result;
 		try {
 			Socket pSocket = serverSocket.accept();
 			BufferedReader playerIn = new BufferedReader (new InputStreamReader(pSocket.getInputStream()));
@@ -72,6 +72,8 @@ public class Server{
             System.out.println(name);
             players.add(p);
             sockets.add(pSocket);
+            result = getPlayerClientInetAddress(players.size()-1);
+            return result;
 		}
 		catch(SocketTimeoutException s) {
             System.out.println("Socket timed out!");
@@ -79,6 +81,7 @@ public class Server{
 		catch(IOException e) {
             e.printStackTrace();
 		}
+		return null;
 		
 	}
 
@@ -92,13 +95,11 @@ public class Server{
 	public String getUpdate(int turn) throws IOException {
 		String update;
         update = in.get(game.getTurn()).readLine();
-        System.out.println(update);
 		return update;
 	}
 
 	public void updateClients(String update) throws IOException {
 		for(int i = 0; i < players.size(); i++) {
-			System.out.println(update);
          	out.get(i).println(update);
 		}
 	}
