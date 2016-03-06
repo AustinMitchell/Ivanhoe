@@ -24,21 +24,6 @@ public class GameController {
 		screen.draw();
 	}
 	
-	// Sets up a new UI with the opening screen
-	public void mainScreen() {
-		screen.clear();
-		screen.addPanel(new ConnectPanel(this));
-		screen.setCurrentPanel(0);
-	}
-	
-	// Either sets up a new UI, or leaves the current panel and tells it the connection failed
-	public void connectToServer(ConnectPanel connectPanel, String address) {
-		if (isValidIPAddress(address)) {
-			setupGame();
-		} else {
-			connectPanel.connectFailed();
-		}
-	}
 	// Checks if address is a valid IP string
 	private boolean isValidIPAddress (String ip) {
 		if (ip.equals("localhost")) {
@@ -71,17 +56,42 @@ public class GameController {
 	    }
 	}
 	
+	// Sets up a new UI with the opening screen
+	public void mainScreen() {
+		screen.clear();
+		screen.addPanel(new ConnectPanel(this));
+		screen.setCurrentPanel(0);
+	}
+	// Either sets up a new UI, or leaves the current panel and tells it the connection failed
+	public void connectToServer(ConnectPanel connectPanel, String address) {
+		if (isValidIPAddress(address)) {
+			String msg = "first";
+			if (msg.equals("first")) {
+				setupGame();
+			}
+		} else {
+			connectPanel.connectFailed();
+		}
+	}
+	
 	// Creates a new UI panel for setting up a game
 	public void setupGame() {
 		screen.clear();
-		screen.addPanel(new StartGamePanel(this));
+		screen.addPanel(new SetupGamePanel(this));
+		screen.setCurrentPanel(0);
+	}
+	
+	// Creates a new UI panel for waiting for a game to start
+	public void waitForGame(int numPlayers) {
+		screen.clear();
+		screen.addPanel(new WaitForJoinPanel(this, numPlayers, null));
 		screen.setCurrentPanel(0);
 	}
 	
 	// Creates a new game with the given number of players (2 to 5)
 	public void startNewGame(int numPlayers) {
 		screen.clear();
-		screen.addPanel(new GamePanel(numPlayers, this));
+		screen.addPanel(new GamePanel(numPlayers, this, 0));
 		screen.setCurrentPanel(0);
 	}
 }

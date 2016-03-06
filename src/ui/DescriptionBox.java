@@ -5,6 +5,7 @@ import java.awt.Font;
 
 import simple.gui.*;
 
+// Displays the name and description of a card, as cards aren't really visible at certain scales
 public class DescriptionBox extends Widget {
 	public static final int NAME_LABEL_HEIGHT = 40;
 	

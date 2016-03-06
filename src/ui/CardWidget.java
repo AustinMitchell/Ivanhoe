@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import simple.gui.*;
 
+// Represents a card. Stores type and value, and specific CardWidgets can change what card they are and whether they display as facedown or not
 public class CardWidget extends ImageBox {
 	public static final double WIDTH_HEIGHT_RATIO = 144.0/200.0;
 	public static final int HOVER_SHIFT_VALUE = 20;

@@ -5,7 +5,9 @@ import java.awt.Color;
 import simple.gui.*;
 import simple.gui.panel.ScaledPanel;
 
+// Represents a collection of tokens. Can be used for showing players tokens or selecting colours
 public class TokenBar extends ScaledPanel{
+	// Returns a drawing function given a specific set of colours
 	private static CustomDraw ovalDrawObject(final Color fill, final Color stroke, final Color hoverFill, final Color hoverStroke) {
 		return new CustomDraw(){
 				public void draw(Widget w) {
@@ -23,10 +25,11 @@ public class TokenBar extends ScaledPanel{
 				}
 			};
 	}
-	
-	private static final CustomDraw EMPTY_TOKEN = 
+	// Drawing function for disabled tokens
+	public static final CustomDraw EMPTY_TOKEN = 
 			ovalDrawObject(new Color(180, 180, 180), new Color(120, 120, 120), new Color(180, 180, 180), new Color(120, 120, 120));
-	private static final CustomDraw[] TOKEN_DRAW = {
+	// Drawing functions for each type of token
+	public static final CustomDraw[] TOKEN_DRAW = {
 			ovalDrawObject(new Color(156, 114, 178), new Color(100,  70, 120), new Color(120,  90, 150), new Color(100,  70, 120)),
 			ovalDrawObject(new Color(250,  94, 108), new Color(200,  70,  80), new Color(200,  70,  80), new Color(180,  50,  60)),
 			ovalDrawObject(new Color(249, 235, 172), new Color(210, 200, 150), new Color(210, 200, 150), new Color(180, 170, 120)),
@@ -37,19 +40,23 @@ public class TokenBar extends ScaledPanel{
 	private boolean[] tokenActive;
 	private Canvas[] tokenUI;
 	
+	// Returns whether a specific token is enabled
 	public boolean isTokenEnabled(int type) {
 		return tokenActive[type];
 	}
 	
+	// Enables a specific token
 	public void enableToken(int type) {
 		tokenActive[type] = true;
 		tokenUI[type].setCustomDraw(TOKEN_DRAW[type]);
 	}
+	// Enables all tokens
 	public void enableAllTokens() {
 		for (int i=0; i<5; i++) {
 			enableToken(i);
 		}
 	}
+	// Disables token of specific type(colour)
 	public void disableToken(int type) {
 		tokenActive[type] = false;
 		tokenUI[type].setCustomDraw(EMPTY_TOKEN);

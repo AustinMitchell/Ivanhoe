@@ -49,6 +49,11 @@ public class WaitForJoinPanel extends ScaledPanel {
 		joinTimer = 120;
 	}
 	
+	@Override
+	public void update() {
+		handleJoinTimer();
+	}
+	
 	private void updateCurrentPlayersMessage() {
 		
 		if (numPlayers - currentPlayers > 1) {
@@ -73,10 +78,5 @@ public class WaitForJoinPanel extends ScaledPanel {
 		} else {
 			updateCurrentPlayersMessage();
 		}
-	}
-	
-	@Override
-	public void update() {
-		handleJoinTimer();
 	}
 }

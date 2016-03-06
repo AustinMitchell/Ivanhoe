@@ -7,14 +7,14 @@ import simple.gui.*;
 import simple.gui.panel.ScaledPanel;
 import ui.GameController;
 
-public class StartGamePanel extends ScaledPanel {
+public class SetupGamePanel extends ScaledPanel {
 	GameController controller;
 	
 	private ScaledPanel playerSelectPanel;
 	private Label playerSelectLabel, entryError;
 	private TextEntryBox playerSelectTextbox;
 	
-	public StartGamePanel(GameController controller) {
+	public SetupGamePanel(GameController controller) {
 		super();
 		
 		this.controller = controller;
@@ -54,7 +54,7 @@ public class StartGamePanel extends ScaledPanel {
 			try {
 				numPlayers = Integer.parseInt(text);
 				if (numPlayers >= 2 && numPlayers <= 5) {
-					controller.startNewGame(numPlayers);
+					controller.waitForGame(numPlayers);
 				} else {
 					entryError.setText("Number of players must be between 2 and 5.");
 				}

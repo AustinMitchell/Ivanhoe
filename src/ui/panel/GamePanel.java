@@ -36,6 +36,7 @@ public class GamePanel extends ScaledPanel {
 	boolean startNewOverlay;
 	
 	int numPlayers;
+	int realPlayerIndex;
 	
 	CardWidget interactionCard;
 	int interactionPlayer;
@@ -48,11 +49,13 @@ public class GamePanel extends ScaledPanel {
 	int aiActions;
 	
 
-	public GamePanel(final int numPlayers, GameController controller) {
+	public GamePanel(final int numPlayers, GameController controller, int realPlayerIndex) {
 		super();
 		
 		aiTimer = 0;
 		aiActions = 0;
+		
+		this.realPlayerIndex = realPlayerIndex;
 		
 		this.controller = controller;
 		
@@ -217,11 +220,11 @@ public class GamePanel extends ScaledPanel {
 			exitGame.setTextColor(Color.WHITE);
 			exitGame.setFont(new Font("Arial", Font.PLAIN, 10));
 			
-			addWidget(messageScrollBox, 3,  3, 94, 35);
-			addWidget(descriptionBox, 	3, 40, 94, 20);
+			addWidget(messageScrollBox,  3,  3, 94, 35);
+			addWidget(descriptionBox, 	 3, 40, 94, 20);
 			addWidget(playerStatusPanel, 3, 62, 94, 23);
-			addWidget(endTurn, 		   20, 87, 60,  8);			
-			addWidget(exitGame, 	   77, 97, 18,  2);
+			addWidget(endTurn, 		    20, 87, 60,  8);			
+			addWidget(exitGame, 	    77, 97, 18,  2);
 			
 		}};		
 		
@@ -260,6 +263,42 @@ public class GamePanel extends ScaledPanel {
 		draw.setColors(null, new Color(0, 200, 0), 4);
 		draw.rect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
 		super.draw();
+	}
+	
+	private void handleIncomingClientMessages() {
+		Queue<String> messageQueue = new LinkedList<String>();
+		if (!messageQueue.isEmpty()) {
+			String[] commands = messageQueue.poll().split(":");
+			switch(commands[0]) {
+			case  "startGame":
+				break;
+			case "drawCard":
+				// Check hand
+				break;
+			case "endTurn":
+				break;
+			case "startTournament":
+				break;
+			case "setColour":
+				// Check tournament color
+				break;
+			case "card":
+				// Check display
+				// Check display value
+				// Check end turn button
+				break;
+			case "unhorseCard":
+				// Check tournament color
+				break;
+			case "changeWeaponCard":
+				// Check tournament color
+				break;
+			case "dropWeaponCard":
+				// Check end turn
+				// Check display values
+				break;
+			}
+		}
 	}
 	
 	private void findCardInteraction() {

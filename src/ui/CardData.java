@@ -5,6 +5,7 @@ import java.io.*;
 
 import simple.gui.Image;
 
+// Static utility class to store data for cards (i.e. name, description and image)
 public class CardData {
 	public static int[][] ALL_CARD_VALUES = {
 		{0, 3}, {0, 4},{0, 5},{0, 7},
@@ -123,13 +124,16 @@ public class CardData {
 	public static Image getBackImage() { 
 		return BACK_IMAGE;
 	}
+	// Returns image object for given card
 	public static Image getCardImage(int type, int value) {
 		return CARD_IMAGE_MAP.get(type).get(value).image;
 	}
+	// Returns name of given card
 	public static String getCardName(int type, int value) {
 		String name = CARD_IMAGE_MAP.get(type).get(value).name;
 		return (name==null ? "" : name);
 	}
+	// Return description of given card
 	public static String getCardDescription(int type, int value) {
 		String description = CARD_IMAGE_MAP.get(type).get(value).description;
 		return (description==null ? "" : description);
