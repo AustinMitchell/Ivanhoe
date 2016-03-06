@@ -42,6 +42,14 @@ public class Deck {
 		moveCardTo(deck.size()-1, newDeck);
 	}
 	
+	public ArrayList<Card> getAllCards() {
+		ArrayList<Card> cards = new ArrayList<Card>();
+		for(int i = 0; i < deck.size(); i++) {
+			cards.add(deck.get(i));
+		}
+		return cards;
+	}
+	
 	public int deckSize() {
 		cardNum = deck.size();
 		return cardNum;
@@ -50,6 +58,7 @@ public class Deck {
 	public Card getCard(int i) {
 		return deck.get(i);
 	}
+	
 	
 	//A function to return a deck sorted by card value as a TreeMap
 	public TreeMap<Card, Integer> sortedDeck() {

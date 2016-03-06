@@ -69,18 +69,29 @@ public class GameState {
 		//setUpStartingHands();
 	}
 	
-	public void initializeServer(ArrayList<Player> newPlayers) {
+	public String initializeServer(ArrayList<Player> newPlayers) {
 		players = newPlayers;
 		drawDeck = new Deck();
-		for(int i = 0; i < players.size(); i++) {
-			players.get(i).enterTournament();
+		String result = "initClient:";
+		for(Player p: players) {
+			p.enterTournament();
+			result += p.getName() + ":";
 		}
+		result += "cards";
 		setTurn(0);
 		for(int i = 0; i < 110; i++) {
 			Card card = new Card(cardTypeData[i], cardValueData[i]);
 			drawDeck.add(card);
 		}
 		drawDeck.shuffle();
+		
+		for(int i = 0; i < drawDeck.deckSize(); i++) {
+			result += ":" + drawDeck.getCard(i).getCardType() + ":";
+			result += drawDeck.getCard(i).getCardValue();
+		}
+		
+		setUpStartingHands();
+		return result;
 	}
 	
 	public void initializeClient(ArrayList<Player> newPlayers, int[][] cardData) {
@@ -94,6 +105,7 @@ public class GameState {
 			Card card = new Card(cardData[i][0], cardData[i][1]);
 			drawDeck.add(card);
 		}
+		setUpStartingHands();
 	}
 	
 	public Player getPlayer(String pName) {

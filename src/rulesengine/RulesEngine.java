@@ -169,6 +169,7 @@ public class RulesEngine {
 		return returnString;
 	}
 	
+	
 	public static String changeWeapon(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
@@ -189,5 +190,12 @@ public class RulesEngine {
 		game.setTournamentColour(Type.GREEN);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
+	}
+	
+	public static String unimplementedActionCard(GameState game, int cardPos) {
+		String result = ("dummyCard:" + cardPos);
+		int playerPos = game.getTurn();
+		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
+		return result;
 	}
 }

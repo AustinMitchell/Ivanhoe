@@ -1,4 +1,4 @@
-package client;
+package network;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -64,19 +64,20 @@ public class Parser {
 					i++;
 					int[][] cardData = new int[(command.length-i) / 2][2];
 					for(int j = 0; j < cardData.length; j++) {
-						cardData[j][0] = Integer.getInteger(command[j*2 + i]);
-						cardData[j][1] = Integer.getInteger(command[j*2 + i + 1]);
+						cardData[j][0] =
+								Integer.parseInt(
+								command[j*2 + i]);
+						cardData[j][1] = Integer.parseInt(command[j*2 + i + 1]);
 					}
 					game.initializeClient(players, cardData);
 					break;
-					
 					
 			
 				case  "startGame":
 					result = RulesEngine.startGame(game);	
 					break;
 				
-				case "drawCard": //TODO: account for starting tournaments here
+				case "drawCard":
 					result = RulesEngine.drawCard(game);
 					if(!game.hasTournamentStarted()) {
 						if(Validator.canStartTournament(game)) {
@@ -114,6 +115,10 @@ public class Parser {
 					
 				case "dropWeaponCard":
 					result = RulesEngine.dropWeapon(game, Integer.getInteger(command[1]));
+					break;
+					
+				case "dummyCard":
+					result = RulesEngine.unimplementedActionCard(game, Integer.getInteger(command[1]));
 					break;
 					
 			}

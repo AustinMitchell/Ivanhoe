@@ -62,7 +62,7 @@ public class Validator {
 				playableCards[i] = validateDropWeapon(game);
 			}
 			else {
-				playableCards[i] = false;
+				playableCards[i] = true;
 			}
 		}
 		return playableCards;
