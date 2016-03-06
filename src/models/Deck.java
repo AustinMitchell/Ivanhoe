@@ -31,11 +31,12 @@ public class Deck {
 	}
 	
 	public void emptyDeck(Deck discardDeck) {
-		for(int i = 0; i < deck.size(); i++) {
+		int size = deck.size();
+		for(int i = 0; i < size; i++) {
 			Card card = deck.get(i);
-			deck.remove(i);
 			discardDeck.add(card);
 		}
+		deck = new ArrayList<Card>();
 	}
 	
 	public void draw(Deck newDeck) {
