@@ -3,9 +3,11 @@ package network;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import models.Card;
 import models.GameState;
 import models.Player;
 import rulesengine.RulesEngine;
+import rulesengine.Type;
 import rulesengine.Validator;
 
 public class Parser {
@@ -103,25 +105,37 @@ public class Parser {
 					
 				case "card":
 					result = RulesEngine.playValueCard(game, Integer.getInteger(command[1]));
-					break;
+					int currPlayer = game.getTurn();
+					int type = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardType();
+					int value = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardValue();
 					
-				case "unhorseCard":
-					result = RulesEngine.unhorse(game, Integer.getInteger(command[1]), Integer.getInteger(command[2]));
-					break;
-					
-				case "changeWeaponCard":
-					result = RulesEngine.changeWeapon(game, Integer.getInteger(command[1]), Integer.getInteger(command[2]));
-					break;
-					
-				case "dropWeaponCard":
-					result = RulesEngine.dropWeapon(game, Integer.getInteger(command[1]));
-					break;
-					
-				case "dummyCard":
-					result = RulesEngine.unimplementedActionCard(game, Integer.getInteger(command[1]));
-					break;
-					
+					switch (type) {
+						case Type.ACTION: 
+							switch (value) {
+								case Card.UNHORSE:
+									result = RulesEngine.unhorse(game, Integer.parseInt(command[1]), Integer.parseInt(command[2]));
+									break;
+									
+								case Card.CHANGE_WEAPON:
+									result = RulesEngine.changeWeapon(game, Integer.parseInt(command[1]), Integer.parseInt(command[2]));
+									break;
+									
+								case Card.DROP_WEAPON:
+									result = RulesEngine.dropWeapon(game, Integer.parseInt(command[1]));
+									break;
+									
+								default:
+									result = RulesEngine.unimplementedActionCard(game, Integer.parseInt(command[1]));
+								
+							}
+							break;
+						default: 
+							result = RulesEngine.playValueCard(game, Integer.parseInt(command[1]));
+							break;
+					}	
+				break;
 			}
+			
 		}
 		
 		return result;
