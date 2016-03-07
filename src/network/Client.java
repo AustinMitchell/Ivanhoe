@@ -1,6 +1,7 @@
 package network;
 
 import models.*;
+import org.apache.log4j.Logger;
 import rulesengine.*;
 
 import java.net.*;
@@ -19,10 +20,11 @@ public class Client implements Runnable {
 	private int id;
 	private String updateIn;
 	private String updateOut;
+
+	static final Logger log = Logger.getLogger("Client");
 	
 	private String serverName;
 	private String username;
-	
 	private String connectStatus;
 	
 
@@ -34,21 +36,23 @@ public class Client implements Runnable {
 		updateOut = "";
 		connectStatus = "";
 	}
-
-	public GameState getGame() {
-		synchronized (game) {
-			return game;
-		}
-	}
+	   
+	   
+	   public GameState getGame() {
+		   synchronized(game) {
+			   return game;
+		   }
+	   }
+	   
+	   public void sendMessage(String message) {
+		   synchronized(updateOut) {
+			   log.info(id +": " + message);
+			   updateOut = message;
+		   }
+	   }
 	
 	public int getID() {
 		return id;
-	}
-
-	public void sendMessage(String message) {
-		synchronized (updateOut) {
-			updateOut = message;
-		}
 	}
 
 	public boolean waitingForConnection() {
@@ -72,7 +76,7 @@ public class Client implements Runnable {
 	
 	@Override
 	public void run() {
-		String serverName = "localhost";
+		//String serverName = "localhost";
 		int port = Server.PORT;
 		try {
 			System.out.println("Connecting to " + serverName + " on port "
@@ -89,6 +93,7 @@ public class Client implements Runnable {
 			out = new PrintWriter(socket.getOutputStream(), true);
 
 			id = Integer.parseInt(in.readLine());
+			log.info(id +": " + username);
 			out.println(username);
 
 			for (;;) {
@@ -135,7 +140,7 @@ public class Client implements Runnable {
 	}
 
 	
-	
+	//return guiFlags queue for testing purposes 
 	public Queue<String> getGuiFlags() {
 		synchronized(guiFlags) {
 			return guiFlags;

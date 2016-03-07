@@ -160,6 +160,11 @@ public class GameState {
 		gameOver = status;
 	}
 	
+	//setter function for testing purposes
+	public void setTournamentNumber(int num) {
+		tournamentNumber = num;
+	}
+	
 	public void incrementTournamentNumber() {
 		tournamentNumber++;
 	}

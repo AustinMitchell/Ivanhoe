@@ -111,7 +111,7 @@ public class RulesEngine {
 		if(withdrawState.equalsIgnoreCase("true")) withdraw(game);
 		if(!isTournamentOver(game) || !game.hasTournamentStarted()) {
 			game.nextTurn();
-			result = "endTurn:" + withdrawState ; 
+			result = "endTurn:" + withdrawState; 
 		}
 		else {
 			game.nextTurn();
