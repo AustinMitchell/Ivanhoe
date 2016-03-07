@@ -20,7 +20,7 @@ public class Parser {
 	 * NOTE: commands must be separated by the single line character "\n"
 	 * 		 DO NOT insert spaces before or after that new line character 
 	 */
-	public static void guiSplitter(Queue guiFlags, String flag) {
+	public static void guiSplitter(Queue<String> guiFlags, String flag) {
 		
 		if(flag.contains(RulesEngine.NEW_COM)) //check if there are multiple commands
 		{
@@ -29,23 +29,25 @@ public class Parser {
 				guiFlags.add(commands[i]);
 			}
 		}
-		else //the case of one single command
+		else { //the case of one single command
 			guiFlags.add(flag);
+		}
 	}
 	
 	
 
-	public static void networkSplitter(String flag, GameState game) {
+	public static String networkSplitter(String flag, GameState game) {
 		String[] commands;
 		if(flag.contains(RulesEngine.NEW_COM)) //check if there are multiple commands
 		{
 			commands = flag.split(RulesEngine.NEW_COM);
 			for(int i = 0; i < commands.length; i++) {
-				parse(commands[i].split(":"), game);
+				commands[i] = parse(commands[i].split(":"), game);
 			}
+			return String.join(RulesEngine.NEW_COM, commands);
 		}
 		else //the case of one single command
-			parse(flag.split(":"), game);
+			return parse(flag.split(":"), game);
 	}
 	
 	
@@ -122,7 +124,6 @@ public class Parser {
 					break;
 					
 				case "card":
-					result = RulesEngine.playValueCard(game, Integer.parseInt(command[1]));
 					int currPlayer = game.getTurn();
 					int type = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardType();
 					int value = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardValue();

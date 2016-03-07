@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 public class Server{
+	public static final int   NUM_PLAYERS = 2;
 	public static final int   PORT = 5000;
 	private BufferedReader    streamIn = null;
 	private BufferedWriter    streamOut = null;
@@ -121,14 +122,15 @@ public class Server{
 		while(true) {
 			updateClients(updateString);
 			updateString = getUpdate(game.getTurn());
-			Parser.networkSplitter(updateString, game);
+			updateString = Parser.networkSplitter(updateString, game);
+			System.out.println("Message to clients: " + updateString);
 		}
 		
 	}
 	
 	public static void main(String[] args) {
 		try {
-			Server server = new Server(PORT, 3);
+			Server server = new Server(PORT, NUM_PLAYERS);
 			server.updateString = server.setupGame();
 			//server.setupUpdateStreams();
 			server.runGame();

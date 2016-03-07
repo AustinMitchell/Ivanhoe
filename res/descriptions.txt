@@ -1,0 +1,87 @@
+PURPLE 3
+~~~
+PURPLE 4
+~~~
+PURPLE 5
+~~~
+PURPLE 7
+~~~
+RED 3
+~~~
+RED 4
+~~~
+RED 5
+~~~
+YELLOW 2
+~~~
+YELLOW 3
+~~~
+YELLOW 4
+~~~
+BLUE 2
+~~~
+BLUE 3
+~~~
+BLUE 4
+~~~
+BLUE 5
+~~~
+GREEN 1
+~~~
+SQUIRE 2
+~~~
+SQUIRE 3
+~~~
+MAIDEN 6
+~~~
+UNHORSE
+Change the tournament color from purple to red, blue, or yellow.
+~~~
+CHANGE WEAPON
+Change the tournament color from red, blue, or yellow to a different one of these colors.
+~~~
+DROP WEAPON
+Change the tournament color from red, blue, or yellow to green.
+~~~
+BREAK LANCE
+One oponent must discard all purple cards from his display.
+~~~
+RIPOSTE
+You may take the last card of any one opponent's display and add it to your own display.
+~~~
+DODGE
+You may discard any one card from any one opponent's display.
+~~~
+RETREAT
+You may take any one card from your own display back into your hand.
+~~~
+KNOCK DOWN
+You may draw at random one card from any one opponent's hand and add it to your own hand (without revealing the card).
+~~~
+OUTMANEUVER
+All your opponents must discard their last card from their displays.
+~~~
+CHARGE
+Identify the lowest value card throughout all displays. All players must discard all cards of this value from their displays.
+~~~
+COUNTERCHARGE
+Identify the highest value vard throughout all displays. All players must discard all cards of this value from their displays.
+~~~
+DISGRACE
+All players must discard all their supporters from their displays.
+~~~
+ADAPT
+Each player may only keep one card of each value in his display. All other cards with the same value are discarded. Each player decides which cards he discards.
+~~~
+OUTWIT
+Place one of your face up cards in front of and opponent, take one face up card from this opponent and place it face up in front of yourself. This may include SHIELD and STUNNED cards.
+~~~
+SHIELD
+Play this card face up in front of you, but separate from your display. As long as you have the SHIELD in front of you, the action cards have no effect on your display.
+~~~
+STUNNED
+You may play this card on any one opponent still in the tournament, but separate from the opponent's display. As long as a player is STUNNED, he may only add one new card to his display each turn.
+~~~
+IVANHOE
+You may play this card at any time as long as your are in the tournament. Use the IVANHOE card to cancel all effects of any one action card just played.
+~~~
