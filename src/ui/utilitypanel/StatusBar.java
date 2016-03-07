@@ -5,6 +5,7 @@ import java.awt.Font;
 
 import simple.gui.*;
 import simple.gui.panel.ScaledPanel;
+import ui.ResLoader;
 
 public class StatusBar extends ScaledPanel {
 	private static final Image greyImage(Image img) {
@@ -65,9 +66,9 @@ public class StatusBar extends ScaledPanel {
 		}
 	}
 	
-	private static final Image SHIELD_IMAGE = new Image("res/status/shield.png");
+	private static final Image SHIELD_IMAGE = new Image(ResLoader.load("status/shield.png"));
 	private static final Image SHIELD_EMPTY = greyImage(SHIELD_IMAGE);
-	private static final Image STUN_IMAGE = new Image("res/status/stun.png");
+	private static final Image STUN_IMAGE = new Image(ResLoader.load("status/stun.png"));
 	private static final Image STUN_EMPTY = greyImage(STUN_IMAGE);
 	
 	private TokenBar tokens;

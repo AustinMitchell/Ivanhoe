@@ -10,6 +10,7 @@ public class IvanhoeApp extends SimpleGUIApp {
 	GameController controller;
 	
 	public void setup() {		
+		CardData.initialize();
 		controller = new GameController(this);
 	}
 	
