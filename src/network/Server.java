@@ -127,7 +127,6 @@ public class Server{
 			
 			updateString = getUpdate(game.getTurn());
 			updateString = Parser.networkSplitter(updateString, game);
-			
 			System.out.println("Message to clients: " + updateString);
 		}
 		

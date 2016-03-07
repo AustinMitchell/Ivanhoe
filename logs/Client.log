@@ -1,8 +1,0 @@
-2016-Mar-06 22:53:56 INFO  debugLogger:96 - 0: Player2
-@2016-Mar-06 22:54:24 INFO  debugLogger:96 - 1: oaihfoi
-@2016-Mar-06 22:54:47 INFO  debugLogger:49 - 0: drawCard
-@2016-Mar-06 22:54:49 INFO  debugLogger:49 - 0: setColour:2~startTournament
-@2016-Mar-06 22:54:50 INFO  debugLogger:49 - 0: card:1
-@2016-Mar-06 22:54:52 INFO  debugLogger:49 - 0: card:5
-@2016-Mar-06 22:54:54 INFO  debugLogger:49 - 0: endTurn:false
-@

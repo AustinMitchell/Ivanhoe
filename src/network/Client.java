@@ -20,13 +20,16 @@ public class Client implements Runnable {
 	private int id;
 	private String updateIn;
 	private String updateOut;
-
-	static final Logger log = Logger.getLogger("Client");
 	
 	private String serverName;
 	private String username;
-	private String connectStatus;
 	
+	private String connectStatus;
+	static final Logger log = Logger.getLogger("Client");
+	
+	public int getID() {
+		return id;
+	}
 
 	// constructor
 	public Client() {
@@ -36,23 +39,18 @@ public class Client implements Runnable {
 		updateOut = "";
 		connectStatus = "";
 	}
-	   
-	   
-	   public GameState getGame() {
-		   synchronized(game) {
-			   return game;
-		   }
-	   }
-	   
-	   public void sendMessage(String message) {
-		   synchronized(updateOut) {
-			   log.info(id +": " + message);
-			   updateOut = message;
-		   }
-	   }
+
+	public GameState getGame() {
+		synchronized (game) {
+			return game;
+		}
+	}
 	
-	public int getID() {
-		return id;
+
+	public void sendMessage(String message) {
+		synchronized (updateOut) {
+			updateOut = message;
+		}
 	}
 
 	public boolean waitingForConnection() {
@@ -76,7 +74,7 @@ public class Client implements Runnable {
 	
 	@Override
 	public void run() {
-		//String serverName = "localhost";
+		String serverName = "localhost";
 		int port = Server.PORT;
 		try {
 			System.out.println("Connecting to " + serverName + " on port "

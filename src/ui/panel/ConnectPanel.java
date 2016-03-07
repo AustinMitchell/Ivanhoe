@@ -6,6 +6,7 @@ import java.awt.Font;
 import simple.gui.*;
 import simple.gui.panel.ScaledPanel;
 import ui.GameController;
+import ui.ResLoader;
 
 public class ConnectPanel extends ScaledPanel {	
 	private ImageBox ivanhoeImage;
@@ -27,7 +28,7 @@ public class ConnectPanel extends ScaledPanel {
 	public ConnectPanel(GameController controller) {
 		super();
 				
-		ivanhoeImage = new ImageBox(new Image("res/ivanhoe_cover.jpg"));
+		ivanhoeImage = new ImageBox(new Image(ResLoader.load("ivanhoe_cover.jpg")));
 		bgColor = new Color(40, 40, 30);
 				
 		this.controller = controller;
