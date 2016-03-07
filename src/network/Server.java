@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.io.*;
 
 public class Server{
-	public static final int   NUM_PLAYERS = 3;
+	public static final int   NUM_PLAYERS = 2;
 	public static final int   PORT = 5000;
 	private BufferedReader    streamIn = null;
 	private BufferedWriter    streamOut = null;

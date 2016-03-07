@@ -119,21 +119,20 @@ public class GamePanel extends ScaledPanel {
 					throw new RuntimeException("Initialized game with a bad number of players (not within 2 and 5)");
 			}
 			
-			// TODO: Fix, adds random cards for testing
 			for (int i=0; i<hand.length; i++) {
 				for (Card c: game.getAllPlayers().get(toGameTurn(i)).getHand().getAllCards()) {
 					CardWidget cw = new CardWidget(c.getCardType(), c.getCardValue());
 					hand[i].addCard(cw);
 				}
 				if (i != THIS_PLAYER) {
+					// Opponent hands won't pop up on hover
 					hand[i].setCardMoveOnHover(false);
 				} else {
+					// Disables your hand by default
 					for (Widget w: hand[i].getWidgetList()) {
 						w.setEnabled(false);
 					}
 				}
-				display[i].setDrawContainingPanel(false);
-				display[i].setFillColor(null);
 			}
 			
 			
@@ -301,6 +300,7 @@ public class GamePanel extends ScaledPanel {
 		return Math.floorMod((turn-realPlayerIndex), numPlayers);
 	}
 	
+	// Bulk of the game logic. This reads the messages that will affect the GameState object, and adjusts the UI models accordingly
 	private void handleClientMessages() {
 		if (client.hasFlags()) {
 			String commandString = client.readGuiFlag();
@@ -309,13 +309,16 @@ public class GamePanel extends ScaledPanel {
 			int guiTurn = toGUITurn(gameTurn);
 			Player player = client.getGame().getAllPlayers().get(gameTurn);
 			switch(command[0]) {
+				// Not yet implemented
 				case  "startGame": {
 					break;
 				}
+				// After drawing, if a player can start a tournament
 				case "canStartTournament" : {
 					switch(command[1]) {
 						case "true":
 							if (guiTurn == THIS_PLAYER) {
+								// Allows player to start a new tournament
 								messageScrollBox.addLine(" > You can start a new tournament");
 								prepareOverlay(OverlayCommand.START_TOURNAMENT);
 							} else {
@@ -334,6 +337,7 @@ public class GamePanel extends ScaledPanel {
 					}
 					break;
 				}
+				// Drawing a card from the deck
 				case "drawCard": {
 					Card newCard = player.getHand().getCard(player.getHand().deckSize()-1);
 					CardWidget newCardWidget = new CardWidget(newCard.getCardType(), newCard.getCardValue());
@@ -465,6 +469,9 @@ public class GamePanel extends ScaledPanel {
 									tournamentColourBar.disableAllTokens();
 									tournamentColourBar.enableToken(Type.GREEN);
 									tournamentColour = Type.GREEN;
+									for (int i=0; i<numPlayers; i++) {
+										playerStatus[i].setDisplayValue(game.getAllPlayers().get(i).getDisplayValue(tournamentColour));
+									}
 									break;
 								}
 								default: {
@@ -572,7 +579,6 @@ public class GamePanel extends ScaledPanel {
 		}
 	}
 	
-	/** DECK OPERATIONS **/
 	private void handleDeckObject() {
 		if (deck.isClicked()) {
 			deck.setEnabled(false);
