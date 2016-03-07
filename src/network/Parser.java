@@ -74,6 +74,7 @@ public class Parser {
 						cardData[j][1] = Integer.parseInt(command[j*2 + i + 1]);
 					}
 					game.initializeClient(players, cardData);
+					result = "initClient";
 					break;
 				}
 					
@@ -88,6 +89,7 @@ public class Parser {
 					}
 					
 					game.renewDrawDeck(cardData);
+					result = "renewDrawDeck";
 					
 					break;
 					
@@ -99,6 +101,7 @@ public class Parser {
 				case "drawCard":
 					result = RulesEngine.drawCard(game);
 					if(!game.hasTournamentStarted()) {
+						result += RulesEngine.NEW_COM + "startTournament";
 						if(Validator.canStartTournament(game)) {
 							result += RulesEngine.NEW_COM + "canStartTournament:true";
 						}
