@@ -2,6 +2,8 @@ package test;
 
 import models.GameState;
 import models.Player;
+import rulesengine.Type;
+
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 import org.junit.Before;
@@ -61,5 +63,41 @@ public class GameStateTest {
 			else assertEquals(i, game.getTurn());
 			game.nextTurn();
 		}
+	}
+	
+
+	@Test
+	public void setTournamentRedColourTest() {
+		game.setTournamentColour(Type.RED);
+		assertEquals(game.getTournamentColour(), Type.RED);
+		
+	}
+	
+	@Test
+	public void setTournamentBlueColourTest() {
+		game.setTournamentColour(Type.BLUE);
+		assertEquals(game.getTournamentColour(), Type.BLUE);
+		
+	}
+	
+	@Test
+	public void setTournamentYellowColourTest() {
+		game.setTournamentColour(Type.YELLOW);
+		assertEquals(game.getTournamentColour(), Type.YELLOW);
+		
+	}
+	
+	@Test
+	public void setTournamentGreenColourTest() {
+		game.setTournamentColour(Type.GREEN);
+		assertEquals(game.getTournamentColour(), Type.GREEN);
+		
+	}
+	
+	@Test
+	public void setTournamentPurpleColourTest() {
+		game.setTournamentColour(Type.PURPLE);
+		assertEquals(game.getTournamentColour(), Type.PURPLE);
+		
 	}
 }

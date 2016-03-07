@@ -4,6 +4,7 @@ import models.*;
 import rulesengine.*; // does contain parser, etc?
 import java.net.*;
 import java.util.ArrayList;
+import org.apache.log4j.Logger;
 import java.io.*;
 
 public class Server{
@@ -17,6 +18,7 @@ public class Server{
 	private int          	  numOfPlayers;
 	private ArrayList<Player> players;
 	private ArrayList<Socket> sockets;
+	static final Logger log = Logger.getLogger("Server");
 
 	//private ArrayList<OutputStream> toClientStreams;
 	//private ArrayList<InputStream> fromClientStreams;
@@ -101,6 +103,7 @@ public class Server{
 
 	public void updateClients(String update) throws IOException {
 		for(int i = 0; i < players.size(); i++) {
+			log.info("Sending to client " + i +": " + update);
          	out.get(i).println(update);
 		}
 	}
@@ -121,6 +124,7 @@ public class Server{
 		RulesEngine.startGame(game); // this should call static rules engine method and start first tournament
 		while(true) {
 			updateClients(updateString);
+			
 			updateString = getUpdate(game.getTurn());
 			updateString = Parser.networkSplitter(updateString, game);
 			System.out.println("Message to clients: " + updateString);

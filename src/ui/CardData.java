@@ -34,6 +34,7 @@ public class CardData {
 	}
 	
 	// Creates a data structure that maps two integers to an image, name and description
+
 	private static ArrayList<HashMap<Integer, Data>> CARD_IMAGE_MAP;
 		
 	public static void initialize() {
@@ -109,7 +110,9 @@ public class CardData {
 			
 			HashMap<Integer, Data> action = new HashMap<Integer, Data>(){{
 					for (int i=0; i<17; i++) {
+
 						put(i, descriptions.remove().setImage(new Image(ResLoader.load(ACTION_PATH + i + ".jpeg"))));
+
 					}
 				}};
 				
@@ -122,6 +125,7 @@ public class CardData {
 			add(action);
 		}};
 	}
+
 	// Rrturns image object for the back of cards
 	public static Image getBackImage() { 
 		return BACK_IMAGE;

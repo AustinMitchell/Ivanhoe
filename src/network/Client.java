@@ -1,6 +1,7 @@
 package network;
 
 import models.*;
+import org.apache.log4j.Logger;
 import rulesengine.*;
 
 import java.net.*;
@@ -24,7 +25,11 @@ public class Client implements Runnable {
 	private String username;
 	
 	private String connectStatus;
+	static final Logger log = Logger.getLogger("Client");
 	
+	public int getID() {
+		return id;
+	}
 
 	// constructor
 	public Client() {
@@ -41,9 +46,6 @@ public class Client implements Runnable {
 		}
 	}
 	
-	public int getID() {
-		return id;
-	}
 
 	public void sendMessage(String message) {
 		synchronized (updateOut) {
@@ -89,6 +91,7 @@ public class Client implements Runnable {
 			out = new PrintWriter(socket.getOutputStream(), true);
 
 			id = Integer.parseInt(in.readLine());
+			log.info(id +": " + username);
 			out.println(username);
 
 			for (;;) {
@@ -135,7 +138,7 @@ public class Client implements Runnable {
 	}
 
 	
-	
+	//return guiFlags queue for testing purposes 
 	public Queue<String> getGuiFlags() {
 		synchronized(guiFlags) {
 			return guiFlags;

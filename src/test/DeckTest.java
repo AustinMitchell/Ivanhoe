@@ -50,8 +50,15 @@ public class DeckTest {
 		assertEquals(2, deck2.deckSize());
 		assertEquals(2, deck2.getCard(1).getCardType());
 		assertEquals(4, deck2.getCard(1).getCardValue());
-		
-		
+	}
+	
+	@Test
+	public void emptyDeckTest() {
+		deck1.add(card1);
+		deck1.add(card2);
+		deck1.emptyDeck(deck2);
+		assertEquals(deck2.deckSize(), 2);
+		assertEquals(deck1.deckSize(), 0);
 	}
 
 }
