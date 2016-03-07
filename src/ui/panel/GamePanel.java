@@ -21,7 +21,7 @@ import ui.utilitypanel.*;
 
 public class GamePanel extends ScaledPanel {
 	public enum OverlayCommand {
-		START_TOURNAMENT
+		START_TOURNAMENT, UNHORSE, CHANGE_WEAPON
 	}
 	
 	public static final int THIS_PLAYER = 0;
@@ -45,6 +45,7 @@ public class GamePanel extends ScaledPanel {
 	OverlayPanel currentOverlay;
 	OverlayCommand overlayCommand;
 	boolean startNewOverlay;
+	int overlayCardReferenceIndex;
 	
 	boolean firstTournamentPlay;
 	
@@ -52,6 +53,8 @@ public class GamePanel extends ScaledPanel {
 	
 	int numPlayers;
 	int realPlayerIndex;
+	
+	int tournamentColour;
 	
 	CardWidget interactionCard;
 	int interactionPlayer;
@@ -215,7 +218,8 @@ public class GamePanel extends ScaledPanel {
 					draw.rect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
 				}});
 			
-			messageScrollBox = new ScrollDialogBox();
+			messageScrollBox = new ScrollDialogBox(); 
+			messageScrollBox.setFont(new Font("Courier", Font.PLAIN, 14));
 			
 			tournamentColourLabel = new Label("Tournament Colour");
 			tournamentColourLabel.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -226,7 +230,11 @@ public class GamePanel extends ScaledPanel {
 			ScaledPanel playerStatusPanel = new ScaledPanel(1, numPlayers) {{
 				playerStatus = new StatusBar[numPlayers];
 				for (int i=0; i<numPlayers; i++) {
-					playerStatus[i] = new StatusBar(playerNames.get(i));
+					if (i == realPlayerIndex) {
+						playerStatus[i] = new StatusBar(playerNames.get(i) + " (you)");
+					} else {
+						playerStatus[i] = new StatusBar(playerNames.get(i));
+					}
 					addWidget(playerStatus[i], 0, i, 1, 1);
 				}
 			}};
@@ -276,9 +284,14 @@ public class GamePanel extends ScaledPanel {
 	public void draw() {
 		// Display panel for the current player's turn
 		CardDisplayPanel p = display[toGUITurn(game.getTurn())];
-		draw.setColors(null, new Color(0, 200, 0), 4);
-		draw.rect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
+		draw.setColors(null, new Color(0, 200, 200), 4);
+		draw.rect(p.getX()-3, p.getY()-3, p.getWidth()+3, p.getHeight()+3);
+		
 		super.draw();
+		
+		StatusBar s = playerStatus[game.getTurn()];
+		draw.setColors(null, new Color(0, 200, 200), 2);
+		draw.rect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
 	}
 	
 	private int toGameTurn(int turn) {
@@ -290,8 +303,8 @@ public class GamePanel extends ScaledPanel {
 	
 	private void handleClientMessages() {
 		if (client.hasFlags()) {
-			String[] command = client.readGuiFlag().split(":");
-			System.out.println("Got new GUI flag: " + command[0]);
+			String commandString = client.readGuiFlag();
+			String[] command = commandString.split(":");
 			int gameTurn = game.getTurn();
 			int guiTurn = toGUITurn(gameTurn);
 			Player player = client.getGame().getAllPlayers().get(gameTurn);
@@ -312,9 +325,9 @@ public class GamePanel extends ScaledPanel {
 						case "false":
 							if (guiTurn == THIS_PLAYER) {
 								messageScrollBox.addLine(" > You cannot start a new tournament");
+								client.sendMessage("endTurn:false");
 							} else {
 								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " cannot start a new tournament");
-								client.sendMessage("endTurn:false");
 							}
 							break;
 					
@@ -330,6 +343,7 @@ public class GamePanel extends ScaledPanel {
 						if (game.hasTournamentStarted()) {
 							hand[THIS_PLAYER].setEnabled(true);
 							endTurn.setEnabled(true);
+							endTurn.setText("Withdraw");
 						} 
 					}
 					if (guiTurn == THIS_PLAYER) {
@@ -346,10 +360,21 @@ public class GamePanel extends ScaledPanel {
 					break;
 				}
 				case "endTurn": {
+					if (command[1].equals("true")) {
+						int lastTurn = Math.floorMod(gameTurn-1, numPlayers);
+						if (lastTurn == realPlayerIndex) {
+							messageScrollBox.addLine("You withdrew from the tournament");
+						} else {
+							messageScrollBox.addLine(playerNames.get(lastTurn) + " withdrew from the tournament");
+						}
+						display[toGUITurn(lastTurn)].clear();
+						playerStatus[lastTurn].clearStatus();
+					}
 					messageScrollBox.addRepeatedTextLine("-");
 					if (guiTurn == THIS_PLAYER) {
 						messageScrollBox.addLine("It is now your turn");
 						deck.setEnabled(true);
+						endTurn.setText("(draw card first)");
 					} else {
 						messageScrollBox.addLine("It is now " + playerNames.get(gameTurn) + "'s turn");
 						for (Widget w: hand[THIS_PLAYER].getWidgetList()) {
@@ -359,7 +384,9 @@ public class GamePanel extends ScaledPanel {
 					break;
 				}
 				case "startTournament": {
+					messageScrollBox.addRepeatedTextLine("* ");
 					messageScrollBox.addLine("-- New Tournament --");
+					messageScrollBox.addRepeatedTextLine("* ");
 					if (guiTurn == THIS_PLAYER) {
 						boolean[] canPlay = Validator.cardsAbleToStart(game);
 						for (int i=0; i<canPlay.length; i++) {
@@ -369,62 +396,37 @@ public class GamePanel extends ScaledPanel {
 					break;
 				}
 				case "endTournament": {
-					String colour = "";
 					int type = Integer.parseInt(command[1]);
-
-					switch(type) {
-						case Type.PURPLE:
-							colour = "PURPLE";
-							break;
-						case Type.RED:
-							colour = "RED";
-							break;
-						case Type.YELLOW:
-							colour = "YELLOW";
-							break;
-						case Type.BLUE:
-							colour = "BLUE";
-							break;
-						case Type.GREEN:
-							colour = "GREEN";
-							break;
-					}
+					String colour = Type.toString(type);
+					
 					messageScrollBox.addRepeatedTextLine("* ");
 					if (guiTurn == THIS_PLAYER) {
 						messageScrollBox.addLine("You won the tournament!");
 						messageScrollBox.addLine("You were awarded a " + colour + " token");
 					} else {
-						messageScrollBox.addLine(playerNames.get(gameTurn) + "won the tournament!");
+						messageScrollBox.addLine(playerNames.get(gameTurn) + " won the tournament!");
 						messageScrollBox.addLine(playerNames.get(gameTurn) + " was awarded a " + colour + " token");
 					}
 					messageScrollBox.addRepeatedTextLine("* ");
-					playerStatus[guiTurn].collectToken(type);
+					playerStatus[gameTurn].collectToken(type);
 					tournamentColourBar.disableAllTokens();
+					for (CardDisplayPanel cp: display) {
+						cp.clear();
+					}
+					for (StatusBar sb: playerStatus) {
+						sb.setDisplayValue(0);
+						sb.clearStatus();
+					}
 					break;
 				}
 				case "setColour": {
-					String colour = "";
 					int type = Integer.parseInt(command[1]);
-					switch(type) {
-						case Type.PURPLE:
-							colour = "PURPLE";
-							break;
-						case Type.RED:
-							colour = "RED";
-							break;
-						case Type.YELLOW:
-							colour = "YELLOW";
-							break;
-						case Type.BLUE:
-							colour = "BLUE";
-							break;
-						case Type.GREEN:
-							colour = "GREEN";
-							break;
-					}
+					String colour = Type.toString(type);
+					
 					messageScrollBox.addLine(" > Tournament colour was set to " + colour);
 					tournamentColourBar.disableAllTokens();
 					tournamentColourBar.enableToken(type);
+					tournamentColour = type;
 					break;
 				}
 				case "card": {
@@ -432,22 +434,69 @@ public class GamePanel extends ScaledPanel {
 					int type = ((CardWidget)hand[guiTurn].getIndex(cardPos)).getType();
 					int value = ((CardWidget)hand[guiTurn].getIndex(cardPos)).getValue();
 					
+					if (guiTurn == THIS_PLAYER) {
+						messageScrollBox.addLine(" > You played: " + CardData.getCardName(type, value));
+					} else {
+						messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " played: " + CardData.getCardName(type, value));
+					}
 					
-					
+					hand[guiTurn].removeIndex(cardPos);
 					switch(type) {
-						case Type.ACTION: {
-							
+						case Type.ACTION: {							
+							discard.setCard(type, value);
+							discard.setFaceUp(true);
+							switch (value) {
+								case Card.UNHORSE: {
+									messageScrollBox.addLine(" > Tournament colour was set to " + Type.toString(Integer.parseInt(command[2])));
+									tournamentColourBar.disableAllTokens();
+									tournamentColourBar.enableToken(Integer.parseInt(command[2]));
+									tournamentColour = Integer.parseInt(command[2]);
+									break;
+								}
+								case Card.CHANGE_WEAPON: {
+									messageScrollBox.addLine(" > Tournament colour was set to " + Type.toString(Integer.parseInt(command[2])));
+									tournamentColourBar.disableAllTokens();
+									tournamentColourBar.enableToken(Integer.parseInt(command[2]));
+									tournamentColour = Integer.parseInt(command[2]);
+									break;
+								}
+								case Card.DROP_WEAPON: {
+									messageScrollBox.addLine(" > Tournament colour was set to GREEN");
+									tournamentColourBar.disableAllTokens();
+									tournamentColourBar.enableToken(Type.GREEN);
+									tournamentColour = Type.GREEN;
+									break;
+								}
+								default: {
+									break;
+								}
+							}
+							break;
 						}
 						default: {
 							display[guiTurn].addCard(new CardWidget(type, value));
-							hand[guiTurn].removeIndex(cardPos);
+							playerStatus[gameTurn].setDisplayValue(game.getAllPlayers().get(gameTurn).getDisplayValue(tournamentColour));
+							break;
 						}
 					}
+					
 					if (guiTurn == THIS_PLAYER) {
-						messageScrollBox.addLine(" > You played: " + CardData.getCardName(type, value));
 						endTurn.setEnabled(true);
-					} else {
-						messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " played: " + CardData.getCardName(type, value));
+						int currentValue = playerStatus[realPlayerIndex].getDisplayValue();
+						boolean greatest = true;
+						for (int i=0; i<playerStatus.length; i++) {
+							if (i != realPlayerIndex && playerStatus[i].getDisplayValue() >= currentValue) {
+								greatest = false;
+								break;
+							}
+						}
+						if (greatest) {
+							endTurn.setText("End Turn");
+						}
+						boolean[] canPlay = Validator.cardsAbleToPlay(game);
+						for (int i=0; i<canPlay.length; i++) {
+							hand[guiTurn].getIndex(i).setEnabled(canPlay[i]);
+						}
 					}
 					break;
 				}
@@ -496,7 +545,20 @@ public class GamePanel extends ScaledPanel {
 	private void handleEndTurn() {
 		if (endTurn.isClicked()) {
 			endTurn.setEnabled(false);
-			client.sendMessage("endTurn:true");
+			
+			int currentValue = playerStatus[realPlayerIndex].getDisplayValue();
+			boolean greatest = true;
+			for (int i=0; i<playerStatus.length; i++) {
+				if (i != realPlayerIndex && playerStatus[i].getDisplayValue() >= currentValue) {
+					greatest = false;
+					break;
+				}
+			}
+			if (greatest) {
+				client.sendMessage("endTurn:false");
+			} else {
+				client.sendMessage("endTurn:true");
+			}
 		}
 	}
 	
@@ -522,8 +584,27 @@ public class GamePanel extends ScaledPanel {
 		for (int i=0; i<hand[THIS_PLAYER].getWidgetList().size(); i++) {
 			CardWidget c = (CardWidget)hand[THIS_PLAYER].getIndex(i);
 			if (c.isClicked()) {
-				switch(c.getType()) {
+				switch (c.getType()) {
 					case Type.ACTION: {
+						switch (c.getValue()) {
+							case Card.UNHORSE: {
+								overlayCardReferenceIndex = i;
+								prepareOverlay(OverlayCommand.UNHORSE);
+								break;
+							}
+							case Card.CHANGE_WEAPON: {
+								overlayCardReferenceIndex = i;
+								prepareOverlay(OverlayCommand.CHANGE_WEAPON);
+								break;
+							}
+							case Card.DROP_WEAPON: {
+								client.sendMessage(UpdateEngine.dropWeapon(game, i));
+								break;
+							}
+							default: {
+								client.sendMessage(UpdateEngine.unimplementedActionCard(game, i));
+							}
+						}
 						break;
 					}
 					default: {
@@ -545,7 +626,15 @@ public class GamePanel extends ScaledPanel {
 			switch(overlayCommand) {
 				// A new tournament is starting, and you are starting the tournament
 				case START_TOURNAMENT:
-					currentOverlay = new NewTournamentOverlay(descriptionBox, hand[THIS_PLAYER]);
+					currentOverlay = new NewTournamentOverlay(descriptionBox, hand[THIS_PLAYER], game);
+					break;
+				case UNHORSE:
+					currentOverlay = new UnhorseOverlay(descriptionBox, hand[THIS_PLAYER]);
+					break;
+				case CHANGE_WEAPON:
+					currentOverlay = new ChangeWeaponOverlay(descriptionBox, hand[THIS_PLAYER], tournamentColour);
+					break;
+				default:
 					break;
 			}
 			startNewOverlay = false;
@@ -553,10 +642,18 @@ public class GamePanel extends ScaledPanel {
 		// Otherwise, check on the status of the current overlay if one exists
 		} else if (currentOverlay != null) {
 			if (currentOverlay.isOverlayActionComplete()) {
-				String result = currentOverlay.getFinalCommandString();
+				String[] result = currentOverlay.getFinalCommandString().split(":");
 				switch(overlayCommand) {
 					case START_TOURNAMENT:
-						client.sendMessage("setColour:" + result + RulesEngine.NEW_COM + "startTournament");
+						client.sendMessage("setColour:" + result[0] + RulesEngine.NEW_COM + "startTournament");
+						break;
+					case UNHORSE:
+						client.sendMessage(UpdateEngine.unhorse(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						break;
+					case CHANGE_WEAPON:
+						client.sendMessage(UpdateEngine.unhorse(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						break;
+					default:
 						break;
 				}
 				

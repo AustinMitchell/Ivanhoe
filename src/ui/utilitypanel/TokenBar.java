@@ -83,7 +83,7 @@ public class TokenBar extends ScaledPanel{
 			tokenUI[i].setCustomDraw(EMPTY_TOKEN);
 			addWidget(tokenUI[i], i, 0, 1, 1);
 		}
-		
+		setWidgetColors(new Color(120, 120, 120, 200), new Color(200, 200, 200, 100), null, null);
 		setDrawContainingPanel(true);
 	}
 	

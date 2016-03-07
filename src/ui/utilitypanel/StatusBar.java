@@ -18,12 +18,25 @@ public class StatusBar extends ScaledPanel {
 		private int imagex, imagey;
 		
 		@Override
+		public void setImage(Image image) { 
+			if (image == null) {
+				baseImage = null;
+				this.image = null;
+			} else {
+				baseImage = image.resize(image.getWidth(), image.getHeight());
+				if (w < h) {
+					image = baseImage.resizeScaledWidth(w);
+				} else if (w > h) {
+					image = baseImage.resizeScaledHeight(h);
+				} 
+			}
+		}
+		
+		@Override
 		public void setSize(int w, int h) {
 			this.w = w;
 			this.h = h;
-			if (baseImage != null) {
-				image = baseImage.resize(this.w, this.h);
-			}
+			
 			if (baseImage != null) {
 				if (w < h) {
 					imagex = x;
@@ -62,7 +75,7 @@ public class StatusBar extends ScaledPanel {
 	private Label name;
 	private Label displayValue;
 	
-	public StatusBar(String name) {
+	public StatusBar(String name) { 
 		super(); 
 		
 		this.name = new Label(name);
@@ -71,6 +84,8 @@ public class StatusBar extends ScaledPanel {
 		
 		this.displayValue = new Label("-");
 		this.displayValue.setFont(new Font("Impact", Font.BOLD, 20));
+		this.displayValue.setBoxIsVisible(true);
+		this.displayValue.setWidgetColors(null, new Color(200, 200, 200, 100), new Color(120, 120, 120, 200), Color.YELLOW);
 		
 		tokens = new TokenBar();
 		shield = new ConstantRatioImageBox(SHIELD_EMPTY);
@@ -89,6 +104,17 @@ public class StatusBar extends ScaledPanel {
 		} else {
 			displayValue.setText("" + value);
 		}
+	}
+	public int getDisplayValue() {
+		if (displayValue.getText().equals("-")) {
+			return 0;
+		} else {
+			return Integer.parseInt(displayValue.getText());
+		}
+	}
+	
+	public TokenBar getTokenBar() {
+		return tokens;
 	}
 	
 	public void collectToken(int type) {

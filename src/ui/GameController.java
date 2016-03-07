@@ -83,7 +83,7 @@ public class GameController {
 				}
 			} else {
 				connectPanel.invalidIP();
-			}
+			} 
 		} else {
 			connectPanel.invalidUsername();
 		}

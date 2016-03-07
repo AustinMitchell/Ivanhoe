@@ -11,7 +11,7 @@ public class Validator {
 			if (type >= 1 && type <= 5) {
 				return true;
 			}
-			else if (type == 0 && game.getPrevTournamentColour() != 0) {
+			else if (type == Type.PURPLE && game.getPrevTournamentColour() != Type.PURPLE) {
 				return true;
 			}
 		}

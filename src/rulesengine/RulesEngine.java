@@ -109,7 +109,7 @@ public class RulesEngine {
 	public static String endTurn(GameState game, String withdrawState) {
 		String result = "";
 		if(withdrawState.equalsIgnoreCase("true")) withdraw(game);
-		if(!isTournamentOver(game)) {
+		if(!isTournamentOver(game) || !game.hasTournamentStarted()) {
 			game.nextTurn();
 			result = "endTurn:" + withdrawState ; 
 		}

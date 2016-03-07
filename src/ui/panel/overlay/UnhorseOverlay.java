@@ -8,29 +8,22 @@ import ui.utilitypanel.CardDisplayPanel;
 import ui.utilitypanel.TokenBar;
 import ui.*;
 
-public class NewTournamentOverlay extends OverlayPanel {
+public class UnhorseOverlay extends OverlayPanel {
 	private CardDisplayPanel playerHand;
 	private TokenBar tokenChoice;
 	
-	public NewTournamentOverlay(DescriptionBox descriptionBox, CardDisplayPanel playerHand, GameState game) {
-		super("Select New Tournament Colour...", descriptionBox);
+	public UnhorseOverlay(DescriptionBox descriptionBox, CardDisplayPanel playerHand) {
+		super("Unhorse - Select Tournament Colour...", descriptionBox);
 		
 		tokenChoice = new TokenBar();
+		tokenChoice.enableToken(Type.RED);
+		tokenChoice.enableToken(Type.YELLOW);
+		tokenChoice.enableToken(Type.BLUE);
 		
 		this.playerHand = new CardDisplayPanel(Image.Orientation.UP, true);
 		for (Widget w: playerHand.getWidgetList()) {
 			CardWidget c = (CardWidget)w;
-			int t = c.getType();
-			this.playerHand.addCard(new CardWidget(t, c.getValue()));
-			if (t < 5) {
-				tokenChoice.enableToken(t);
-			} else if (t == 5) {
-				tokenChoice.enableAllTokens();
-			}
-		}
-		
-		if (game.getPrevTournamentColour() == Type.PURPLE) {
-			tokenChoice.disableToken(Type.PURPLE);
+			this.playerHand.addCard(new CardWidget(c.getType(), c.getValue()));
 		}
 		
 		addWidget(this.playerHand, 17, 75, 66, 23);

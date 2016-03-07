@@ -170,7 +170,7 @@ public class UpdateEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("card:" + playerPos + ":" + cardType + ":" + cardValue + ":" + cardPos);
+		returnString = ("card:" + cardPos);
 		
 		return returnString;
 	}
