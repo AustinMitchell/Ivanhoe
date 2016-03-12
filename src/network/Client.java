@@ -74,7 +74,7 @@ public class Client implements Runnable {
 	
 	@Override
 	public void run() {
-		String serverName = "localhost";
+		//String serverName = "localhost";
 		int port = Server.PORT;
 		try {
 			System.out.println("Connecting to " + serverName + " on port "
