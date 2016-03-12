@@ -30,7 +30,7 @@ public class RiposteTest {
 		game.initializeServer(players);
 		game.setTournamentColour(Type.PURPLE);
 		
-		game.setTurn(1);
+		game.setTurn(0);
 		
 		
 		//create cards to be added to player's hand and target's display
@@ -56,6 +56,32 @@ public class RiposteTest {
 		game.getDisplay(1).add(maiden);
 	}
 
+
+	//Setup a game where the target's display has only 1 card
+	public void DisplayWithOneCard() {
+		players = new ArrayList<Player>();
+		player1 = new Player("Nick");
+		player2 = new Player("Ausitn");
+		players.add(player1);
+		players.add(player2);
+		game = new GameState();
+		game.initializeServer(players);
+		game.setTournamentColour(Type.PURPLE);
+		
+		game.setTurn(0);
+		
+		
+		//create cards to be added to player's hand and target's display
+		Card redCard = new Card(Type.RED, 4);
+		
+		//Give one of the players a break lance card to play
+		Card breakLance = new Card(Type.ACTION, Card.BREAK_LANCE);
+		game.getAllPlayers().get(0).getHand().add(breakLance);
+		
+		//Give target player a custom display
+		game.getDisplay(1).add(redCard);
+	}
+
 	
 	
 	
@@ -68,7 +94,7 @@ public class RiposteTest {
 		int targetPlayer = 1;
 		int targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
 		/*
-		 * test to make sure the target has a maiden as his last played card
+		 * test to make sure the target has a maiden as the last played card
 		*/
 		assertTrue(game.getDisplay(1).getCard(targetDisplaySize-1).isMaiden());
 		
@@ -76,22 +102,78 @@ public class RiposteTest {
 		 * test to make sure the player's display is still empty
 		 */
 		assertTrue(game.getDisplay(0).deckSize() == 0);
+		
+		
 		//assertFalse(game.getDisplay(0).getCard(targetDisplaySize-1).isMaiden());
 		
-		//test the size of discard deck before playing break lance
+		//test the size of discard deck before playing Riposte
 		assertEquals(game.getDiscardDeck().deckSize(), 0);
-		//play break lance
+		
+		assertEquals(game.getDisplay(targetPlayer).deckSize(), 7);
+		
+		//play Riposte
 		RulesEngine.riposte(game, cardPos, targetPlayer);
 		
-		//test the size of discard deck after playing break lance
-		//a total of 4 cards should have been discarded (1 break lance card + 3 purple cards)
+		//test the size of discard deck after playing Riposte
 		assertEquals(game.getDiscardDeck().deckSize(), 1);
 		
+		//Update this variable after a card has been removed from the display
+		targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
+		
 		/*
-		 * test to make sure the target has no purple cards. In this case we are testing the 2nd card in display
-		 * which used to be purple but isn't anymore.
+		 * test to make sure the target's last played card is no longer a maiden
 		*/
-		assertTrue(game.getDisplay(1).getCard(1).getCardType() != Type.PURPLE);
+		assertFalse(game.getDisplay(targetPlayer).getCard(targetDisplaySize-1).isMaiden());
+		
+		/*
+		 * test to make sure the player's last played card is now a maiden
+		*/
+		assertTrue(game.getDisplay(0).getCard(0).isMaiden());
+	}
+
+	
+	@Test
+	public void RiposteWithOneCardDisplayTest() {
+		DisplayWithOneCard();
+		
+		int cardPos = 0;
+		int targetPlayer = 1;
+		int targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
+		/*
+		 * test to make sure the target has a red card as the last played card
+		*/
+		assertTrue(game.getDisplay(1).getCard(targetDisplaySize-1).getCardType() == Type.RED);
+		
+		/*
+		 * test to make sure the player's display is still empty
+		 */
+		assertTrue(game.getDisplay(0).deckSize() == 0);
+		
+		
+		//test the size of discard deck before playing Riposte
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
+		
+		//test the size of the target's display
+		assertEquals(game.getDisplay(targetPlayer).deckSize(), 1);
+		
+		//play Riposte
+		RulesEngine.riposte(game, cardPos, targetPlayer);
+		
+		//test the size of discard deck after playing Riposte
+		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		
+		//Update this variable after a card has been removed from the display
+		targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
+		
+		/*
+		 * test to make sure the target's last played card is still the single red card
+		*/
+		assertTrue(game.getDisplay(targetPlayer).getCard(targetDisplaySize-1).getCardType() == Type.RED);
+		
+		/*
+		 * test to make sure the player's display is still empty
+		*/
+		assertEquals(game.getDisplay(0).deckSize(), 0);
 	}
 
 }

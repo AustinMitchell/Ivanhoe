@@ -33,7 +33,7 @@ public class BreakLanceTest {
 		game.initializeServer(players);
 		game.setTournamentColour(Type.PURPLE);
 		
-		game.setTurn(1);
+		game.setTurn(0);
 		
 		
 		//create cards to be added to player's hand and target's display
@@ -71,7 +71,7 @@ public class BreakLanceTest {
 		game.initializeServer(players);
 		game.setTournamentColour(Type.PURPLE);
 		
-		game.setTurn(1);
+		game.setTurn(0);
 		
 		//create cards to be added to player's hand and target's display
 		Card purpleCard1 = new Card(Type.PURPLE, 3);
@@ -100,7 +100,7 @@ public class BreakLanceTest {
 		game.initializeServer(players);
 		game.setTournamentColour(Type.PURPLE);
 		
-		game.setTurn(1);
+		game.setTurn(0);
 		
 		//create cards to be added to player's hand and target's display
 		Card purpleCard1 = new Card(Type.PURPLE, 3);
@@ -130,6 +130,7 @@ public class BreakLanceTest {
 		assertEquals(game.getDiscardDeck().deckSize(), 0);
 		//play break lance
 		RulesEngine.breakLance(game, cardPos, targetPlayer);
+		
 		
 		//test the size of discard deck after playing break lance
 		//a total of 4 cards should have been discarded (1 break lance card + 3 purple cards)
