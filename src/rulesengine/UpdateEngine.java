@@ -147,9 +147,6 @@ public class UpdateEngine {
 	
 	public static String unhorse(GameState game, int cardPos, int colour) {
 		String returnString;
-		int playerPos = game.getTurn();
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:" + cardPos + ":" + colour);
 		
 		return returnString;
@@ -157,21 +154,23 @@ public class UpdateEngine {
 	
 	public static String changeWeapon(GameState game, int cardPos, int colour) {
 		String returnString;
-		int playerPos = game.getTurn();
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:"  + cardPos + ":" + colour);
-		
 		return returnString;
 	}
 	
 	public static String dropWeapon(GameState game, int cardPos) {
 		String returnString;
-		int playerPos = game.getTurn();
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:" + cardPos);
-		
+		return returnString;
+	}
+	
+	public static String breakLance(GameState game, int cardPos, int targetPos) {
+		String returnString = ("card:" + cardPos + ":" + targetPos);
+		return returnString;
+	}
+	
+	public static String riposte(GameState game, int cardPos, int targetPos) {
+		String returnString = ("card:" + cardPos + ":" + targetPos);
 		return returnString;
 	}
 	
