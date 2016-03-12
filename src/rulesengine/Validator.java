@@ -61,6 +61,15 @@ public class Validator {
 			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.DROP_WEAPON) {
 				playableCards[i] = validateDropWeapon(game);
 			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.BREAK_LANCE) {
+				playableCards[i] = validateBreakLance(game);
+			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.RIPOSTE) {
+				playableCards[i] = validateRiposte(game);
+			}
+			
 			else {
 				playableCards[i] = true;
 			}
@@ -118,6 +127,22 @@ public class Validator {
 		else {
 			return false;
 		}
+	}
+	
+	/*
+	 * Function to validate break lance. there are no restrictions on this card for now.
+	 * It's function in the rules engine does not fully empty the display 
+	 */
+	public static boolean validateBreakLance(GameState game) {
+		return true;
+	}
+	
+	/*
+	 * Function to validate riposte. there are no restrictions on this card for now.
+	 * It's function in the rules engine does not fully empty the display 
+	 */
+	public static boolean validateRiposte(GameState game) {
+		return true;
 	}
 	
 	
