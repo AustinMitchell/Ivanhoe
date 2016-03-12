@@ -1,3 +1,4 @@
+
 package models;
 import rulesengine.Type;
 
@@ -94,6 +95,7 @@ public class GameState {
 		return result;
 	}
 	
+	//Initialize the game on the client side by receiving the participating players and card data
 	public void initializeClient(ArrayList<Player> newPlayers, int[][] cardData) {
 		players = newPlayers;
 		drawDeck = new Deck();
@@ -108,6 +110,7 @@ public class GameState {
 		setUpStartingHands();
 	}
 	
+	//Function to get player by name
 	public Player getPlayer(String pName) {
 		Player player = null;
 		for(int i = 0; i < players.size(); i++) {
@@ -118,7 +121,20 @@ public class GameState {
 		return player;
 	}
 	
+	//Function to get player by index
+	public Player getPlayer(int playerPos) {
+		return players.get(playerPos);
+	}
 	
+	//Function to get the player's hand
+	public Deck getHand(int playerPos) {
+		return players.get(playerPos).getHand();
+	}
+	
+	//Function to get player's display
+	public Deck getDisplay(int playerPos) {
+		return players.get(playerPos).getDisplay();
+	}
 	
 	public boolean hasTournamentStarted() {
 		return tournamentStarted;
