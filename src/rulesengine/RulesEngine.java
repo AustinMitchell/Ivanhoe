@@ -165,22 +165,17 @@ public class RulesEngine {
 	
 	public static String playValueCard(GameState game, int cardPos) {
 		String returnString;
-		Card card = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos);
 		
 		int playerPos = game.getTurn();
-		int cardType = card.getCardType();
-		int cardValue = card.getCardValue();
 		returnString = ("card:" + cardPos);
 		
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getAllPlayers().get(playerPos).getDisplay());
 		return returnString;
 	}
 	
-	public static String unhorse(GameState game, int cardPos, int colour) { //TODO: CLEAN UP THIS SHIT LIKE WE DID IN PLAY VALUE CARDS
+	public static String unhorse(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:" + cardPos + ":" + colour);
 		game.setTournamentColour(colour);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
@@ -190,8 +185,6 @@ public class RulesEngine {
 	public static String changeWeapon(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:" + cardPos + ":" + colour);
 		game.setTournamentColour(colour);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
@@ -201,11 +194,47 @@ public class RulesEngine {
 	public static String dropWeapon(GameState game, int cardPos) {
 		String returnString;
 		int playerPos = game.getTurn();
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:" + cardPos);
 		game.setTournamentColour(Type.GREEN);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
+		return returnString;
+	}
+	
+	
+	//Process break lance card
+	public static String breakLance(GameState game, int cardPos, int targetPos) {
+		String returnString = ("card:" + cardPos);
+		int turn = game.getTurn();
+		//Discard the Break Lance card
+		
+		game.getHand(turn).moveCardTo(cardPos, game.getDiscardDeck());
+		//game.getAllPlayers().get(turn).getHand().moveCardTo(cardPos, game.getDiscardDeck());
+		
+		//Discard all purple cards from the target's display while making sure at least one card remains
+		for(int i = 0; i < game.getDisplay(targetPos).deckSize(); i++) {
+			int type = game.getDisplay(targetPos).getCard(i).getCardType();
+			if(type == Type.PURPLE && game.getDisplay(targetPos).deckSize() > 1) {
+				System.out.println("DISCARDING PURPLE CARD");
+				game.getDisplay(targetPos).moveCardTo(i, game.getDiscardDeck());
+			}
+		}
+		return returnString;
+	}
+	
+	//Process Riposte card
+	public static String riposte(GameState game, int cardPos, int targetPos) {
+		String returnString = ("card:" + cardPos);
+		int turn = game.getTurn();
+		//Discard the riposte card
+		game.getHand(turn).moveCardTo(cardPos, game.getDiscardDeck());
+		/*
+		 * remove the last card in a target's display and add to player's display
+		 * perform the procedure ONLY if the target doesn't end up with an empty display
+		 */
+		int cardToRemove = game.getDisplay(targetPos).deckSize()-1;
+		if(cardToRemove > 0) {
+			game.getDisplay(targetPos).moveCardTo(cardToRemove, game.getDisplay(turn));
+		}
 		return returnString;
 	}
 	
