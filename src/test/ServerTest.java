@@ -74,18 +74,5 @@ public class ServerTest {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test
-	public void setupUpdateStreamsTest() {
-		try {
-			setupServer();
-			server.setupUpdateStreams();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-
 }
 

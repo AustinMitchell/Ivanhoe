@@ -16,10 +16,9 @@ public class Client implements Runnable {
 	
 	private GameState game;
 	private BufferedReader in;
-	private PrintWriter out;
+	private OutputThread out;
 	private int id;
 	private String updateIn;
-	private String updateOut;
 	
 	private String serverName;
 	private String username;
@@ -36,7 +35,6 @@ public class Client implements Runnable {
 		guiFlags = new LinkedList<String>();
 		game = new GameState();
 		updateIn = "";
-		updateOut = "";
 		connectStatus = "";
 	}
 
@@ -48,9 +46,7 @@ public class Client implements Runnable {
 	
 
 	public void sendMessage(String message) {
-		synchronized (updateOut) {
-			updateOut = message;
-		}
+		out.sendMessage(message);
 	}
 
 	public boolean waitingForConnection() {
@@ -87,28 +83,17 @@ public class Client implements Runnable {
 
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
-			out = new PrintWriter(socket.getOutputStream(), true);
+			out = new OutputThread(new PrintWriter(socket.getOutputStream(), true));
 
 			id = Integer.parseInt(in.readLine());
 			log.info(id +": " + username);
-			out.println(username);
+			out.sendMessage(username);
 
 			for (;;) {
 				updateIn = in.readLine();
 				Parser.networkSplitter(updateIn, game);
 				synchronized (guiFlags) {
 					Parser.guiSplitter(guiFlags, updateIn);
-				}
-				if (game.getTurn() == id) {
-					while (true) {
-						synchronized (updateOut) {
-							if (!updateOut.equals("")) {
-								out.println(updateOut);
-								updateOut = "";
-								break;
-							}
-						}
-					}
 				}
 			}
 			// socket.close();
