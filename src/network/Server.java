@@ -2,32 +2,31 @@ package network;
 
 import models.*;
 import rulesengine.*; // does contain parser, etc?
+
 import java.net.*;
 import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
+
 import java.io.*;
 
 public class Server{
-	public static final int   NUM_PLAYERS = 2;
-	public static final int   PORT = 5000;
-	private BufferedReader    streamIn = null;
-	private BufferedWriter    streamOut = null;
-	private ServerSocket      serverSocket;
-	private RulesEngine       rules;
-	private GameState         game;
-	private int          	  numOfPlayers;
-	private ArrayList<Player> players;
-	private ArrayList<Socket> sockets;
-	static final Logger log = Logger.getLogger("Server");
-
-	//private ArrayList<OutputStream> toClientStreams;
-	//private ArrayList<InputStream> fromClientStreams;
-	//private ArrayList<BufferedReader> fromClientStreams;
+	private enum ServerState {
+		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, IN_GAME
+	}
 	
-    private ArrayList<PrintWriter> out;
-    private ArrayList<BufferedReader> in;
-
-	private String updateString;
+	static final Logger             log = Logger.getLogger("Server");
+	public static final int         MAX_PLAYERS = 2;
+	public static final int         PORT = 5000;
+	private ServerSocket            serverSocket;
+	private GameState               game;
+	private ArrayList<Player>       players;
+	private ArrayList<Socket>       sockets;
+    private ArrayList<OutputThread> out;
+    private ArrayList<InputThread>  in;
+    private int          	        numOfPlayers;
+	private String                  updateString;
+	private ServerState             serverState;
 	
 	public Server(int port, int maxPlayers) throws IOException {
 		numOfPlayers = maxPlayers;
@@ -35,8 +34,9 @@ public class Server{
 		serverSocket = new ServerSocket(port);
 		serverSocket.setSoTimeout(1000000);
 		players = new ArrayList<Player>();
-		in  = new ArrayList<BufferedReader>();
-		out = new ArrayList<PrintWriter>();
+		in  = new ArrayList<InputThread>();
+		out = new ArrayList<OutputThread>();
+		serverState = ServerState.WAITING_FOR_ALL;
 	}
 	
 	public int getNumOfPlayers() {
@@ -63,14 +63,24 @@ public class Server{
 		InetAddress result;
 		try {
 			Socket pSocket = serverSocket.accept();
-			BufferedReader playerIn = new BufferedReader (new InputStreamReader(pSocket.getInputStream()));
-			PrintWriter playerOut = new PrintWriter(pSocket.getOutputStream(), true);
+			InputThread playerIn = new InputThread(new BufferedReader (new InputStreamReader(pSocket.getInputStream())));
+			OutputThread playerOut = new OutputThread (new PrintWriter(pSocket.getOutputStream(), true));
 			
 			in.add(playerIn);
 			out.add(playerOut);
 			
-			playerOut.println(players.size());
-            String name = playerIn.readLine();
+			for (OutputThread o: out) {
+				o.sendMessage(""+players.size());
+			}
+			
+			String name = null;
+			try {
+				while(!playerIn.hasMessage()) {}
+				name = playerIn.readMessage();
+			} catch (Exception e) {
+				throw new RuntimeException("Input thread has died.");
+			}
+			
             Player p = new Player(name);
             System.out.println(name);
             players.add(p);
@@ -88,59 +98,90 @@ public class Server{
 		
 	}
 
-	public void setupUpdateStreams() throws IOException {
-		for(int i = 0; i < players.size(); i++) {
-         	in.add(new BufferedReader(new InputStreamReader(sockets.get(i).getInputStream())));
-         	out.add(new PrintWriter(sockets.get(i).getOutputStream()));
+	private Object[] getUpdate() {
+		Object[] update = null;
+		try {
+			while(update == null) {
+				for (int i=0; i<numOfPlayers; i++) {
+					if (in.get(i).hasMessage()) {
+						update = new Object[2];
+						update[0] = i;
+						update[1] = in.get(i).readMessage();
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			for (int i=0; i<numOfPlayers; i++) {
+				out.get(i).killThread();
+				in.get(i).killThread();
+			}
+			throw new RuntimeException("Input thread has died.");
 		}
-	}
-
-	public String getUpdate(int turn) throws IOException {
-		String update;
-        update = in.get(game.getTurn()).readLine();
+		
 		return update;
 	}
 
-	public void updateClients(String update) throws IOException {
+	private void updateClients(String update) throws IOException {
 		for(int i = 0; i < players.size(); i++) {
 			log.info("Sending to client " + i +": " + update);
-         	out.get(i).println(update);
+         	out.get(i).sendMessage(update);
 		}
 	}
 	
-	public String setupGame() {
+	private String waitForPlayer() {
+		acceptPlayer();
 		
-		//players = new ArrayList<Player>();
-		int i;
-		for(i = 0; i < numOfPlayers; i++) {
-			acceptPlayer();
+		if (players.size() == numOfPlayers) {
+			serverState = ServerState.CREATE_GAME;
 		}
-		game = new GameState();
-		updateString = game.initializeServer(players); // make initializeServer return shuffled array of cards as string
+		
 		return updateString;
 	}
 	
-	public void runGame() throws IOException {
+	private void createGame() throws IOException {
+		game = new GameState();
+		updateString = game.initializeServer(players); // make initializeServer return shuffled array of cards as string
+		updateClients(updateString);
 		RulesEngine.startGame(game); // this should call static rules engine method and start first tournament
-		while(true) {
-			updateClients(updateString);
-			
-			updateString = getUpdate(game.getTurn());
-			updateString = Parser.networkSplitter(updateString, game);
-			System.out.println("Message to clients: " + updateString);
-		}
+		serverState = ServerState.IN_GAME;
+	}
+	
+	private void gameIteration() throws IOException {
+		updateString = (String)getUpdate()[1];
+		updateString = Parser.networkSplitter(updateString, game);
+		System.out.println("Message to clients: " + updateString);
 		
+		updateClients(updateString);
+	}
+	
+	private void handleState(ServerState st) throws IOException {
+		switch (st) {
+			case WAITING_FOR_FIRST:
+				break;
+			case WAITING_FOR_ALL:
+				waitForPlayer();
+				break;
+			case CREATE_GAME:
+				createGame();
+				break;
+			case IN_GAME:
+				gameIteration();
+				break;
+		}
+	}
+
+	private void serverLoop() throws IOException {
+		while(true) {
+			handleState(serverState);
+		}
 	}
 	
 	public static void main(String[] args) {
 		try {
-			Server server = new Server(PORT, NUM_PLAYERS);
-			server.updateString = server.setupGame();
-			//server.setupUpdateStreams();
-			server.runGame();
+			Server server = new Server(PORT, MAX_PLAYERS);
+			server.serverLoop();
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (IndexOutOfBoundsException e) {
 			e.printStackTrace();
 		}
 		
