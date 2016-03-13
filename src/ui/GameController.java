@@ -77,7 +77,7 @@ public class GameController {
 				while (client.waitingForConnection()) {}
 				if (client.connectPassed()) {
 					// TODO: Implement game being set up
-					waitForGame(Server.NUM_PLAYERS);
+					waitForGame(Server.MAX_PLAYERS);
 				} else {
 					connectPanel.connectFailed();
 				}
