@@ -638,7 +638,7 @@ public class GamePanel extends ScaledPanel {
 					currentOverlay = new UnhorseOverlay(descriptionBox, hand[THIS_PLAYER]);
 					break;
 				case CHANGE_WEAPON:
-					currentOverlay = new ChangeWeaponOverlay(descriptionBox, hand[THIS_PLAYER], tournamentColour);
+					currentOverlay = new ChangeWeaponOverlay(descriptionBox, hand[THIS_PLAYER], game);
 					break;
 				default:
 					break;

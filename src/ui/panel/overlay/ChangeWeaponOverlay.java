@@ -1,6 +1,7 @@
 package ui.panel.overlay;
 
 import models.GameState;
+import rulesengine.Validator;
 import rulesengine.Type;
 import simple.gui.*;
 import ui.DescriptionBox;
@@ -12,14 +13,22 @@ public class ChangeWeaponOverlay extends OverlayPanel {
 	private CardDisplayPanel playerHand;
 	private TokenBar tokenChoice;
 	
-	public ChangeWeaponOverlay(DescriptionBox descriptionBox, CardDisplayPanel playerHand, int currentColor) {
+	public ChangeWeaponOverlay(DescriptionBox descriptionBox, CardDisplayPanel playerHand, GameState game) {
 		super("Change Weapon - Select Tournament Colour...", descriptionBox);
 		
+		
 		tokenChoice = new TokenBar();
-		tokenChoice.enableToken(Type.RED);
+		boolean[] validColours = Validator.validateChangeWeapon(game);
+		for(int i = 0; i < validColours.length; i++) {
+			if(validColours[i]) {
+				tokenChoice.enableToken(i);
+			}
+		}
+		
+		/*tokenChoice.enableToken(Type.RED);
 		tokenChoice.enableToken(Type.YELLOW);
-		tokenChoice.enableToken(Type.BLUE);
-		tokenChoice.disableToken(currentColor);
+		tokenChoice.enableToken(Type.BLUE);*/
+		//tokenChoice.disableToken(game.getTournamentColour());
 		
 		this.playerHand = new CardDisplayPanel(Image.Orientation.UP, true);
 		for (Widget w: playerHand.getWidgetList()) {

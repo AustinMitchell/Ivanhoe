@@ -43,8 +43,8 @@ public class RiposteTest {
 		Card maiden = new Card (Type.WHITE, 6);
 		
 		//Give one of the players a break lance card to play
-		Card breakLance = new Card(Type.ACTION, Card.BREAK_LANCE);
-		game.getAllPlayers().get(0).getHand().add(breakLance);
+		Card riposte = new Card(Type.ACTION, Card.RIPOSTE);
+		game.getAllPlayers().get(0).getHand().add(riposte);
 		
 		//Give target player a custom display
 		game.getDisplay(1).add(redCard);
@@ -75,8 +75,8 @@ public class RiposteTest {
 		Card redCard = new Card(Type.RED, 4);
 		
 		//Give one of the players a break lance card to play
-		Card breakLance = new Card(Type.ACTION, Card.BREAK_LANCE);
-		game.getAllPlayers().get(0).getHand().add(breakLance);
+		Card riposte = new Card(Type.ACTION, Card.RIPOSTE);
+		game.getAllPlayers().get(0).getHand().add(riposte);
 		
 		//Give target player a custom display
 		game.getDisplay(1).add(redCard);

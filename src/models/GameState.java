@@ -61,6 +61,7 @@ public class GameState {
 												Card.COUNTERCHARGE, Card.DISGRACE, Card.ADAPT, Card.OUTWIT, Card.SHIELD, 
 												Card.STUNNED, Card.IVANHOE, Card.RIPOSTE, Card.RIPOSTE, Card.KNOCKDOWN};
 	
+	
 	public GameState() {
 		discardDeck = new Deck();
 		tournamentNumber = 0;

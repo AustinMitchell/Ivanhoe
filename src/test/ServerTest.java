@@ -54,7 +54,7 @@ public class ServerTest {
 	}*/
 	
 	@Test
-	public void setuptPlayersTest() {
+	public void setupPlayersTest() {
 		try {
 			setupServer();
 		} catch (IOException e) {

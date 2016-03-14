@@ -203,7 +203,7 @@ public class RulesEngine {
 	
 	//Process break lance card
 	public static String breakLance(GameState game, int cardPos, int targetPos) {
-		String returnString = ("card:" + cardPos);
+		String returnString = ("card:" + cardPos + targetPos);
 		int turn = game.getTurn();
 		//Discard the Break Lance card
 		
@@ -214,7 +214,6 @@ public class RulesEngine {
 		for(int i = 0; i < game.getDisplay(targetPos).deckSize(); i++) {
 			int type = game.getDisplay(targetPos).getCard(i).getCardType();
 			if(type == Type.PURPLE && game.getDisplay(targetPos).deckSize() > 1) {
-				System.out.println("DISCARDING PURPLE CARD");
 				game.getDisplay(targetPos).moveCardTo(i, game.getDiscardDeck());
 			}
 		}
@@ -223,7 +222,7 @@ public class RulesEngine {
 	
 	//Process Riposte card
 	public static String riposte(GameState game, int cardPos, int targetPos) {
-		String returnString = ("card:" + cardPos);
+		String returnString = ("card:" + cardPos + targetPos);
 		int turn = game.getTurn();
 		//Discard the riposte card
 		game.getHand(turn).moveCardTo(cardPos, game.getDiscardDeck());
@@ -237,6 +236,24 @@ public class RulesEngine {
 		}
 		return returnString;
 	}
+
+
+	
+	//Process Dodge
+	public static String dodge(GameState game, int cardPos, int targetPos, int targetCardPos) {
+		String returnString = "card:" + cardPos + targetPos + targetCardPos;
+		int turn = game.getTurn();
+		//Discard the riposte card
+		game.getHand(turn).moveCardTo(cardPos, game.getDiscardDeck());
+		
+		//Discard the target's card only if the display's size is bigger than 1
+		if(game.getDisplay(targetPos).deckSize() > 1) {
+			game.getDisplay(targetPos).moveCardTo(targetCardPos, game.getDiscardDeck());
+		}
+		return returnString;
+	}
+	
+	
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {
 		String result = ("card:" + cardPos);

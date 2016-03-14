@@ -137,9 +137,6 @@ public class UpdateEngine {
 	
 	public static String playValueCard(GameState game, int cardPos) {
 		String returnString;
-		/*int playerPos = game.getTurn();
-		int cardType = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();*/
 		returnString = ("card:" + cardPos);
 		
 		return returnString;
@@ -177,5 +174,10 @@ public class UpdateEngine {
 	public static String unimplementedActionCard(GameState game, int cardPos) {
 		String result = ("card:" + cardPos);
 		return result;
+	}
+	
+	public static String dodge(GameState game, int cardPos, int targetPos, int targetCardPos) {
+		String returnString = "card:" + cardPos + targetPos + targetCardPos;
+		return returnString;
 	}
 }
