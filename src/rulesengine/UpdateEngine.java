@@ -185,4 +185,9 @@ public class UpdateEngine {
 		String returnString = "card:" + cardPos + ":" + targetCardPos;
 		return returnString;
 	}
+	
+	public static String knockdown(GameState game, int cardPos, int targetPos, int targetCardPos) {
+		String returnString = "card:" + cardPos + targetPos + targetCardPos;
+		return returnString;
+	}
 }

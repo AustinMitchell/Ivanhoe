@@ -116,6 +116,19 @@ public class Validator {
 			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.RETREAT) {
 				playableCards[i] = validateRetreat(game);
 			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.KNOCKDOWN) {
+				ArrayList<Boolean> availableTargets = validateKnockdown(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
 
 
 			else {
@@ -248,7 +261,7 @@ public class Validator {
 	}
 	
 	/*
-	 * Function to validate retreat
+	 * Function to validate Retreat
 	 */
 	public static boolean validateRetreat(GameState game) {
 		boolean valid = false;
@@ -257,6 +270,24 @@ public class Validator {
 		}
 		return valid;
 	}
+	
+	/*
+	 * Function to validate Knockdown. 
+	 */
+	public static ArrayList<Boolean> validateKnockdown (GameState game) {
+		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			
+			if(i != game.getTurn() && game.getHand(i).deckSize() > 0) {
+				availableTargets.add(true);
+			}
+			else {
+				availableTargets.add(false);
+			}
+		}
+		return availableTargets;
+	}
+	
 	
 	
 	public static boolean isGameOver(GameState game) {

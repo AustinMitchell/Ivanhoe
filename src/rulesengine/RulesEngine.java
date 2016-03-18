@@ -204,11 +204,10 @@ public class RulesEngine {
 	//Process break lance card
 	public static String breakLance(GameState game, int cardPos, int targetPos) {
 		String returnString = ("card:" + cardPos + targetPos);
-		int turn = game.getTurn();
+		int playerPos = game.getTurn();
 		//Discard the Break Lance card
 		
-		game.getHand(turn).moveCardTo(cardPos, game.getDiscardDeck());
-		//game.getAllPlayers().get(turn).getHand().moveCardTo(cardPos, game.getDiscardDeck());
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
 		
 		//Discard all purple cards from the target's display while making sure at least one card remains
 		for(int i = 0; i < game.getDisplay(targetPos).deckSize(); i++) {
@@ -223,16 +222,16 @@ public class RulesEngine {
 	//Process Riposte card
 	public static String riposte(GameState game, int cardPos, int targetPos) {
 		String returnString = ("card:" + cardPos + targetPos);
-		int turn = game.getTurn();
+		int playerPos = game.getTurn();
 		//Discard the riposte card
-		game.getHand(turn).moveCardTo(cardPos, game.getDiscardDeck());
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
 		/*
 		 * remove the last card in a target's display and add to player's display
 		 * perform the procedure ONLY if the target doesn't end up with an empty display
 		 */
 		int cardToRemove = game.getDisplay(targetPos).deckSize()-1;
 		if(cardToRemove > 0) {
-			game.getDisplay(targetPos).moveCardTo(cardToRemove, game.getDisplay(turn));
+			game.getDisplay(targetPos).moveCardTo(cardToRemove, game.getDisplay(playerPos));
 		}
 		return returnString;
 	}
@@ -242,9 +241,9 @@ public class RulesEngine {
 	//Process Dodge
 	public static String dodge(GameState game, int cardPos, int targetPos, int targetCardPos) {
 		String returnString = "card:" + cardPos + targetPos + targetCardPos;
-		int turn = game.getTurn();
+		int playerPos = game.getTurn();
 		//Discard the dodge card
-		game.getHand(turn).moveCardTo(cardPos, game.getDiscardDeck());
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
 		
 		//Discard the target's card only if the display's size is bigger than 1
 		if(game.getDisplay(targetPos).deckSize() > 1) {
@@ -254,19 +253,34 @@ public class RulesEngine {
 	}
 	
 	
-	
+	//Process Retreat
 	public static String retreat(GameState game, int cardPos, int targetCardPos) {
 		String returnString = "card:" + cardPos + ":" + targetCardPos;
+		int playerPos = game.getTurn();
 		//Discard the retreat card
 		game.getHand(game.getTurn()).moveCardTo(cardPos, game.getDiscardDeck());
 		
 		//Move card from player's display to their hand
 		if(game.getDisplay(game.getTurn()).deckSize() > 1) {
-			game.getDisplay(game.getTurn()).moveCardTo(targetCardPos, game.getHand(game.getTurn()));
+			game.getDisplay(game.getTurn()).moveCardTo(targetCardPos, game.getHand(playerPos));
 		}
-		
 		return returnString;
 	}
+	
+	//Process KnockDown
+	public static String knockdown(GameState game, int cardPos, int targetPos, int targetCardPos) {
+		String returnString = "card:" + cardPos + targetPos + targetCardPos;
+		int playerPos = game.getTurn();
+		//Discard the knockdown card
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
+		
+		//Take the target's card and add it to player's hand
+		if (game.getHand(targetPos).deckSize() > 0) {
+			game.getHand(targetPos).moveCardTo(targetCardPos, game.getHand(playerPos));
+		}
+		return returnString;
+	}
+	
 	
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {
