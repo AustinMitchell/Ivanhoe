@@ -180,4 +180,9 @@ public class UpdateEngine {
 		String returnString = "card:" + cardPos + targetPos + targetCardPos;
 		return returnString;
 	}
+	
+	public static String retreat(GameState game, int cardPos, int targetCardPos) {
+		String returnString = "card:" + cardPos + ":" + targetCardPos;
+		return returnString;
+	}
 }

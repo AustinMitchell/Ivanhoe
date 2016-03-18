@@ -100,6 +100,24 @@ public class Validator {
 				}
 			}
 			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.DODGE) {
+				ArrayList<Boolean> availableTargets = validateDodge(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.RETREAT) {
+				playableCards[i] = validateRetreat(game);
+			}
+
+
 			else {
 				playableCards[i] = true;
 			}
@@ -166,15 +184,13 @@ public class Validator {
 		if (game.getTournamentColour() != Type.PURPLE && game.getTournamentColour() != Type.GREEN) {
 			return true;
 		}
-		
 		else {
 			return false;
 		}
 	}
 	
 	/*
-	 * Function to validate break lance. there are no restrictions on this card for now.
-	 * It's function in the rules engine does not fully empty the display 
+	 * Function to validate break lance.
 	 */
 	public static ArrayList<Boolean> validateBreakLance(GameState game) {
 		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
@@ -198,8 +214,7 @@ public class Validator {
 
 	
 	/*
-	 * Function to validate riposte. there are no restrictions on this card for now.
-	 * It's function in the rules engine does not fully empty the display 
+	 * Function to validate riposte.
 	 */
 	public static ArrayList<Boolean> validateRiposte(GameState game) {
 		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
@@ -213,6 +228,34 @@ public class Validator {
 			}
 		}
 		return availableTargets;
+	}
+	
+	/*
+	 * Function to validate Dodge. 
+	 */
+	public static ArrayList<Boolean> validateDodge (GameState game) {
+		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			
+			if(i != game.getTurn() && game.getDisplay(i).deckSize() > 1) {
+				availableTargets.add(true);
+			}
+			else {
+				availableTargets.add(false);
+			}
+		}
+		return availableTargets;
+	}
+	
+	/*
+	 * Function to validate retreat
+	 */
+	public static boolean validateRetreat(GameState game) {
+		boolean valid = false;
+		if (game.getDisplay(game.getTurn()).deckSize() > 1) {
+			valid = true;
+		}
+		return valid;
 	}
 	
 	

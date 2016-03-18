@@ -243,7 +243,7 @@ public class RulesEngine {
 	public static String dodge(GameState game, int cardPos, int targetPos, int targetCardPos) {
 		String returnString = "card:" + cardPos + targetPos + targetCardPos;
 		int turn = game.getTurn();
-		//Discard the riposte card
+		//Discard the dodge card
 		game.getHand(turn).moveCardTo(cardPos, game.getDiscardDeck());
 		
 		//Discard the target's card only if the display's size is bigger than 1
@@ -253,6 +253,20 @@ public class RulesEngine {
 		return returnString;
 	}
 	
+	
+	
+	public static String retreat(GameState game, int cardPos, int targetCardPos) {
+		String returnString = "card:" + cardPos + ":" + targetCardPos;
+		//Discard the retreat card
+		game.getHand(game.getTurn()).moveCardTo(cardPos, game.getDiscardDeck());
+		
+		//Move card from player's display to their hand
+		if(game.getDisplay(game.getTurn()).deckSize() > 1) {
+			game.getDisplay(game.getTurn()).moveCardTo(targetCardPos, game.getHand(game.getTurn()));
+		}
+		
+		return returnString;
+	}
 	
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {
