@@ -68,7 +68,6 @@ public class KnockdownTest {
 		Card knockdown = new Card(Type.ACTION, Card.KNOCKDOWN);
 		game.getHand(0).add(knockdown);
 		game.getHand(0).add(knockdown);
-		
 	}
 
 

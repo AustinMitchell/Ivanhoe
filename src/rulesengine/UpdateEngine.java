@@ -190,4 +190,9 @@ public class UpdateEngine {
 		String returnString = "card:" + cardPos + targetPos + targetCardPos;
 		return returnString;
 	}
+	
+	public static String outmaneuver(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		return returnString;
+	}
 }

@@ -281,6 +281,25 @@ public class RulesEngine {
 		return returnString;
 	}
 	
+	//Process Outmaneuver
+	public static String outmaneuver(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		int playerPos = game.getTurn();
+		//Discard the outmaneuver card
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
+		
+		//loop through all players
+		for (int i = 0; i < game.getAllPlayers().size(); i++) {
+			//discard the last card in the display if it is not the player's display
+			// and if the display has more than 1 card
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1) {
+				int displaySize = game.getDisplay(i).deckSize();
+				game.getDisplay(i).moveCardTo(displaySize-1, game.getDiscardDeck());
+			}
+		}
+		return returnString;
+	}
+	
 	
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {

@@ -129,6 +129,28 @@ public class Validator {
 					}
 				}
 			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.OUTMANEUVER) {
+				ArrayList<Boolean> availableTargets = validateOutmaneuver(game);
+				if(availableTargets.size() > 0) {
+					playableCards[i] = true;
+				}
+				else {
+					playableCards[i] = false;
+				}
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.CHARGE) {
+				
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.COUNTERCHARGE) {
+				
+			}
+			
+			
+			
+			
 
 
 			else {
@@ -286,6 +308,20 @@ public class Validator {
 			}
 		}
 		return availableTargets;
+	}
+	
+	/*
+	 * Function to validate outmaneuver
+	 */
+	public static ArrayList<Boolean> validateOutmaneuver(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		int playerPos = game.getTurn();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1) {
+				validTargets.add(true);
+			}
+		}
+		return validTargets;
 	}
 	
 	
