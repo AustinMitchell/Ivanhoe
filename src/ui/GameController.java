@@ -77,9 +77,17 @@ public class GameController {
 				while (client.waitingForConnection()) {}
 				if (client.connectPassed()) {
 					// TODO: Implement game being set up
-					waitForGame(Server.MAX_PLAYERS);
+					if (client.isFirstToConnect()) {
+						setupGame();
+					} else {
+						waitForGame();
+					}
 				} else {
-					connectPanel.connectFailed();
+					if (client.getConnectMessage().equals(Client.CONNECT_FAILED)) {
+						connectPanel.connectFailed();
+					} else {
+						connectPanel.connectRejected();
+					}
 				}
 			} else {
 				connectPanel.invalidIP();
@@ -97,9 +105,9 @@ public class GameController {
 	}
 	
 	// Creates a new UI panel for waiting for a game to start
-	public void waitForGame(int numPlayers) {
+	public void waitForGame() {
 		screen.clear();
-		screen.addPanel(new WaitForJoinPanel(this, numPlayers, null));
+		screen.addPanel(new WaitForJoinPanel(this));
 		screen.setCurrentPanel(0);
 	}
 	

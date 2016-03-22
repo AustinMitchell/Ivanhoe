@@ -22,9 +22,9 @@ public class Parser {
 	 */
 	public static void guiSplitter(Queue<String> guiFlags, String flag) {
 		
-		if(flag.contains(RulesEngine.NEW_COM)) //check if there are multiple commands
+		if(flag.contains(Flag.NEW_COM)) //check if there are multiple commands
 		{
-			String commands[] = flag.split(RulesEngine.NEW_COM);
+			String commands[] = flag.split(Flag.NEW_COM);
 			for(int i = 0; i < commands.length; i++) {
 				guiFlags.add(commands[i]);
 			}
@@ -38,13 +38,13 @@ public class Parser {
 
 	public static String networkSplitter(String flag, GameState game) {
 		String[] commands;
-		if(flag.contains(RulesEngine.NEW_COM)) //check if there are multiple commands
+		if(flag.contains(Flag.NEW_COM)) //check if there are multiple commands
 		{
-			commands = flag.split(RulesEngine.NEW_COM);
+			commands = flag.split(Flag.NEW_COM);
 			for(int i = 0; i < commands.length; i++) {
 				commands[i] = parse(commands[i].split(":"), game);
 			}
-			return String.join(RulesEngine.NEW_COM, commands);
+			return String.join(Flag.NEW_COM, commands);
 		}
 		else //the case of one single command
 			return parse(flag.split(":"), game);
@@ -58,10 +58,10 @@ public class Parser {
 		synchronized(game) {
 			switch (command[0]) {
 			
-				case "initClient": { //initializes draw deck on the client side
+				case Flag.INIT_CLIENT: { //initializes draw deck on the client side
 					int i = 1;
 					ArrayList<Player> players = new ArrayList();
-					while(!command[i].equals("cards")) {
+					while(!command[i].equals(Flag.CARDS_BEGIN)) {
 						players.add(new Player(command[i]));
 						i++;
 					}
@@ -74,11 +74,11 @@ public class Parser {
 						cardData[j][1] = Integer.parseInt(command[j*2 + i + 1]);
 					}
 					game.initializeClient(players, cardData);
-					result = "initClient";
+					result = Flag.INIT_CLIENT;
 					break;
 				}
 					
-				case "renewDeck":
+				case Flag.RENEW_DECK:
 					
 					int[][] cardData = new int[(command.length-1) / 2][2];
 					for(int j = 0; j < cardData.length; j++) {
@@ -89,41 +89,41 @@ public class Parser {
 					}
 					
 					game.renewDrawDeck(cardData);
-					result = "renewDrawDeck";
+					result = Flag.RENEW_DECK;
 					
 					break;
 					
 			
-				case  "startGame":
+				case  Flag.START_GAME:
 					result = RulesEngine.startGame(game);	
 					break;
 				
-				case "drawCard":
+				case Flag.DRAW_CARD:
 					result = RulesEngine.drawCard(game);
 					if(!game.hasTournamentStarted()) {
-						result += RulesEngine.NEW_COM + "startTournament";
+						result += Flag.NEW_COM + Flag.START_TOURNAMENT;
 						if(Validator.canStartTournament(game)) {
-							result += RulesEngine.NEW_COM + "canStartTournament:true";
+							result += Flag.NEW_COM + Flag.CAN_START_TOURNAMENT + ":true";
 						}
 						else {
-							result += RulesEngine.NEW_COM + "canStartTournament:false";
+							result += Flag.NEW_COM + Flag.CAN_START_TOURNAMENT + ":false";
 						}
 					}
 					break;
 					
-				case "endTurn":
+				case Flag.END_TURN:
 					result = RulesEngine.endTurn(game, command[1]);
 					break;
 					
-				case "startTournament":
+				case Flag.START_TOURNAMENT:
 					result = RulesEngine.startTournament(game);
 					break;
 					
-				case "setColour":
+				case Flag.SET_COLOUR:
 					result = RulesEngine.setColour(game, command[1]);
 					break;
 					
-				case "card":
+				case Flag.CARD:
 					int currPlayer = game.getTurn();
 					int type = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardType();
 					int value = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardValue();

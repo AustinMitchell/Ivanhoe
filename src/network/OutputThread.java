@@ -1,15 +1,16 @@
 package network;
 
 import java.io.PrintWriter;
+import java.util.*;
 
 public class OutputThread implements Runnable {
 		private PrintWriter out;
-		private String updateOut;
+		private Queue<String> updateOut;
 		private boolean exit;
 		
 		public OutputThread(PrintWriter out) {
 			this.out = out;
-			updateOut = "";
+			updateOut = new LinkedList<String>();
 			exit = false;
 			
 			new Thread(this).start();
@@ -17,7 +18,7 @@ public class OutputThread implements Runnable {
 		
 		public void sendMessage(String msg) {
 			synchronized(updateOut) {
-				updateOut = msg;
+				updateOut.add(msg);
 			}
 		}
 		
@@ -29,9 +30,8 @@ public class OutputThread implements Runnable {
 		public void run() {
 			while (!exit) {
 				synchronized (updateOut) {
-					if (!updateOut.equals("")) {
-						out.println(updateOut);
-						updateOut = "";
+					if (!updateOut.isEmpty()) {
+						out.println(updateOut.poll());
 					}
 				}
 			}

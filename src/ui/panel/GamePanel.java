@@ -8,6 +8,7 @@ import models.Card;
 import models.GameState;
 import models.Player;
 import network.Client;
+import network.Flag;
 import rulesengine.RulesEngine;
 import rulesengine.Type;
 import rulesengine.UpdateEngine;
@@ -651,7 +652,7 @@ public class GamePanel extends ScaledPanel {
 				String[] result = currentOverlay.getFinalCommandString().split(":");
 				switch(overlayCommand) {
 					case START_TOURNAMENT:
-						client.sendMessage("setColour:" + result[0] + RulesEngine.NEW_COM + "startTournament");
+						client.sendMessage(Flag.SET_COLOUR + ":" + result[0] + Flag.NEW_COM + Flag.START_TOURNAMENT);
 						break;
 					case UNHORSE:
 						client.sendMessage(UpdateEngine.unhorse(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));

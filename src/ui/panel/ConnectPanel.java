@@ -70,6 +70,9 @@ public class ConnectPanel extends ScaledPanel {
 		addWidget(addressEntryPanel, 35, 55, 30, 35);
 	}
 	
+	public void connectRejected() {
+		entryFailed.setText("Connection to server was not accepted (game likely already started)");
+	}
 	public void connectFailed() {
 		entryFailed.setText("Connection to server failed (possibly invalid IP)");
 	}
