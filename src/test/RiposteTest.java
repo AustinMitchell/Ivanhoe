@@ -42,7 +42,7 @@ public class RiposteTest {
 		Card squire = new Card(Type.WHITE, 2);
 		Card maiden = new Card (Type.WHITE, 6);
 		
-		//Give one of the players a break lance card to play
+		//Give one of the players a riposte card to play
 		Card riposte = new Card(Type.ACTION, Card.RIPOSTE);
 		game.getAllPlayers().get(0).getHand().add(riposte);
 		
@@ -74,7 +74,7 @@ public class RiposteTest {
 		//create cards to be added to player's hand and target's display
 		Card redCard = new Card(Type.RED, 4);
 		
-		//Give one of the players a break lance card to play
+		//Give one of the players a riposte card to play
 		Card riposte = new Card(Type.ACTION, Card.RIPOSTE);
 		game.getAllPlayers().get(0).getHand().add(riposte);
 		

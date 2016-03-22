@@ -195,4 +195,17 @@ public class UpdateEngine {
 		String returnString = "card:" + cardPos;
 		return returnString;
 	}
+
+	//Process Charge
+	public static String charge(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		return returnString;
+	}
+	
+	//Process Counterharge
+	public static String countercharge(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		return returnString;
+	}
+	
 }

@@ -141,18 +141,25 @@ public class Validator {
 			}
 			
 			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.CHARGE) {
-				
+				ArrayList<Boolean> availableTargets = validateCharge(game);
+				if(availableTargets.size() > 0) {
+					playableCards[i] = true;
+				}
+				else {
+					playableCards[i] = false;
+				}
 			}
 			
 			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.COUNTERCHARGE) {
-				
+				ArrayList<Boolean> availableTargets = validateCountercharge(game);
+				if(availableTargets.size() > 0) {
+					playableCards[i] = true;
+				}
+				else {
+					playableCards[i] = false;
+				}
 			}
 			
-			
-			
-			
-
-
 			else {
 				playableCards[i] = true;
 			}
@@ -324,6 +331,37 @@ public class Validator {
 		return validTargets;
 	}
 	
+	
+	/*
+	 * Function to validate charge
+	 * ~~~~~~~~~~~~~~~~~~~~ IMPLEMENT TESTS ~~~~~~~~~~~~~~~~~~~~
+	 */
+	public static ArrayList<Boolean> validateCharge(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		int playerPos = game.getTurn();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1) {
+				validTargets.add(true);
+			}
+		}
+		return validTargets;
+	}
+	
+	
+	/*
+	 * Function to validate countercharge
+	 * ~~~~~~~~~~~~~~~~~~~~ IMPLEMENT TESTS ~~~~~~~~~~~~~~~~~~~~ 
+	 */
+	public static ArrayList<Boolean> validateCountercharge(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		int playerPos = game.getTurn();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1) {
+				validTargets.add(true);
+			}
+		}
+		return validTargets;
+	}
 	
 	
 	public static boolean isGameOver(GameState game) {

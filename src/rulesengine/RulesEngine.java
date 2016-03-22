@@ -300,6 +300,73 @@ public class RulesEngine {
 		return returnString;
 	}
 	
+	//Process Charge
+	public static String charge(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		int playerPos = game.getTurn();
+		//Discard the charge card
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
+		
+		//variable to keep track of the lowest value card
+		int lowest = 100;
+		
+		//Loop through all cards in all displays to identify the lowest value card
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+				if(lowest > game.getDisplay(i).getCard(j).getCardValue()) {
+					lowest =  game.getDisplay(i).getCard(j).getCardValue();
+				}
+			}
+		}
+		
+		/*loop through opponents' displays and discard the identified value cards
+		 * provided it isn't the player's display and the opponent has no shield
+		 */
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(i != game.getTurn() && !game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
+				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+					if(game.getDisplay(i).getCard(j).getCardValue() == lowest) {
+						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+					}
+				}
+			}
+		}
+		return returnString;
+	}
+	
+	//Process Counterharge
+	public static String countercharge(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		int playerPos = game.getTurn();
+		//Discard the countercharge card
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
+		//variable to keep track of the lowest value card
+		int highest = 0;
+		
+		//Loop through all cards in all displays to identify the lowest value card
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+				if(highest < game.getDisplay(i).getCard(j).getCardValue()) {
+					highest =  game.getDisplay(i).getCard(j).getCardValue();
+				}
+			}
+		}
+		
+		/*loop through opponents' displays and discard the identified value cards
+		 * provided it isn't the player's display and the opponent has no shield
+		 */
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(i != game.getTurn() && !game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
+				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+					if(game.getDisplay(i).getCard(j).getCardValue() == highest) {
+						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+					}
+				}
+			}
+		}
+		return returnString;
+	}
+	
 	
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {

@@ -12,7 +12,7 @@ import models.Player;
 import rulesengine.RulesEngine;
 import rulesengine.Type;
 
-public class OutmaneuverTest {
+public class ChargeTest {
 	Player player1;
 	Player player2;
 	Player player3;
@@ -47,21 +47,27 @@ public class OutmaneuverTest {
 		Card squireThree = new Card(Type.WHITE, 3);
 		Card maiden = new Card (Type.WHITE, 6);
 		
-		//Give one of the players a outmaneuver card to play
-		Card outmaneuver = new Card(Type.ACTION, Card.OUTMANEUVER);
-		game.getAllPlayers().get(0).getHand().add(outmaneuver);
+		//Give one of the players a charge card to play
+		Card charge = new Card(Type.ACTION, Card.CHARGE);
+		game.getAllPlayers().get(0).getHand().add(charge);
 		
 		//Give target player a custom display
 		game.getDisplay(0).add(purpleThree);
 		game.getDisplay(0).add(yellowFour);
-		game.getDisplay(1).add(purpleFive);
+		game.getDisplay(0).add(greenOne);
+
 		game.getDisplay(1).add(greenOne);
+		game.getDisplay(1).add(purpleFive);
 		game.getDisplay(1).add(blueFour);
+		game.getDisplay(1).add(greenOne);
 		game.getDisplay(1).add(squireThree);
+		game.getDisplay(1).add(greenOne);
+		
 		game.getDisplay(2).add(purpleSeven);
 		game.getDisplay(2).add(blueThree);
 		game.getDisplay(2).add(redFour);
 		game.getDisplay(2).add(maiden);
+		game.getDisplay(2).add(greenOne);
 	}
 
 	
@@ -82,25 +88,25 @@ public class OutmaneuverTest {
 		
 		//create cards to be added to player's hand and target's display
 		Card purpleThree = new Card(Type.PURPLE, 3);
-		Card purpleFive = new Card(Type.PURPLE, 5);
 		Card purpleSeven = new Card(Type.PURPLE, 7);
 		Card yellowFour = new Card(Type.YELLOW, 4);
 		Card blueThree = new Card(Type.BLUE, 3);
 		Card redFour = new Card(Type.RED, 4);
 		Card maiden = new Card (Type.WHITE, 6);
 		
-		//Give one of the players a break lance card to play
-		Card outmaneuver = new Card(Type.ACTION, Card.OUTMANEUVER);
-		game.getAllPlayers().get(0).getHand().add(outmaneuver);
+		//Give one of the players a charge card to play
+		Card charge = new Card(Type.ACTION, Card.CHARGE);
+		game.getAllPlayers().get(0).getHand().add(charge);
 		
 		//Give target player a custom display
 		game.getDisplay(0).add(purpleThree);
 		game.getDisplay(0).add(yellowFour);
-		game.getDisplay(1).add(purpleFive);
+		game.getDisplay(1).add(purpleThree);
 		game.getDisplay(2).add(purpleSeven);
 		game.getDisplay(2).add(blueThree);
 		game.getDisplay(2).add(redFour);
 		game.getDisplay(2).add(maiden);
+		game.getDisplay(2).add(purpleThree);
 	}
 
 	
@@ -120,26 +126,23 @@ public class OutmaneuverTest {
 		
 		
 		//create cards to be added to player's hand and target's display
-		Card purpleThree = new Card(Type.PURPLE, 3);
-		Card purpleFive = new Card(Type.PURPLE, 5);
-		Card yellowFour = new Card(Type.YELLOW, 4);
-		Card maiden = new Card (Type.WHITE, 6);
+		Card greenOne = new Card(Type.GREEN, 1);
 		
-		//Give one of the players a break lance card to play
-		Card outmaneuver = new Card(Type.ACTION, Card.OUTMANEUVER);
-		game.getAllPlayers().get(0).getHand().add(outmaneuver);
+		//Give one of the players a charge card to play
+		Card charge = new Card(Type.ACTION, Card.CHARGE);
+		game.getAllPlayers().get(0).getHand().add(charge);
 		
 		//Give target player a custom display
-		game.getDisplay(0).add(purpleThree);
-		game.getDisplay(0).add(yellowFour);
-		game.getDisplay(1).add(purpleFive);
-		game.getDisplay(2).add(maiden);
+		game.getDisplay(0).add(greenOne);
+		game.getDisplay(0).add(greenOne);
+		game.getDisplay(1).add(greenOne);
+		game.getDisplay(2).add(greenOne);
 	}
 	
 	
 	//A test where the targets' displays have multiple cards 
 	@Test
-	public void outmaneuverValidTargetsTest() {
+	public void chargeValidTargetsTest() {
 		displaysWithMultiCards();
 		int cardPos = game.getHand(0).deckSize()-1;
 		
@@ -149,58 +152,58 @@ public class OutmaneuverTest {
 		 * cards as the last played cards
 		*/
 		int playerSize = game.getDisplay(0).deckSize();
-		assertTrue(playerSize == 2);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.YELLOW);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 4);
+		assertTrue(playerSize == 3);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 1);
 		
 		
 		int firstTargetSize = game.getDisplay(1).deckSize();
-		assertTrue(firstTargetSize == 4);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.WHITE);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 3);
+		assertTrue(firstTargetSize == 6);
+		assertTrue(game.getDisplay(1).getCard(0).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(1).getCard(0).getCardValue() == 1);
 		
 
 		int secondTargetSize = game.getDisplay(2).deckSize();
-		assertTrue(secondTargetSize == 4);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.WHITE);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 6);
+		assertTrue(secondTargetSize == 5);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 1);
 		
-		//test the size of discard deck before playing outmaneuver
+		//test the size of discard deck before playing charge
 		assertEquals(game.getDiscardDeck().deckSize(), 0);
-		//play outmaneuver
-		RulesEngine.outmaneuver(game, cardPos);
+		//play charge
+		RulesEngine.charge(game, cardPos);
 		
 		
-		//test the size of discard deck after playing outmaneuver
-		//a total of 3 cards should have been discarded (1 outmaneuver card + 2 opponent cards)
-		assertEquals(game.getDiscardDeck().deckSize(), 3);
+		//test the size of discard deck after playing charge
+		//a total of 3 cards should have been discarded (1 charge card + 4 opponent cards)
+		assertEquals(game.getDiscardDeck().deckSize(), 5);
 		
 		/*
 		 * test to make sure the player and targets have the right size display and proper cards in their display
 		 * as their last played cards
 		*/
 		playerSize = game.getDisplay(0).deckSize();
-		assertTrue(playerSize == 2);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.YELLOW);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 4);
+		assertTrue(playerSize == 3);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 1);
 		
 		
 		firstTargetSize = game.getDisplay(1).deckSize();
 		assertTrue(firstTargetSize == 3);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.BLUE);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 4);
+		assertTrue(game.getDisplay(1).getCard(0).getCardType() == Type.PURPLE);
+		assertTrue(game.getDisplay(1).getCard(0).getCardValue() == 5);
 		
 
 		secondTargetSize = game.getDisplay(2).deckSize();
-		assertTrue(secondTargetSize == 3);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.RED);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 4);
+		assertTrue(secondTargetSize == 4);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.WHITE);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 6);
 	}
 	
 
 	//A test where some targets have only one card in their display 
 	@Test
-	public void outmaneuverSomeValidTargetsTest() {
+	public void chargeSomeValidTargetsTest() {
 		oneDisplayWithOneCard();
 		int cardPos = game.getHand(0).deckSize()-1;
 		
@@ -211,30 +214,32 @@ public class OutmaneuverTest {
 		*/
 		int playerSize = game.getDisplay(0).deckSize();
 		assertTrue(playerSize == 2);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.YELLOW);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 4);
+		assertTrue(game.getDisplay(0).getCard(0).getCardType() == Type.PURPLE);
+		assertTrue(game.getDisplay(0).getCard(0).getCardValue() == 3);
 		
 		
 		int firstTargetSize = game.getDisplay(1).deckSize();
 		assertTrue(firstTargetSize == 1);
 		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.PURPLE);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 5);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 3);
 		
 
 		int secondTargetSize = game.getDisplay(2).deckSize();
-		assertTrue(secondTargetSize == 4);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.WHITE);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 6);
+		assertTrue(secondTargetSize == 5);
+		assertTrue(game.getDisplay(2).getCard(1).getCardType() == Type.BLUE);
+		assertTrue(game.getDisplay(2).getCard(1).getCardValue() == 3);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.PURPLE);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 3);
 		
-		//test the size of discard deck before playing outmaneuver
+		//test the size of discard deck before playing charge
 		assertEquals(game.getDiscardDeck().deckSize(), 0);
-		//play outmaneuver
-		RulesEngine.outmaneuver(game, cardPos);
+		//play charge
+		RulesEngine.charge(game, cardPos);
 		
 		
-		//test the size of discard deck after playing outmaneuver
-		//a total of 2 cards should have been discarded (1 outmaneuver card + 1 opponent card)
-		assertEquals(game.getDiscardDeck().deckSize(), 2);
+		//test the size of discard deck after playing charge
+		//a total of 2 cards should have been discarded (1 charge card + 2 opponent card)
+		assertEquals(game.getDiscardDeck().deckSize(), 3);
 		
 		/*
 		 * test to make sure the player and targets have the right size display and proper cards in their display
@@ -242,26 +247,28 @@ public class OutmaneuverTest {
 		*/
 		playerSize = game.getDisplay(0).deckSize();
 		assertTrue(playerSize == 2);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.YELLOW);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 4);
+		assertTrue(game.getDisplay(0).getCard(0).getCardType() == Type.PURPLE);
+		assertTrue(game.getDisplay(0).getCard(0).getCardValue() == 3);
 		
 		
 		firstTargetSize = game.getDisplay(1).deckSize();
 		assertTrue(firstTargetSize == 1);
 		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.PURPLE);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 5);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 3);
 		
 
 		secondTargetSize = game.getDisplay(2).deckSize();
 		assertTrue(secondTargetSize == 3);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.RED);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 4);
+		assertTrue(game.getDisplay(2).getCard(1).getCardType() == Type.RED);
+		assertTrue(game.getDisplay(2).getCard(1).getCardValue() == 4);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.WHITE);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 6);
 	}
 	
 	
 	//A test where the targets' displays have one card each 
 	@Test
-	public void outmaneuverInvalidTargetsTest() {
+	public void chargeInvalidTargetsTest() {
 		allDisplaysWithOneCard();
 		int cardPos = game.getHand(0).deckSize()-1;
 		
@@ -272,29 +279,29 @@ public class OutmaneuverTest {
 		*/
 		int playerSize = game.getDisplay(0).deckSize();
 		assertTrue(playerSize == 2);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.YELLOW);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 4);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 1);
 		
 		
 		int firstTargetSize = game.getDisplay(1).deckSize();
 		assertTrue(firstTargetSize == 1);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.PURPLE);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 5);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 1);
 		
 
 		int secondTargetSize = game.getDisplay(2).deckSize();
 		assertTrue(secondTargetSize == 1);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.WHITE);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 6);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 1);
 		
-		//test the size of discard deck before playing outmaneuver
+		//test the size of discard deck before playing charge
 		assertEquals(game.getDiscardDeck().deckSize(), 0);
-		//play outmaneuver
-		RulesEngine.outmaneuver(game, cardPos);
+		//play charge
+		RulesEngine.charge(game, cardPos);
 		
 		
-		//test the size of discard deck after playing outmaneuver
-		//a total of 1 card should have been discarded (1 outmaneuver card)
+		//test the size of discard deck after playing charge
+		//a total of 1 card should have been discarded (1 charge card)
 		assertEquals(game.getDiscardDeck().deckSize(), 1);
 		
 		/*
@@ -303,20 +310,20 @@ public class OutmaneuverTest {
 		*/
 		playerSize = game.getDisplay(0).deckSize();
 		assertTrue(playerSize == 2);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.YELLOW);
-		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 4);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 1);
 		
 		
 		firstTargetSize = game.getDisplay(1).deckSize();
 		assertTrue(firstTargetSize == 1);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.PURPLE);
-		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 5);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 1);
 		
 
 		secondTargetSize = game.getDisplay(2).deckSize();
 		assertTrue(secondTargetSize == 1);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.WHITE);
-		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 6);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 1);
 	}
-	
+
 }

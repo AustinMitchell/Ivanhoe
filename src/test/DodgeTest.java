@@ -41,7 +41,7 @@ public class DodgeTest {
 		Card squire = new Card(Type.WHITE, 2);
 		Card maiden = new Card (Type.WHITE, 6);
 		
-		//Give one of the players a break lance card to play
+		//Give one of the players a dodge card to play
 		Card dodge = new Card(Type.ACTION, Card.DODGE);
 		game.getAllPlayers().get(0).getHand().add(dodge);
 		
@@ -73,7 +73,7 @@ public class DodgeTest {
 		//create cards to be added to player's hand and target's display
 		Card redCard = new Card(Type.RED, 4);
 		
-		//Give one of the players a break lance card to play
+		//Give one of the players a dodge card to play
 		Card dodge = new Card(Type.ACTION, Card.DODGE);
 		game.getAllPlayers().get(0).getHand().add(dodge);
 		
