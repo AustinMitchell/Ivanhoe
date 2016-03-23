@@ -160,6 +160,16 @@ public class Validator {
 				}
 			}
 			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.DISGRACE) {
+				ArrayList<Boolean> availableTargets = validateDisgrace(game);
+				if(availableTargets.size() > 0) {
+					playableCards[i] = true;
+				}
+				else {
+					playableCards[i] = false;
+				}
+			}
+			
 			else {
 				playableCards[i] = true;
 			}
@@ -237,10 +247,13 @@ public class Validator {
 	public static ArrayList<Boolean> validateBreakLance(GameState game) {
 		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(i == game.getTurn()) {
+			if (game.getPlayer(i).hasShield()) {
 				availableTargets.add(false);
 			}
-			else {
+			else if(i == game.getTurn()) {
+				availableTargets.add(false);
+			}
+			else{
 				boolean hasPurple = false;
 				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
 					if(game.getDisplay(i).getCard(j).getCardType() == Type.PURPLE && game.getDisplay(i).deckSize() > 1) {
@@ -262,7 +275,7 @@ public class Validator {
 		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			
-			if(i != game.getTurn() && game.getDisplay(i).deckSize() > 1) {
+			if(i != game.getTurn() && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				availableTargets.add(true);
 			}
 			else {
@@ -279,7 +292,7 @@ public class Validator {
 		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			
-			if(i != game.getTurn() && game.getDisplay(i).deckSize() > 1) {
+			if(i != game.getTurn() && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				availableTargets.add(true);
 			}
 			else {
@@ -307,7 +320,7 @@ public class Validator {
 		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			
-			if(i != game.getTurn() && game.getHand(i).deckSize() > 0) {
+			if(i != game.getTurn() && game.getHand(i).deckSize() > 0 && !game.getPlayer(i).hasShield()) {
 				availableTargets.add(true);
 			}
 			else {
@@ -324,7 +337,7 @@ public class Validator {
 		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
 		int playerPos = game.getTurn();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(i != playerPos && game.getDisplay(i).deckSize() > 1) {
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				validTargets.add(true);
 			}
 		}
@@ -334,13 +347,12 @@ public class Validator {
 	
 	/*
 	 * Function to validate charge
-	 * ~~~~~~~~~~~~~~~~~~~~ IMPLEMENT TESTS ~~~~~~~~~~~~~~~~~~~~
 	 */
 	public static ArrayList<Boolean> validateCharge(GameState game) {
 		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
 		int playerPos = game.getTurn();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(i != playerPos && game.getDisplay(i).deckSize() > 1) {
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				validTargets.add(true);
 			}
 		}
@@ -350,19 +362,39 @@ public class Validator {
 	
 	/*
 	 * Function to validate countercharge
-	 * ~~~~~~~~~~~~~~~~~~~~ IMPLEMENT TESTS ~~~~~~~~~~~~~~~~~~~~ 
 	 */
 	public static ArrayList<Boolean> validateCountercharge(GameState game) {
 		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
 		int playerPos = game.getTurn();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(i != playerPos && game.getDisplay(i).deckSize() > 1) {
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				validTargets.add(true);
 			}
 		}
 		return validTargets;
 	}
 	
+	
+	/*
+	 * Function to validate disgrace
+	 * ~~~~~~~~~~~~~~~~~~~~ IMPLEMENT TEST ~~~~~~~~~~~~~~~~~~~~
+	 */
+	public static ArrayList<Boolean> validateDisgrace(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		//int playerPos = game.getTurn();
+		for (int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+					if(game.getDisplay(i).getCard(j).getCardType() == Type.WHITE) {
+						validTargets.add(true);
+						break;
+					}
+				}
+			}
+		}
+		return validTargets;
+	}
+
 	
 	public static boolean isGameOver(GameState game) {
 		for(Player p: game.getAllPlayers()) {

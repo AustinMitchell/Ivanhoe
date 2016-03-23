@@ -301,6 +301,7 @@ public class RulesEngine {
 	}
 	
 	//Process Charge
+	//~~~~~~~~~~~~~~~~~~~ AWAITING JP'S REPLY WHETHER THIS ALSO AFFECTS THE PLAYER OR NOT! CURRENTLY IT DOES NOT ~~~~~~~~~~~~~~~~~~~
 	public static String charge(GameState game, int cardPos) {
 		String returnString = "card:" + cardPos;
 		int playerPos = game.getTurn();
@@ -335,6 +336,7 @@ public class RulesEngine {
 	}
 	
 	//Process Counterharge
+	//~~~~~~~~~~~~~~~~~~~ AWAITING JP'S REPLY WHETHER THIS ALSO AFFECTS THE PLAYER OR NOT! CURRENTLY IT DOES NOT ~~~~~~~~~~~~~~~~~~~
 	public static String countercharge(GameState game, int cardPos) {
 		String returnString = "card:" + cardPos;
 		int playerPos = game.getTurn();
@@ -367,6 +369,27 @@ public class RulesEngine {
 		return returnString;
 	}
 	
+	//Process Disgrace
+	//~~~~~~~~~~~~~~~~~~~ AWAITING JP'S REPLY WHETHER THIS ALSO AFFECTS THE PLAYER OR NOT! CURRENTLY IT DOES ~~~~~~~~~~~~~~~~~~~
+	
+	public static String disgrace(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		int playerPos = game.getTurn();
+		//Discard the disgrace card
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
+		
+		//discard all supporter cards given it isn't the player and the target doesn't have a shield
+		for (int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(!game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
+				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+					if(game.getDisplay(i).getCard(j).getCardType() == Type.WHITE) {
+						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+					}
+				}
+			}
+		}
+		return returnString;
+	}
 	
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {

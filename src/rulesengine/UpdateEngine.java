@@ -208,4 +208,10 @@ public class UpdateEngine {
 		return returnString;
 	}
 	
+	//Process Disgrace
+	public static String disgrace(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		return returnString;
+	}
+	
 }
