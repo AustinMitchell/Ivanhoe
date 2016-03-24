@@ -3,15 +3,14 @@ package rulesengine;
 import java.util.ArrayList;
 import java.util.Random;
 
+import network.Flag;
 import models.Card;
 import models.Deck;
 import models.GameState;
 import models.Player;
 import rulesengine.Type;
 
-public class RulesEngine {
-	public static final String NEW_COM = "~";
-	
+public class RulesEngine {	
 	
 	public static void drawToken(GameState game) {
 		ArrayList tokens = new ArrayList();
@@ -42,14 +41,14 @@ public class RulesEngine {
 				game.setTurn(i);
 			}
 		}
-		return("setTurn:" + game.getTurn());
+		return(Flag.SET_TURN + ":" + game.getTurn());
 	}
 	
 	
 	public static String startGame(GameState game) {
 		//drawToken(game);
 		startTournament(game);
-		return ("startGame");
+		return Flag.START_GAME;
 	}
 	
 	public static String drawCard(GameState game) {
@@ -57,18 +56,18 @@ public class RulesEngine {
 		Deck drawDeck = game.getDrawDeck();
 		if(drawDeck.deckSize() == 0) {
 			game.renewDrawDeck();
-			result += "renewDeck";
+			result += Flag.RENEW_DECK;
 			for (int i = 0; i < game.getDrawDeck().deckSize(); i++) {
 				int type = game.getDrawDeck().getCard(i).getCardType();
 				int value = game.getDrawDeck().getCard(i).getCardValue();
 				result += ":" + type + ":" + value;
 			}
-			result += NEW_COM;
+			result += Flag.NEW_COM;
 		}
 		
 		game.getDrawDeck().draw(game.getAllPlayers().get(game.getTurn()).getHand());
 		
-		return result + "drawCard:" + game.getTurn();
+		return result + Flag.DRAW_CARD + ":" + game.getTurn();
 	}
 	
 	public static boolean isTournamentOver(GameState game) {
@@ -90,12 +89,12 @@ public class RulesEngine {
 		}
 		game.setPrevTournamentColour(game.getTournamentColour());
 		int winningColour = game.getTournamentColour();
-		String result = "endTournament:" + winningColour;
+		String result = Flag.END_TOURNAMENT + ":" + winningColour;
 		game.setTournamentColour(-1);
 		game.setTournamentStarted(false);
 		//int playerPos = game.getTurn();
 		if(endGame(game)) {
-			result += NEW_COM + "endGame";
+			result += Flag.NEW_COM + Flag.END_GAME;
 		}
 		return result;
 	}
@@ -111,12 +110,12 @@ public class RulesEngine {
 		if(withdrawState.equalsIgnoreCase("true")) withdraw(game);
 		if(!isTournamentOver(game) || !game.hasTournamentStarted()) {
 			game.nextTurn();
-			result = "endTurn:" + withdrawState; 
+			result = Flag.END_TURN + ":" + withdrawState; 
 		}
 		else {
 			game.nextTurn();
 			String endTournamentCommand = endTournament(game);
-			result = "endTurn:" + withdrawState + NEW_COM + endTournamentCommand;
+			result = Flag.END_TURN + ":" + withdrawState + Flag.NEW_COM + endTournamentCommand;
 		}
 		return result;
 	}
@@ -127,7 +126,6 @@ public class RulesEngine {
 		game.getAllPlayers().get(game.getTurn()).getDisplay().emptyDeck(game.getDiscardDeck());
 		game.getAllPlayers().get(game.getTurn()).getStunDeck().emptyDeck(game.getDiscardDeck());
 		game.getAllPlayers().get(game.getTurn()).getShieldDeck().emptyDeck(game.getDiscardDeck());
-		//return("withdraw:" + playerPos);
 	}
 	
 	public static String startTournament(GameState game) {
@@ -137,7 +135,7 @@ public class RulesEngine {
 		
 		game.incrementTournamentNumber();
 		String result;
-		result = ("startTournament:" + game.getTurn());
+		result = (Flag.START_TOURNAMENT + ":" + game.getTurn());
 		return result;
 		
 	}
@@ -146,7 +144,7 @@ public class RulesEngine {
 		game.setTournamentStarted(true);
 		game.setTournamentColour(Integer.valueOf(colour));
 		
-		return("setColour:"  + colour);
+		return(Flag.SET_COLOUR + ":"  + colour);
 	}
 	
 	public static boolean remainInTournament(GameState game) {
@@ -170,7 +168,7 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = card.getCardType();
 		int cardValue = card.getCardValue();
-		returnString = ("card:" + cardPos);
+		returnString = (Flag.CARD + ":" + cardPos);
 		
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getAllPlayers().get(playerPos).getDisplay());
 		return returnString;
@@ -181,7 +179,7 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("card:" + cardPos + ":" + colour);
+		returnString = (Flag.CARD + ":" + cardPos + ":" + colour);
 		game.setTournamentColour(colour);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
@@ -192,7 +190,7 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("card:" + cardPos + ":" + colour);
+		returnString = (Flag.CARD + ":" + cardPos + ":" + colour);
 		game.setTournamentColour(colour);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
@@ -203,14 +201,14 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = ("card:" + cardPos);
+		returnString = (Flag.CARD + ":" + cardPos);
 		game.setTournamentColour(Type.GREEN);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
 	}
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {
-		String result = ("card:" + cardPos);
+		String result = (Flag.CARD + ":" + cardPos);
 		int playerPos = game.getTurn();
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return result;

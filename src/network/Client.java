@@ -1,41 +1,65 @@
 package network;
 
 import models.*;
+
 import org.apache.log4j.Logger;
+
 import rulesengine.*;
 
 import java.net.*;
+import java.sql.Time;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.io.*;
+
+import javax.naming.TimeLimitExceededException;
 
 public class Client implements Runnable {
 	public static final String NO_MESSAGE = "";
 	public static final String CONNECT_PASSED = "pass";
 	public static final String CONNECT_FAILED = "fail";
+	public static final String CONNECT_REJECT = "reject";
+	
+	private static final Object IN_LOCK = new Object();
+	private static final Object OUT_LOCK = new Object();
+	private static final Object GUI_LOCK = new Object();
+	
+	private static final Logger log = Logger.getLogger("Client");
 	
 	private GameState game;
-	private BufferedReader in;
+	private InputThread in;
 	private OutputThread out;
-	private int id;
+	private int id, connectTimeoutMillis, port;
 	private String updateIn;
+	
+	private boolean firstToConnect;
 	
 	private String serverName;
 	private String username;
 	
 	private String connectStatus;
-	static final Logger log = Logger.getLogger("Client");
-	
+		
 	public int getID() {
 		return id;
 	}
+	
+	public boolean isFirstToConnect() { return firstToConnect; }
 
-	// constructor
 	public Client() {
+		this(2000, Server.PORT);
+	}
+	public Client(int port) {
+		this(2000, port);
+	}
+	// constructor
+	public Client(int connectTimeoutMillis, int port) {
+		this.connectTimeoutMillis = connectTimeoutMillis;
+		this.port = port;
 		guiFlags = new LinkedList<String>();
 		game = new GameState();
 		updateIn = "";
 		connectStatus = "";
+		firstToConnect = false;
 	}
 
 	public GameState getGame() {
@@ -46,7 +70,9 @@ public class Client implements Runnable {
 	
 
 	public void sendMessage(String message) {
-		out.sendMessage(message);
+		synchronized(OUT_LOCK) {
+			out.sendMessage(message);
+		}
 	}
 
 	public boolean waitingForConnection() {
@@ -61,6 +87,11 @@ public class Client implements Runnable {
 			return result;
 		}
 	}
+	public String getConnectMessage() { 
+		synchronized(connectStatus) {
+			return connectStatus;
+		}
+	}
 	
 	public void connect(String serverName, String username) {
 		this.serverName = serverName;
@@ -68,39 +99,81 @@ public class Client implements Runnable {
 		new Thread(this).start();
 	}
 	
+	public void killClient() {
+		synchronized(IN_LOCK) {
+			if (in != null) {
+				in.killThread();
+			}
+		}
+		synchronized(OUT_LOCK) {
+			if (out != null) {
+				out.killThread();
+			}
+		}
+	}
+	
 	@Override
 	public void run() {
-		int port = Server.PORT;
 		try {
 			System.out.println("Connecting to " + serverName + " on port "
 					+ port);
 			Socket socket = new Socket(serverName, port);
-			synchronized(connectStatus) {
-				connectStatus = CONNECT_PASSED;
-			}
+			
 			System.out.println("Just connected to "
 					+ socket.getRemoteSocketAddress());
 
-			in = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
+			in = new InputThread(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 			out = new OutputThread(new PrintWriter(socket.getOutputStream(), true));
 
-			id = Integer.parseInt(in.readLine());
-			log.info(id +": " + username);
 			out.sendMessage(username);
+			
+			long startTime = System.currentTimeMillis();
+			while(!in.hasMessage()) {
+				if (System.currentTimeMillis() - startTime > connectTimeoutMillis) {
+					throw new TimeLimitExceededException();
+				}
+			}
+			
+			// Expecting Flag.PLAYER_ID
+			String message = in.readMessage();
+			id = Integer.parseInt(message.split(":")[1]) - 1;
+			guiFlags.add(message);
+			
+			log.info(id +": " + username);
+			
+			if (id == 0) {
+				firstToConnect = true;
+			}
 
-			for (;;) {
-				updateIn = in.readLine();
+			synchronized(connectStatus) {
+				connectStatus = CONNECT_PASSED;
+			}
+
+			while (true) {
+				Thread.sleep(10);
+				synchronized(IN_LOCK) {
+					if (!in.hasMessage()) {
+						continue;
+					}
+					
+					updateIn = in.readMessage();
+				}
 				Parser.networkSplitter(updateIn, game);
-				synchronized (guiFlags) {
+				synchronized (GUI_LOCK) {
 					Parser.guiSplitter(guiFlags, updateIn);
 				}
 			}
 			// socket.close();
+		} catch (TimeLimitExceededException e) {
+			synchronized(connectStatus) {
+				connectStatus = CONNECT_REJECT;
+			}
+			killClient();
 		} catch (Exception e) {
 			synchronized(connectStatus) {
 				connectStatus = CONNECT_FAILED;
 			}
+			killClient();
 		}
 	}
 
@@ -116,7 +189,7 @@ public class Client implements Runnable {
 	// this is used by the GUI to figure out whether there is a need
 	// to update the UI or not
 	public boolean hasFlags() {
-		synchronized (guiFlags) {
+		synchronized (GUI_LOCK) {
 			return !guiFlags.isEmpty();
 		}
 	}
@@ -124,13 +197,13 @@ public class Client implements Runnable {
 	
 	//return guiFlags queue for testing purposes 
 	public Queue<String> getGuiFlags() {
-		synchronized(guiFlags) {
+		synchronized(GUI_LOCK) {
 			return guiFlags;
 		}
 	}
 	
 	public String readGuiFlag() {
-		synchronized (guiFlags) {
+		synchronized (GUI_LOCK) {
 			String flag = guiFlags.remove();
 			return flag;
 		}

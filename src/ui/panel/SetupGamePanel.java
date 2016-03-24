@@ -2,13 +2,17 @@ package ui.panel;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 
+import network.Client;
+import network.Flag;
 import simple.gui.*;
 import simple.gui.panel.ScaledPanel;
 import ui.GameController;
 
 public class SetupGamePanel extends ScaledPanel {
 	GameController controller;
+	Client client;
 	
 	private ScaledPanel playerSelectPanel;
 	private Label playerSelectLabel, entryError;
@@ -18,6 +22,7 @@ public class SetupGamePanel extends ScaledPanel {
 		super();
 		
 		this.controller = controller;
+		client = controller.getClient();
 		
 		playerSelectPanel = new ScaledPanel() {{
 			setWidgetColors(new Color(0, 0, 0, 200), new Color(0, 0, 0, 150), null, null);
@@ -47,20 +52,41 @@ public class SetupGamePanel extends ScaledPanel {
 	@Override
 	public void update() {
 		super.update();
+		
+		handlePlayerEntry();
+		handleClientMessages();
+	}
+	
+	private void handlePlayerEntry() {
 		if (playerSelectTextbox.hasTextEntered()) {
+			entryError.clear();
 			String text = playerSelectTextbox.getEnteredText();
 			int numPlayers;
 			
 			try {
 				numPlayers = Integer.parseInt(text);
 				if (numPlayers >= 2 && numPlayers <= 5) {
-					controller.waitForGame(numPlayers);
+					client.sendMessage(Flag.MAX_PLAYERS_SET + ":" + numPlayers);
 				} else {
 					entryError.setText("Number of players must be between 2 and 5.");
 				}
 			} catch(NumberFormatException e) {
 				entryError.setText("You did not enter a valid integer.");
 			} 
+		}
+	}
+	
+	private void handleClientMessages() {
+		if (client.hasFlags()) {
+			String msg = client.readGuiFlag();
+			String[] command = msg.split(":");
+			
+			System.out.println(msg);
+			switch (command[0]) {
+				case Flag.MAX_PLAYERS_SET:
+					controller.waitForGame();
+					break;
+			}
 		}
 	}
 }

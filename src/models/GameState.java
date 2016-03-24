@@ -3,6 +3,8 @@ import rulesengine.Type;
 
 import java.util.ArrayList;
 
+import network.Flag;
+
 public class GameState {
 	private int tournamentNumber;
 	private int tournamentColour;
@@ -77,7 +79,7 @@ public class GameState {
 			p.enterTournament();
 			result += p.getName() + ":";
 		}
-		result += "cards";
+		result += Flag.CARDS_BEGIN;
 		setTurn(0);
 		for(int i = 0; i < 110; i++) {
 			Card card = new Card(cardTypeData[i], cardValueData[i]);
