@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.util.*;
 
 import models.Card;
+import models.CardData;
 import models.GameState;
 import models.Player;
 import network.Client;

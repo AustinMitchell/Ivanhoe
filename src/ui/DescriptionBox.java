@@ -3,6 +3,7 @@ package ui;
 import java.awt.Color;
 import java.awt.Font;
 
+import models.CardData;
 import simple.gui.*;
 
 // Displays the name and description of a card, as cards aren't really visible at certain scales

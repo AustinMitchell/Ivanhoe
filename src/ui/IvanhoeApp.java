@@ -1,5 +1,6 @@
 package ui;
 
+import models.CardData;
 import simple.run.*;
 
 // All boilerplate code to run the UI
