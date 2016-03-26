@@ -369,7 +369,6 @@ public class RulesEngine {
 	}
 	
 	//Process Disgrace
-	//~~~~~~~~~~~~~~~~~~~ AWAITING JP'S REPLY WHETHER THIS ALSO AFFECTS THE PLAYER OR NOT! CURRENTLY IT DOES ~~~~~~~~~~~~~~~~~~~
 	public static String disgrace(GameState game, int cardPos) {
 		String returnString = "card:" + cardPos;
 		int playerPos = game.getTurn();
@@ -389,6 +388,54 @@ public class RulesEngine {
 		return returnString;
 	}
 	
+	//Process Outwit
+	public static String outwit(GameState game, int cardPos, String playerDeck, int playerCardPos, int targetPos, String targetDeck, int targetCardPos) {
+		String returnString = "card:" + cardPos + ":" + playerDeck + ":" + playerCardPos + ":" + targetPos + ":" + targetDeck + ":" + targetCardPos;
+		int playerPos = game.getTurn();
+		Card playerCard;
+		int playerCardType;
+		int playerCardValue;
+		
+		//Discard the outwit card
+		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
+		
+		//Check if the player a card in their display to swap
+		if (playerDeck.equalsIgnoreCase("display")) {
+			playerCard = game.getDisplay(playerPos).getCard(playerCardPos);
+			playerCardType = playerCard.getCardType();
+			playerCardValue = playerCard.getCardValue();
+			
+			if (targetDeck.equalsIgnoreCase("display")) {
+				//move the target's card to player's display
+				game.getDisplay(targetPos).moveCardTo(targetCardPos, game.getDisplay(playerPos));
+				//loop to find the player's card and move it to target's display
+				for(int i = 0; i < game.getDisplay(playerPos).deckSize(); i++) {
+					if(game.getDisplay(playerPos).getCard(i).getCardType() == playerCardType &&
+							game.getDisplay(playerPos).getCard(i).getCardValue() == playerCardValue) {
+						game.getDisplay(playerPos).moveCardTo(i, game.getDisplay(targetPos));
+						break;
+					}
+				}
+			} else {
+				//player gets the target's shield and give's the target their display card
+				game.getShield(targetPos).moveCardTo(targetCardPos, game.getShield(playerPos));
+				game.getDisplay(playerPos).moveCardTo(playerCardPos, game.getDisplay(targetPos));
+			}
+			
+		} else {
+			if (targetDeck.equalsIgnoreCase("display")) {
+				//move the target's card to player's display and give player's stun to target
+				game.getDisplay(targetPos).moveCardTo(targetCardPos, game.getDisplay(playerPos));
+				game.getStun(playerPos).moveCardTo(playerCardPos, game.getStun(targetPos));
+			} else {
+				//player gets the target's shield and gives their stun to the target
+				game.getShield(targetPos).moveCardTo(targetCardPos, game.getShield(playerPos));
+				game.getStun(playerPos).moveCardTo(playerCardPos, game.getStun(targetPos));
+			}
+		}
+		return returnString;
+	}
+	
 	//Process Shield
 	public static String shield(GameState game, int cardPos) {
 		String returnString = "card:" + cardPos;
@@ -397,6 +444,11 @@ public class RulesEngine {
 		return returnString;
 	}
 	
+	//Process Stun
+	public static String stun() {
+		
+		return "";
+	}
 	
 	public static String unimplementedActionCard(GameState game, int cardPos) {
 		String result = ("card:" + cardPos);

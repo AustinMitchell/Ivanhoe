@@ -214,4 +214,11 @@ public class UpdateEngine {
 		return returnString;
 	}
 	
+	//Process Outwit
+	public static String outwit(GameState game, int cardPos, String playerDeck, int playerCardPos, int targetPos, String targetDeck, int targetCardPos) {
+		String returnString = "card:" + cardPos + ":" + playerDeck + ":" + playerCardPos + ":" + targetPos + ":" + targetDeck + ":" + targetCardPos;
+		return returnString;
+	}
+		
+	
 }

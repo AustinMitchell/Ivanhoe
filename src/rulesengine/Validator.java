@@ -321,13 +321,13 @@ public class Validator {
 	}
 	
 	/*
-	 * Function to validate Knockdown. 
+	 * Function to validate Knockdown.
 	 */
 	public static ArrayList<Boolean> validateKnockdown (GameState game) {
 		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			
-			if(i != game.getTurn() && game.getHand(i).deckSize() > 0 && !game.getPlayer(i).hasShield()) {
+			if(i != game.getTurn() && game.getHand(i).deckSize() > 0) {
 				availableTargets.add(true);
 			}
 			else {
@@ -406,8 +406,23 @@ public class Validator {
 	 * Function to validate Shield
 	 */
 	public static boolean validateShield(GameState game) {
-		
 		return true;
+	}
+	
+	
+	/*
+	 * Function to validate Stun
+	 */
+	public static boolean validateStun(GameState game) {
+		return true;
+	}
+	
+	
+	/*
+	 * Function to validate Ivanhoe
+	 */
+	public static boolean validateIvanhoe(GameState game) {
+		return false;
 	}
 
 	
