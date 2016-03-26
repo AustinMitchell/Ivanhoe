@@ -212,7 +212,7 @@ public class RulesEngine {
 		//Discard all purple cards from the target's display while making sure at least one card remains
 		for(int i = 0; i < game.getDisplay(targetPos).deckSize(); i++) {
 			int type = game.getDisplay(targetPos).getCard(i).getCardType();
-			if(type == Type.PURPLE && game.getDisplay(targetPos).deckSize() > 1) {
+			if(type == Type.PURPLE && game.getDisplay(targetPos).deckSize() > 1 && !game.getPlayer(targetPos).hasShield()) {
 				game.getDisplay(targetPos).moveCardTo(i, game.getDiscardDeck());
 			}
 		}
@@ -230,7 +230,7 @@ public class RulesEngine {
 		 * perform the procedure ONLY if the target doesn't end up with an empty display
 		 */
 		int cardToRemove = game.getDisplay(targetPos).deckSize()-1;
-		if(cardToRemove > 0) {
+		if(cardToRemove > 0 && !game.getPlayer(targetPos).hasShield()) {
 			game.getDisplay(targetPos).moveCardTo(cardToRemove, game.getDisplay(playerPos));
 		}
 		return returnString;
@@ -245,8 +245,8 @@ public class RulesEngine {
 		//Discard the dodge card
 		game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck());
 		
-		//Discard the target's card only if the display's size is bigger than 1
-		if(game.getDisplay(targetPos).deckSize() > 1) {
+		//Discard the target's card only if the display's size is bigger than 1 and if the target doesn't have a shield
+		if(game.getDisplay(targetPos).deckSize() > 1 && !game.getPlayer(targetPos).hasShield()) {
 			game.getDisplay(targetPos).moveCardTo(targetCardPos, game.getDiscardDeck());
 		}
 		return returnString;
@@ -292,7 +292,8 @@ public class RulesEngine {
 		for (int i = 0; i < game.getAllPlayers().size(); i++) {
 			//discard the last card in the display if it is not the player's display
 			// and if the display has more than 1 card
-			if(i != playerPos && game.getDisplay(i).deckSize() > 1) {
+			// and if the target does not have a shield
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				int displaySize = game.getDisplay(i).deckSize();
 				game.getDisplay(i).moveCardTo(displaySize-1, game.getDiscardDeck());
 			}
@@ -301,7 +302,6 @@ public class RulesEngine {
 	}
 	
 	//Process Charge
-	//~~~~~~~~~~~~~~~~~~~ AWAITING JP'S REPLY WHETHER THIS ALSO AFFECTS THE PLAYER OR NOT! CURRENTLY IT DOES NOT ~~~~~~~~~~~~~~~~~~~
 	public static String charge(GameState game, int cardPos) {
 		String returnString = "card:" + cardPos;
 		int playerPos = game.getTurn();
@@ -324,7 +324,7 @@ public class RulesEngine {
 		 * provided it isn't the player's display and the opponent has no shield
 		 */
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(i != game.getTurn() && !game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
+			if(!game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
 				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
 					if(game.getDisplay(i).getCard(j).getCardValue() == lowest) {
 						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
@@ -336,7 +336,6 @@ public class RulesEngine {
 	}
 	
 	//Process Counterharge
-	//~~~~~~~~~~~~~~~~~~~ AWAITING JP'S REPLY WHETHER THIS ALSO AFFECTS THE PLAYER OR NOT! CURRENTLY IT DOES NOT ~~~~~~~~~~~~~~~~~~~
 	public static String countercharge(GameState game, int cardPos) {
 		String returnString = "card:" + cardPos;
 		int playerPos = game.getTurn();
@@ -358,7 +357,7 @@ public class RulesEngine {
 		 * provided it isn't the player's display and the opponent has no shield
 		 */
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(i != game.getTurn() && !game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
+			if(!game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
 				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
 					if(game.getDisplay(i).getCard(j).getCardValue() == highest) {
 						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
@@ -371,7 +370,6 @@ public class RulesEngine {
 	
 	//Process Disgrace
 	//~~~~~~~~~~~~~~~~~~~ AWAITING JP'S REPLY WHETHER THIS ALSO AFFECTS THE PLAYER OR NOT! CURRENTLY IT DOES ~~~~~~~~~~~~~~~~~~~
-	
 	public static String disgrace(GameState game, int cardPos) {
 		String returnString = "card:" + cardPos;
 		int playerPos = game.getTurn();
@@ -388,6 +386,14 @@ public class RulesEngine {
 				}
 			}
 		}
+		return returnString;
+	}
+	
+	//Process Shield
+	public static String shield(GameState game, int cardPos) {
+		String returnString = "card:" + cardPos;
+		int playerPos = game.getTurn();
+		game.getHand(playerPos).moveCardTo(cardPos, game.getShield(playerPos));		
 		return returnString;
 	}
 	

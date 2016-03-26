@@ -137,6 +137,16 @@ public class GameState {
 		return players.get(playerPos).getDisplay();
 	}
 	
+	//Function to get player's stun deck
+	public Deck getStun(int playerPos) {
+		return players.get(playerPos).getStunDeck();
+	}
+	
+	//Function to get player's shield deck
+		public Deck getShield(int playerPos) {
+			return players.get(playerPos).getShieldDeck();
+		}
+	
 	public boolean hasTournamentStarted() {
 		return tournamentStarted;
 	}

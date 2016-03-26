@@ -170,6 +170,13 @@ public class Validator {
 				}
 			}
 			
+			
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.SHIELD) {
+				playableCards[i] = validateShield(game);
+			}
+			
+			
 			else {
 				playableCards[i] = true;
 			}
@@ -352,7 +359,7 @@ public class Validator {
 		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
 		int playerPos = game.getTurn();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(i != playerPos && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+			if(game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				validTargets.add(true);
 			}
 		}
@@ -367,7 +374,7 @@ public class Validator {
 		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
 		int playerPos = game.getTurn();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			if(i != playerPos && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+			if(game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				validTargets.add(true);
 			}
 		}
@@ -377,7 +384,6 @@ public class Validator {
 	
 	/*
 	 * Function to validate disgrace
-	 * ~~~~~~~~~~~~~~~~~~~~ IMPLEMENT TEST ~~~~~~~~~~~~~~~~~~~~
 	 */
 	public static ArrayList<Boolean> validateDisgrace(GameState game) {
 		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
@@ -393,6 +399,15 @@ public class Validator {
 			}
 		}
 		return validTargets;
+	}
+	
+	
+	/*
+	 * Function to validate Shield
+	 */
+	public static boolean validateShield(GameState game) {
+		
+		return true;
 	}
 
 	

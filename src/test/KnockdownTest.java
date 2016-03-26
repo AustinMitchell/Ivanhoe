@@ -71,6 +71,39 @@ public class KnockdownTest {
 	}
 
 
+	//Setup a game where the target has a shield
+	//unclear whether shield affects knock down or not. awaiting reply from JP. did not make corrosponding test yet 
+	public void setupGameWithShield() {
+		players = new ArrayList<Player>();
+		player1 = new Player("Nick");
+		player2 = new Player("Ausitn");
+		players.add(player1);
+		players.add(player2);
+		game = new GameState();
+		game.initializeServer(players);
+		game.setTournamentColour(Type.PURPLE);
+		
+		//Empty players hands
+		game.getHand(0).emptyDeck(game.getDiscardDeck());
+		game.getHand(1).emptyDeck(game.getDiscardDeck());
+		game.setTurn(0);
+		
+		
+		//create cards to be added to target's hand
+		Card purpleCard = new Card(Type.PURPLE, 3);
+		Card shield = new Card(Type.ACTION, Card.SHIELD);
+		
+		//Give the players two knockdown cards to play
+		Card knockdown = new Card(Type.ACTION, Card.KNOCKDOWN);
+		game.getHand(0).add(knockdown);
+		game.getHand(0).add(knockdown);
+		
+		//Give target player a custom hand
+		game.getHand(1).add(purpleCard);
+		game.getShield(1).add(shield); //give player a shield
+	}
+	
+
 	//Test knockdown against a target whose hand's isn't empty
 	@Test
 	public void knockdownWithNonEmptyHandTest() {

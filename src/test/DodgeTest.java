@@ -82,6 +82,45 @@ public class DodgeTest {
 	}
 
 	
+	//Setup a game where the target has a shield
+	public void DisplayWithShield() {
+		players = new ArrayList<Player>();
+		player1 = new Player("Nick");
+		player2 = new Player("Ausitn");
+		players.add(player1);
+		players.add(player2);
+		game = new GameState();
+		game.initializeServer(players);
+		game.setTournamentColour(Type.PURPLE);
+		
+		game.setTurn(0);
+		
+		
+		//create cards to be added to player's hand and target's display
+		Card purpleCard = new Card(Type.PURPLE, 3);
+		Card greenCard = new Card(Type.GREEN, 1);
+		Card yellowCard = new Card(Type.YELLOW, 3);
+		Card blueCard = new Card(Type.BLUE, 3);
+		Card redCard = new Card(Type.RED, 4);
+		Card squire = new Card(Type.WHITE, 2);
+		Card maiden = new Card (Type.WHITE, 6);
+		Card shield = new Card(Type.ACTION, Card.SHIELD);
+		
+		//Give one of the players a dodge card to play
+		Card dodge = new Card(Type.ACTION, Card.DODGE);
+		game.getAllPlayers().get(0).getHand().add(dodge);
+		
+		//Give target player a custom display
+		game.getDisplay(1).add(redCard);
+		game.getDisplay(1).add(purpleCard);
+		game.getDisplay(1).add(blueCard);
+		game.getDisplay(1).add(greenCard);
+		game.getDisplay(1).add(squire);
+		game.getDisplay(1).add(yellowCard);
+		game.getDisplay(1).add(maiden);
+		game.getShield(1).add(shield); //give player a shield
+	}
+
 
 
 	@Test
@@ -162,6 +201,44 @@ public class DodgeTest {
 		 * test to make sure the target's last played card is still the single red card
 		*/
 		assertTrue(game.getDisplay(targetPlayer).getCard(targetDisplaySize-1).getCardType() == Type.RED);
+	}
+
+	
+	//A test where the target has a shield
+	@Test
+	public void dodgeShieldTest() {
+		DisplayWithShield();
+		
+		int cardPos = game.getHand(0).deckSize()-1;
+		int targetPlayer = 1;
+		/*
+		 * test to make sure the target has a squire at the 5th position
+		*/
+		assertEquals(game.getDisplay(1).getCard(4).getCardType(), Type.WHITE);
+		assertEquals(game.getDisplay(1).getCard(4).getCardValue(), 2);
+		
+		//test the size of discard deck before playing dodge
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
+		
+		assertEquals(game.getDisplay(targetPlayer).deckSize(), 7);
+		
+		//play dodge
+		RulesEngine.dodge(game, cardPos, targetPlayer, 4);
+		
+		//test the size of discard deck after playing dodge
+		assertEquals(game.getDiscardDeck().deckSize(), 1);
+
+		/*
+		 * test to make sure the target does not have a squire at the 5th position anymore
+		*/
+		assertTrue(game.getDisplay(1).getCard(4).getCardType() == Type.WHITE);
+		assertTrue(game.getDisplay(1).getCard(4).getCardValue() == 2);
+		
+		/*
+		 * test to make sure the first card in the discard deck is a dodge
+		*/
+		assertEquals(game.getDiscardDeck().getCard(0).getCardType(), Type.ACTION);
+		assertEquals(game.getDiscardDeck().getCard(0).getCardValue(), Card.DODGE);
 	}
 
 

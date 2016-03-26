@@ -59,7 +59,6 @@ public class Player {
 	public boolean hasShield() {
 		if(shieldDeck.deckSize() == 0)
 			return false;
-		
 		else
 			return true;
 	}
