@@ -38,8 +38,6 @@ public class Validator {
 		return playableCards;
 	}
 	
-	
-	
 	public static boolean[] cardsAbleToPlay(GameState game) {
 		Deck hand = game.getAllPlayers().get(game.getTurn()).getHand();
 		Card card;
@@ -170,7 +168,31 @@ public class Validator {
 				}
 			}
 			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.ADAPT) {
+				ArrayList<Boolean> availableTargets = validateAdapt(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
 			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.OUTWIT) {
+				ArrayList<Boolean> availableTargets = validateOutwit(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
 			
 			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.SHIELD) {
 				playableCards[i] = validateShield(game);
@@ -185,20 +207,22 @@ public class Validator {
 	}
 	
 	public static boolean validateValueCard(GameState game, Card card, boolean displayHasMaiden) {
-		if(card.getCardType() == game.getTournamentColour()) {
-			return true;
-		}
-		
-		else if (card.getCardType() == Type.WHITE && !card.isMaiden()) {
-			return true;
-		}
-		
-		else if (card.getCardType() == Type.WHITE && card.isMaiden()) {
-			if(displayHasMaiden) {
-				return false;
-			}
-			else {
+		if((!game.getPlayer(game.getTurn()).isStunned()) || (game.getPlayer(game.getTurn()).isStunned() && !game.getPlayedValueCard()) ) {
+			if(card.getCardType() == game.getTournamentColour()) {
 				return true;
+			}
+			
+			else if (card.getCardType() == Type.WHITE && !card.isMaiden()) {
+				return true;
+			}
+			
+			else if (card.getCardType() == Type.WHITE && card.isMaiden()) {
+				if(displayHasMaiden) {
+					return false;
+				}
+				else {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -357,7 +381,6 @@ public class Validator {
 	 */
 	public static ArrayList<Boolean> validateCharge(GameState game) {
 		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
-		int playerPos = game.getTurn();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				validTargets.add(true);
@@ -372,7 +395,6 @@ public class Validator {
 	 */
 	public static ArrayList<Boolean> validateCountercharge(GameState game) {
 		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
-		int playerPos = game.getTurn();
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
 				validTargets.add(true);
@@ -397,6 +419,62 @@ public class Validator {
 					}
 				}
 			}
+		}
+		return validTargets;
+	}
+	
+	/*
+	 * Function to validate adapt
+	 */
+	public static ArrayList<Boolean> validateAdapt(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		Boolean[] values = new Boolean[8];
+		
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			for(int j = 0; j < values.length; j++) {
+				values[j] = false;
+			}
+			for(int j=0; j<game.getDisplay(i).deckSize(); j++)  {
+				if(values[game.getDisplay(i).getCard(j).getCardValue()] == true) {
+					validTargets.add(true);
+					break;
+				}
+				else if (j == game.getDisplay(i).deckSize()-1){
+					validTargets.add(false);
+				}
+				else {
+					values[game.getDisplay(i).getCard(j).getCardValue()] = true;
+				}
+			}
+		}
+		return validTargets;
+	}
+	
+	/*
+	 * Function to validate outwit
+	 */
+	public static ArrayList<Boolean> validateOutwit(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		int playerPos = game.getTurn();
+		if (game.getDisplay(playerPos).deckSize() > 1 || game.getPlayer(playerPos).hasShield()|| game.getPlayer(playerPos).isStunned()) {
+			for(int i = 0; i < game.getAllPlayers().size(); i++) {
+				if(i != playerPos) {
+					if (game.getDisplay(i).deckSize() > 1 || game.getPlayer(i).hasShield()|| game.getPlayer(i).isStunned()) {
+					validTargets.add(true);
+					} else {
+						validTargets.add(false);
+					}
+				}
+				else {
+					validTargets.add(false);
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < game.getAllPlayers().size(); i ++) {
+				validTargets.add(false);
+			}
+			
 		}
 		return validTargets;
 	}

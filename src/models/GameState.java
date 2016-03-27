@@ -4,6 +4,8 @@ import rulesengine.Type;
 
 import java.util.ArrayList;
 
+import network.Flag;
+
 public class GameState {
 	private int tournamentNumber;
 	private int tournamentColour;
@@ -14,6 +16,7 @@ public class GameState {
 	private boolean gameOver;
 	private boolean tournamentStarted;
 	private int prevTournamentColour;
+	private boolean playedValueCard = false; //toggle to true every time a player plays a value card. useful for STUNNED implementation
 	
 	private static final int[] cardTypeData = {Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
 												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
@@ -79,7 +82,7 @@ public class GameState {
 			p.enterTournament();
 			result += p.getName() + ":";
 		}
-		result += "cards";
+		result += Flag.CARDS_BEGIN;
 		setTurn(0);
 		for(int i = 0; i < 110; i++) {
 			Card card = new Card(cardTypeData[i], cardValueData[i]);
@@ -198,6 +201,14 @@ public class GameState {
 	
 	public int getTournamentNumber() {
 		return tournamentNumber;
+	}
+	
+	public boolean getPlayedValueCard() {
+		return playedValueCard;
+	}
+	
+	public void setplayedValueCard(boolean bool) {
+		playedValueCard = bool;
 	}
 	
 	public Deck getDrawDeck() {

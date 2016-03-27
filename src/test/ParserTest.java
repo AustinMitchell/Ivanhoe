@@ -49,7 +49,7 @@ public class ParserTest {
 
 	@Test
 	public void guiSplitterTest() {
-		Parser.guiSplitter(queue, ("command 1" + RulesEngine.NEW_COM + "command 2"));
+		Parser.guiSplitter(queue, ("command 1" + Flag.NEW_COM + "command 2"));
 		assertEquals(queue.peek(), "command 1");
 	}
 	
@@ -73,7 +73,7 @@ public class ParserTest {
 		clientGame.getDrawDeck().emptyDeck(clientGame.getDiscardDeck());
 		assertEquals(clientGame.getDiscardDeck().deckSize(), 70);
 		assertEquals(clientGame.getDrawDeck().deckSize(), 0);
-		Parser.networkSplitter("renewDeck:2:3:1:4:6:2", clientGame);
+		Parser.networkSplitter(Flag.RENEW_DECK + ":2:3:1:4:6:2", clientGame);
 		assertEquals(clientGame.getDrawDeck().deckSize(), 3);
 	}
 	
@@ -96,10 +96,10 @@ public class ParserTest {
 		
 		String output = Parser.parse(command, serverGame);
 		if(Validator.canStartTournament(serverGame)) {
-			assertEquals(output, "drawCard:" + serverGame.getTurn() + RulesEngine.NEW_COM + "startTournament" + RulesEngine.NEW_COM + "canStartTournament:true");
+			assertEquals(output, Flag.DRAW_CARD + ":" + serverGame.getTurn() + Flag.NEW_COM + Flag.START_TOURNAMENT + Flag.NEW_COM + Flag.CAN_START_TOURNAMENT + ":true");
 		}
 		else {
-			assertEquals(output, "drawCard:" + serverGame.getTurn() + RulesEngine.NEW_COM + "startTournament" + RulesEngine.NEW_COM + "canStartTournament:false");
+			assertEquals(output, Flag.DRAW_CARD + ":" + serverGame.getTurn() + Flag.NEW_COM + Flag.START_TOURNAMENT + Flag.NEW_COM + Flag.CAN_START_TOURNAMENT + ":false");
 		}
 	}
 	
@@ -109,9 +109,9 @@ public class ParserTest {
 		serverGame.initializeServer(players);
 		serverGame.setTournamentColour(Type.BLUE);
 		serverGame.getAllPlayers().get(serverGame.getTurn()).getHand().emptyDeck(serverGame.getDiscardDeck());
-		String[] command = {"endTurn", "false"};
+		String[] command = {Flag.END_TURN, "false"};
 		
-		assertEquals(Parser.parse(command, serverGame), "endTurn:false");
+		assertEquals(Parser.parse(command, serverGame), Flag.END_TURN + ":false");
 	}
 	
 	@Test
@@ -120,8 +120,8 @@ public class ParserTest {
 		serverGame.initializeServer(players);
 		serverGame.setTournamentColour(Type.BLUE);
 		serverGame.getAllPlayers().get(serverGame.getTurn()).getHand().emptyDeck(serverGame.getDiscardDeck());
-		String[] command = {"startTournament"};
-		assertEquals(Parser.parse(command, serverGame), "startTournament:0");
+		String[] command = {Flag.START_TOURNAMENT};
+		assertEquals(Parser.parse(command, serverGame), Flag.START_TOURNAMENT + ":0");
 	}
 	
 	@Test
@@ -130,8 +130,8 @@ public class ParserTest {
 		serverGame.initializeServer(players);
 		serverGame.setTournamentColour(Type.BLUE);
 		serverGame.getAllPlayers().get(serverGame.getTurn()).getHand().emptyDeck(serverGame.getDiscardDeck());
-		String[] command = {"setColour", "2"};
-		assertEquals(Parser.parse(command, serverGame), "setColour:2");
+		String[] command = {Flag.SET_COLOUR, "2"};
+		assertEquals(Parser.parse(command, serverGame), Flag.SET_COLOUR + ":2");
 	}
 
 }
