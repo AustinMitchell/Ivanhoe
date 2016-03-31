@@ -12,7 +12,7 @@ import java.io.*;
 
 public class Server{
 	public enum ServerState {
-		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, IN_GAME
+		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, IN_GAME, IVANHOE
 	}
 	
 	static final Logger             log = Logger.getLogger("Server");
@@ -27,6 +27,11 @@ public class Server{
     private int          	        maxPlayers;
 	private String                  updateString;
 	private ServerState             serverState;
+
+	// Ivanhoe action card specific stuff
+	private String                  currentActionCardCommand;
+	private int                     ivanhoePlayed;
+	private int                     ivanhoeResponses;
 	
 	public Server(int port) throws IOException {
 		this.maxPlayers = 1;
@@ -136,6 +141,7 @@ public class Server{
 					}
 				}
 			}
+			System.out.println("Message from client " + (int)update[0] + ": " + (String)update[1]);
 		} catch (Exception e) {
 			killServer();
 			throw new RuntimeException("Input thread has died.");
@@ -145,12 +151,14 @@ public class Server{
 	}
 
 	public void updateClients(String update) throws IOException {
+		System.out.println("Message to clients: " + updateString);
 		for(int i = 0; i < out.size(); i++) {
 			log.info("Sending to client " + i +": " + update);
          	out.get(i).sendMessage(update);
 		}
 	}
 	
+	// Watis to accept a new player
 	public void waitForPlayer() {
 		acceptPlayer();
 		
@@ -191,10 +199,58 @@ public class Server{
 	
 	public void gameIteration() throws IOException {
 		updateString = (String)getUpdate()[1];
-		updateString = Parser.networkSplitter(updateString, game);
-		System.out.println("Message to clients: " + updateString);
 		
+		String[] splitString = updateString.split(":");
+		// Checks if the given flag was a card 
+		if (splitString[0].equals(Flag.CARD)) {
+			int cardType = game.getAllPlayers().get(game.getTurn()).getHand().getCard(Integer.parseInt(splitString[1])).getCardType();
+			// Checks the next argument to see if it's an action card
+			if (cardType == Type.ACTION) {
+				// Stores what the desired action is
+				currentActionCardCommand = updateString;
+				// Number of responses to Ivanhoe
+				ivanhoeResponses = 0;
+				// If a player plays ivanhoe, it will be indicated through this
+				ivanhoePlayed = -1;
+				// Changes the state to handle ivanhoe messages
+				serverState = ServerState.IVANHOE;
+			}
+		}
+		
+		updateString = Parser.networkSplitter(updateString, game);
 		updateClients(updateString);
+	}
+	
+	public void ivanhoeIteration() throws IOException {
+		Object[] update = getUpdate();
+		String updateString = (String)update[1];
+		String[] splitString = updateString.split(":");
+		
+		// If it's ivanhoe, this means the player resolved an overlay to use ivanhoe or not
+		if (splitString[0].equals(Flag.IVANHOE_RESPONSE)) {
+			// If someone played Ivanhoe, update the value to reflect the player who played it
+			if (splitString[1].equals("true")) {
+				ivanhoePlayed = (int)update[0];
+			}
+			ivanhoeResponses += 1;
+			// If we receive responses equal to 1 less than the number of players (as the instigator does not give input)
+			if (ivanhoeResponses == players.size()-1) {
+				String[] actionCommand = currentActionCardCommand.split(":");
+				if (ivanhoePlayed == -1) {
+					// Takes the original command and replaces Flag.CARD with Flag.ACTION_CARD.
+					// Flag.ACTION_CARD signifies to make the action card actually perform an action
+					actionCommand[0] = Flag.ACTION_CARD;
+					updateClients(Parser.networkSplitter(String.join(":", actionCommand), game));
+				} else {
+					updateClients(Parser.networkSplitter(Flag.IVANHOE_PLAYED + ":" + actionCommand[1] + ":" + (int)update[0], game));
+				}
+				// Go back to the game
+				serverState = ServerState.IN_GAME;
+			}
+		// Any other message, pass it off as normal.
+		} else {
+			updateClients(Parser.networkSplitter(updateString, game));
+		}
 	}
 	
 	public void handleState(ServerState st) throws IOException {
@@ -211,6 +267,9 @@ public class Server{
 				break;
 			case IN_GAME:
 				gameIteration();
+				break;
+			case IVANHOE:
+				ivanhoeIteration();
 				break;
 		}
 	}
