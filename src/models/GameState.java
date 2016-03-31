@@ -61,6 +61,10 @@ public class GameState {
 												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
 												Card.COUNTERCHARGE, Card.DISGRACE, Card.ADAPT, Card.OUTWIT, Card.SHIELD, 
 												Card.STUNNED, Card.IVANHOE, Card.RIPOSTE, Card.RIPOSTE, Card.KNOCKDOWN};
+//												Card.UNHORSE, Card.CHANGE_WEAPON, Card.DROP_WEAPON, Card.BREAK_LANCE, Card.RIPOSTE, 
+//												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
+//												Card.COUNTERCHARGE, Card.DISGRACE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, 
+//												Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE};
 	
 	public GameState() {
 		discardDeck = new Deck();
