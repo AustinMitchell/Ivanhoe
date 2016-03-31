@@ -111,7 +111,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -125,7 +125,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the second player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -139,7 +139,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the third player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -153,7 +153,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the fourth player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 		
 		//Make sure the first player has won a blue token
 		assertTrue(game.getPlayer(0).playerHasToken());
@@ -191,7 +191,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -214,7 +214,7 @@ public class tournamentsTest {
 		assertTrue(game.getPlayer(1).isInTournament());
 		
 		//end the second player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -228,7 +228,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the third player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -242,7 +242,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the fourth player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 		
 		//test to make sure only players 1 and 2 are still in the tournament
 		assertTrue(game.getPlayer(0).isInTournament());
@@ -276,7 +276,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -300,7 +300,7 @@ public class tournamentsTest {
 		assertTrue(game.getPlayer(1).isInTournament());
 		
 		//end the second player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -314,7 +314,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the third player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -328,7 +328,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the fourth player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 		
 		//test to make sure only players 1 and 2 are still in the tournament
 		assertTrue(game.getPlayer(0).isInTournament());
@@ -362,7 +362,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -385,7 +385,7 @@ public class tournamentsTest {
 		assertTrue(game.getPlayer(1).isInTournament());
 		
 		//end the second player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -406,7 +406,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the third player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -427,7 +427,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the fourth player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		//test to make sure all players are still in the tournament
 		assertTrue(game.getPlayer(0).isInTournament());
@@ -461,7 +461,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -482,7 +482,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the second player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -503,7 +503,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the third player's turn
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -524,7 +524,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the fourth player's turn
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		//test to make sure all players are still in the tournament
 		assertTrue(game.getPlayer(0).isInTournament());
@@ -558,7 +558,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 	}
 
 	
@@ -587,7 +587,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 2);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 	}
 
 	
@@ -616,7 +616,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -638,7 +638,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 2);
 		
 		//end the second player's turn
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -661,7 +661,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 3);
 		
 		//end the third player's turn
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -683,7 +683,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 2);
 		
 		//end the fourth player's turn
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		//test to make sure only all players are still in the tournament
 		assertTrue(game.getPlayer(0).isInTournament());
@@ -702,7 +702,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 3);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -715,7 +715,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 4);
 		
 		//end second player's turn
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -728,7 +728,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 5);
 		
 		//end third player's turn
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -741,7 +741,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 4);
 		
 		//end fourth player's turn
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		//test to make sure only the third player remains in the tournament
 		assertFalse(game.getPlayer(0).isInTournament());
@@ -780,7 +780,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 3);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -801,7 +801,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the second player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -822,7 +822,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the third player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -843,7 +843,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the fourth player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		//test to make sure everyone failed to beat player 1
 		assertTrue(game.getPlayer(0).isInTournament());
@@ -907,7 +907,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -921,7 +921,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the second player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -935,7 +935,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the third player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -949,7 +949,7 @@ public class tournamentsTest {
 		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
 		
 		//end the fourth player's turn 
-		RulesEngine.endTurn(game, "true");
+		RulesEngine.endTurn(game);
 		
 		//Make sure the first player has won a blue token
 		assertTrue(game.getPlayer(0).playerHasToken());
@@ -994,7 +994,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 3);
 		
 		//end turn and move on to next player
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -1015,7 +1015,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the second player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -1036,7 +1036,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the third player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 
 		currentPlayer = game.getTurn(); //update current player position
 		
@@ -1063,7 +1063,7 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 		
 		//end the fourth player's turn 
-		RulesEngine.endTurn(game, "false");
+		RulesEngine.endTurn(game);
 		
 		//test to make sure everyone failed to beat player 1
 		assertTrue(game.getPlayer(0).isInTournament());

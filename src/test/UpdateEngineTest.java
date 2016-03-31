@@ -4,11 +4,15 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import network.Flag;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import models.Card;
 import models.GameState;
 import models.Player;
+import rulesengine.RulesEngine;
 import rulesengine.Type;
 import rulesengine.UpdateEngine;
 
@@ -44,28 +48,27 @@ public class UpdateEngineTest {
 
 	@Test
 	public void playValueCardTest() {
-		assertEquals("card:2", UpdateEngine.playValueCard(game, 2));
+		assertEquals(Flag.CARD + ":2", UpdateEngine.playValueCard(game, 2));
 	}
 	
 	@Test 
 	public void unhorseTest() {
-		assertEquals("card:3:1", UpdateEngine.unhorse(game, 3, Type.RED));
+		assertEquals(Flag.CARD + ":3:1", UpdateEngine.unhorse(game, 3, Type.RED));
 	}
 	
 	@Test 
 	public void changeWeaponTest() {
-		assertEquals("card:4:2", UpdateEngine.changeWeapon(game, 4, Type.YELLOW));
+		assertEquals(Flag.CARD + ":4:2", UpdateEngine.changeWeapon(game, 4, Type.YELLOW));
 	}
 	
 	@Test 
 	public void dropWeaponTest() {
-		assertEquals("card:3:4", UpdateEngine.unhorse(game, 3, Type.GREEN));
+		assertEquals(Flag.CARD + ":3:4", UpdateEngine.unhorse(game, 3, Type.GREEN));
 	}
 	
 	@Test
 	public void endTurnTest() {
-		assertEquals("endTurn:false", UpdateEngine.endTurn(game, "false"));
-		assertEquals("endTurn:true", UpdateEngine.endTurn(game, "true"));
+		assertEquals(Flag.END_TURN, UpdateEngine.endTurn(game));
 	}
 
 }

@@ -333,7 +333,7 @@ public class GamePanel extends ScaledPanel {
 						case "false":
 							if (guiTurn == THIS_PLAYER) {
 								messageScrollBox.addLine(" > You cannot start a new tournament");
-								client.sendMessage(Flag.END_TURN + ":false");
+								client.sendMessage(Flag.END_TURN);
 							} else {
 								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " cannot start a new tournament");
 							}
@@ -369,16 +369,6 @@ public class GamePanel extends ScaledPanel {
 					break;
 				}
 				case Flag.END_TURN: {
-					if (command[1].equals("true")) {
-						int lastTurn = Math.floorMod(gameTurn-1, numPlayers);
-						if (lastTurn == realPlayerIndex) {
-							messageScrollBox.addLine("You withdrew from the tournament");
-						} else {
-							messageScrollBox.addLine(playerNames.get(lastTurn) + " withdrew from the tournament");
-						}
-						display[toGUITurn(lastTurn)].clear();
-						playerStatus[lastTurn].clearStatus();
-					}
 					messageScrollBox.addRepeatedTextLine("-");
 					if (guiTurn == THIS_PLAYER) {
 						messageScrollBox.addLine("It is now your turn");
@@ -392,10 +382,20 @@ public class GamePanel extends ScaledPanel {
 					}
 					break;
 				}
+				case Flag.WITHDRAW: {
+					int lastTurn = Integer.parseInt(command[1]);
+					if (lastTurn == realPlayerIndex) {
+						messageScrollBox.addLine("You withdrew from the tournament");
+					} else {
+						messageScrollBox.addLine(playerNames.get(lastTurn) + " withdrew from the tournament");
+					}
+					display[toGUITurn(lastTurn)].clear();
+					playerStatus[lastTurn].clearStatus();
+				}
 				case Flag.START_TOURNAMENT: {
-					messageScrollBox.addRepeatedTextLine("* ");
+					//messageScrollBox.addRepeatedTextLine("* ");
 					messageScrollBox.addLine("-- New Tournament --");
-					messageScrollBox.addRepeatedTextLine("* ");
+					//messageScrollBox.addRepeatedTextLine("* ");
 					if (guiTurn == THIS_PLAYER) {
 						boolean[] canPlay = Validator.cardsAbleToStart(game);
 						for (int i=0; i<canPlay.length; i++) {
@@ -408,7 +408,7 @@ public class GamePanel extends ScaledPanel {
 					int type = Integer.parseInt(command[1]);
 					String colour = Type.toString(type);
 					
-					messageScrollBox.addRepeatedTextLine("* ");
+					//messageScrollBox.addRepeatedTextLine("* ");
 					if (guiTurn == THIS_PLAYER) {
 						messageScrollBox.addLine("You won the tournament!");
 						messageScrollBox.addLine("You were awarded a " + colour + " token");
@@ -416,7 +416,7 @@ public class GamePanel extends ScaledPanel {
 						messageScrollBox.addLine(playerNames.get(gameTurn) + " won the tournament!");
 						messageScrollBox.addLine(playerNames.get(gameTurn) + " was awarded a " + colour + " token");
 					}
-					messageScrollBox.addRepeatedTextLine("* ");
+					//messageScrollBox.addRepeatedTextLine("* ");
 					playerStatus[gameTurn].collectToken(type);
 					tournamentColourBar.disableAllTokens();
 					for (CardDisplayPanel cp: display) {
@@ -637,9 +637,9 @@ public class GamePanel extends ScaledPanel {
 				}
 			}
 			if (greatest) {
-				client.sendMessage("endTurn:false");
+				client.sendMessage(Flag.END_TURN);
 			} else {
-				client.sendMessage("endTurn:true");
+				client.sendMessage(Flag.END_TURN);
 			}
 		}
 	}
@@ -657,7 +657,7 @@ public class GamePanel extends ScaledPanel {
 	private void handleDeckObject() {
 		if (deck.isClicked()) {
 			deck.setEnabled(false);
-			client.sendMessage("drawCard");
+			client.sendMessage(Flag.DRAW_CARD);
 		}
 	}
 	

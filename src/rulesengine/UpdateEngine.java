@@ -102,8 +102,8 @@ public class UpdateEngine {
 	
 	
 	
-	public static String endTurn(GameState game, String withdrawState) {
-		return (Flag.END_TURN + ":" + withdrawState);
+	public static String endTurn(GameState game) {
+		return (Flag.END_TURN);
 	}
 	
 	

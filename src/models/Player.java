@@ -116,6 +116,14 @@ public class Player {
 		return hand;
 	}
 	
+	// purely for testing purposes
+	public void setHand(Card[] cards) {
+		hand = new Deck();
+		for (Card c: cards) {
+			hand.add(c);
+		}
+	}
+	
 	public void enterTournament() {
 		inTournament = true;
 	}

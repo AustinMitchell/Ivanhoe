@@ -109,9 +109,9 @@ public class ParserTest {
 		serverGame.initializeServer(players);
 		serverGame.setTournamentColour(Type.BLUE);
 		serverGame.getAllPlayers().get(serverGame.getTurn()).getHand().emptyDeck(serverGame.getDiscardDeck());
-		String[] command = {Flag.END_TURN, "false"};
+		String[] command = {Flag.END_TURN};
 		
-		assertEquals(Parser.parse(command, serverGame), Flag.END_TURN + ":false");
+		assertEquals(Parser.parse(command, serverGame), Flag.END_TURN);
 	}
 	
 	@Test

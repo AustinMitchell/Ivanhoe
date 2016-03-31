@@ -27,5 +27,6 @@ public class Flag {
 	public static final String START_GAME           = "startGame";
 	public static final String START_TOURNAMENT     = "startTournament";
 	public static final String STUN 				= "stun";
+	public static final String WITHDRAW             = "withdraw";
 
 }

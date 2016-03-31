@@ -103,24 +103,28 @@ public class RulesEngine {
 		return Validator.isGameOver(game);
 	}
 	
-	public static String endTurn(GameState game, String withdrawState) {
+	public static String endTurn(GameState game) {
 		String result = "";
-		if(/*withdrawState.equalsIgnoreCase("true") &&*/ !remainInTournament(game)) withdraw(game);
-		if(!isTournamentOver(game) /*|| !game.hasTournamentStarted()*/) { //The commented out section in the if statement was required in order to pass the junit test. It does not break the game. However, it should be uncommented if there is a strange behaviour
+		String withdrawState = "";
+		if (!remainInTournament(game)) withdrawState = Flag.NEW_COM + withdraw(game);
+		
+		// The commented out section in the if statement was required in order to pass the junit test. It does not break the game. 
+		// However, it should be uncommented if there is a strange behaviour
+		if(!isTournamentOver(game) /*|| !game.hasTournamentStarted()*/ ) { 
 			game.nextTurn();
-			result = Flag.END_TURN + ":" + withdrawState; 
+			result = Flag.END_TURN + withdrawState; 
 		}
 		else {
 			System.out.println("ending tournament");
 			game.nextTurn();
-			String endTournamentCommand = endTournament(game);
-			result = Flag.END_TURN + ":" + withdrawState + Flag.NEW_COM + endTournamentCommand;
+			String endTournamentCommand = Flag.NEW_COM + endTournament(game);
+			result = Flag.END_TURN + withdrawState + endTournamentCommand;
 		}
 		game.setplayedValueCard(false);
 		return result;
 	}
 	
-	public static void withdraw(GameState game) {
+	public static String withdraw(GameState game) {
 		int playerPos = game.getTurn();
 		//The following if statment checks if the withdrawing player has a maiden in their dispplay to take away a token accordingly
 		if(game.getPlayer(playerPos).displayHasMaiden() && game.getPlayer(playerPos).playerHasToken()) {
@@ -134,6 +138,8 @@ public class RulesEngine {
 		game.getAllPlayers().get(game.getTurn()).getDisplay().emptyDeck(game.getDiscardDeck());
 		game.getAllPlayers().get(game.getTurn()).getStunDeck().emptyDeck(game.getDiscardDeck());
 		game.getAllPlayers().get(game.getTurn()).getShieldDeck().emptyDeck(game.getDiscardDeck());
+		
+		return Flag.WITHDRAW + ":" + playerPos;
 	}
 	
 	public static String startTournament(GameState game) {
@@ -156,6 +162,8 @@ public class RulesEngine {
 	}
 	
 	public static boolean remainInTournament(GameState game) {
+		if (!game.hasTournamentStarted()) { return true; }
+		
 		Player player = game.getAllPlayers().get(game.getTurn());
 		for(Player p:game.getAllPlayers()) {
 			

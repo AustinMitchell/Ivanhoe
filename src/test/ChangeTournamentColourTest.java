@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import network.Flag;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +50,7 @@ public class ChangeTournamentColourTest {
 						break;
 					}
 		}
-		returnString = ("card:" + cardPos + ":" + Type.RED);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos + ":" + Type.RED);
 		assertEquals(Type.PURPLE, game.getTournamentColour());
 		assertEquals(returnString, RulesEngine.unhorse(game, cardPos, Type.RED));
 		assertEquals(Type.RED, game.getTournamentColour());
@@ -68,7 +70,7 @@ public class ChangeTournamentColourTest {
 						cardPos = i;
 					}
 		}
-		returnString = ("card:" + cardPos + ":" + Type.YELLOW);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos + ":" + Type.YELLOW);
 		assertEquals(Type.BLUE, game.getTournamentColour());
 		assertEquals(returnString, RulesEngine.changeWeapon(game, cardPos, Type.YELLOW));
 		assertEquals(Type.YELLOW, game.getTournamentColour());
@@ -89,7 +91,7 @@ public class ChangeTournamentColourTest {
 						cardPos = i;
 					}
 		}
-		returnString = ("card:" + cardPos);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos);
 		assertEquals(Type.BLUE, game.getTournamentColour());
 		assertEquals(returnString, RulesEngine.dropWeapon(game, cardPos));
 		assertEquals(Type.GREEN, game.getTournamentColour());

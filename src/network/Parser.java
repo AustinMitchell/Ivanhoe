@@ -118,7 +118,7 @@ public class Parser {
 					
 				// First command is true or false depending on whether they withdrew
 				case Flag.END_TURN: {
-					result = RulesEngine.endTurn(game, command[1]);
+					result = RulesEngine.endTurn(game);
 					break;
 				}
 					
