@@ -48,8 +48,6 @@ public class ChangeTournamentColourTest {
 						break;
 					}
 		}
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:" + cardPos + ":" + Type.RED);
 		assertEquals(Type.PURPLE, game.getTournamentColour());
 		assertEquals(returnString, RulesEngine.unhorse(game, cardPos, Type.RED));
@@ -70,8 +68,6 @@ public class ChangeTournamentColourTest {
 						cardPos = i;
 					}
 		}
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:" + cardPos + ":" + Type.YELLOW);
 		assertEquals(Type.BLUE, game.getTournamentColour());
 		assertEquals(returnString, RulesEngine.changeWeapon(game, cardPos, Type.YELLOW));
@@ -93,8 +89,6 @@ public class ChangeTournamentColourTest {
 						cardPos = i;
 					}
 		}
-		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
-		int cardValue = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardValue();
 		returnString = ("card:" + cardPos);
 		assertEquals(Type.BLUE, game.getTournamentColour());
 		assertEquals(returnString, RulesEngine.dropWeapon(game, cardPos));

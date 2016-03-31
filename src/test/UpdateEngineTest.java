@@ -44,28 +44,28 @@ public class UpdateEngineTest {
 
 	@Test
 	public void playValueCardTest() {
-		assertEquals("card:2", update.playValueCard(game, 2));
+		assertEquals("card:2", UpdateEngine.playValueCard(game, 2));
 	}
 	
 	@Test 
 	public void unhorseTest() {
-		assertEquals("card:3:1", update.unhorse(game, 3, Type.RED));
+		assertEquals("card:3:1", UpdateEngine.unhorse(game, 3, Type.RED));
 	}
 	
 	@Test 
 	public void changeWeaponTest() {
-		assertEquals("card:4:2", update.changeWeapon(game, 4, Type.YELLOW));
+		assertEquals("card:4:2", UpdateEngine.changeWeapon(game, 4, Type.YELLOW));
 	}
 	
 	@Test 
 	public void dropWeaponTest() {
-		assertEquals("card:3:4", update.unhorse(game, 3, Type.GREEN));
+		assertEquals("card:3:4", UpdateEngine.unhorse(game, 3, Type.GREEN));
 	}
 	
 	@Test
 	public void endTurnTest() {
-		assertEquals("endTurn:false", update.endTurn(game, "false"));
-		assertEquals("endTurn:true", update.endTurn(game, "true"));
+		assertEquals("endTurn:false", UpdateEngine.endTurn(game, "false"));
+		assertEquals("endTurn:true", UpdateEngine.endTurn(game, "true"));
 	}
 
 }

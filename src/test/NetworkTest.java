@@ -2,21 +2,13 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
 
 import network.*;
 
 import org.junit.Test;
 
-import java.net.*;
-import java.io.*;
 
 public class NetworkTest {	
 	public static final String LOCAL = "localhost";

@@ -198,7 +198,7 @@ public class RiposteTest {
 		RulesEngine.riposte(game, cardPos, targetPlayer);
 		
 		//test the size of discard deck after playing Riposte
-		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 		
 		//Update this variable after a card has been removed from the display
 		targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
@@ -246,7 +246,7 @@ public class RiposteTest {
 		RulesEngine.riposte(game, cardPos, targetPlayer);
 		
 		//test the size of discard deck after playing Riposte
-		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 		
 		//Update this variable after a card has been removed from the display
 		targetDisplaySize = game.getDisplay(targetPlayer).deckSize();

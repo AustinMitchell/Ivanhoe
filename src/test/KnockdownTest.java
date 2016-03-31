@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import models.Card;
@@ -120,12 +119,12 @@ public class KnockdownTest {
 		RulesEngine.knockdown(game, cardPos, targetPlayer, 0);
 		
 		//test the size of discard deck after playing knockdown
-		assertEquals(game.getDiscardDeck().deckSize(), 17);
+		assertEquals(game.getDiscardDeck().deckSize(), 16);
 
 		/*
 		 * test the size of player's hand
 		 */
-		assertEquals(game.getHand(0).deckSize(), 1);
+		assertEquals(game.getHand(0).deckSize(), 2);
 
 		/*
 		 * test to make sure the target's hand has no cards

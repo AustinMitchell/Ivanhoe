@@ -4,12 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import models.Card;
-import models.Deck;
 import models.GameState;
 import models.Player;
 import rulesengine.RulesEngine;
@@ -235,8 +232,8 @@ public class BreakLanceTest {
 		RulesEngine.breakLance(game, cardPos, targetPlayer);
 		
 		//test the size of discard deck after playing break lance
-		//a total of 3 cards should have been discarded (1 break lance card)
-		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		//a total of 0 cards should have been discarded
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 		
 		/*
 		 * test to make sure the target has one purple card left. In this case we are testing the 
@@ -270,7 +267,7 @@ public class BreakLanceTest {
 		
 		//test the size of discard deck after playing break lance
 		//a total of 1 card should have been discarded due to the shield (1 break lance card)
-		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 		
 		/*
 		 * test to make sure the target still has purple cards.

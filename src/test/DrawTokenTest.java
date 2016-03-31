@@ -4,10 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
 import models.GameState;
 import models.Player;
 import rulesengine.RulesEngine;
@@ -28,7 +25,7 @@ public class DrawTokenTest {
 	public void twoPlayerDrawTokenTest() {
 		player1 = new Player("Ahmed");
 		player2 = new Player("Nick");
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		game = new GameState();
@@ -57,7 +54,7 @@ public class DrawTokenTest {
 		player1 = new Player("Ahmed");
 		player2 = new Player("Nick");
 		player3 = new Player("Austin");
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
@@ -87,7 +84,7 @@ public class DrawTokenTest {
 		player2 = new Player("Nick");
 		player3 = new Player("Austin");
 		player4 = new Player("Mike");
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
@@ -119,7 +116,7 @@ public class DrawTokenTest {
 		player3 = new Player("Austin");
 		player4 = new Player("Mike");
 		player5 = new Player("Malik");
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);

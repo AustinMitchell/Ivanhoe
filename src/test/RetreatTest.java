@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -83,7 +82,7 @@ public class RetreatTest {
 	}
 
 
-	//Test Retreat card with more than 1 card in the display
+	//Test Retreat card with 1 card in the display
 	@Test
 	public void retreatWithOneCardDisplayTest() {
 		
@@ -97,13 +96,14 @@ public class RetreatTest {
 		RulesEngine.retreat(game, 0, 0);
 		
 		//test the size of discard deck after playing retreat
-		assertEquals(game.getDiscardDeck().deckSize(), 10);
+		assertEquals(game.getDiscardDeck().deckSize(), 9);
 		
 		/*
-		 * test to make sure the player has a red card in his hand along with the hand's size
+		 * test to make sure the player still has a retreat card in his hand
 		*/
-		assertEquals(game.getHand(0).getCard(0).getCardType(), Type.RED);
-		assertEquals(game.getHand(0).deckSize(), 1);
+		assertEquals(game.getHand(0).getCard(0).getCardType(), Type.ACTION);
+		assertEquals(game.getHand(0).getCard(0).getCardValue(), Card.RETREAT);
+		assertEquals(game.getHand(0).deckSize(), 2);
 		
 		/*
 		 * test to make sure there is a purple in the display along with the display's size

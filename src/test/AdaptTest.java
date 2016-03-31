@@ -9,7 +9,6 @@ import org.junit.Test;
 import models.Card;
 import models.GameState;
 import models.Player;
-import network.Flag;
 import rulesengine.RulesEngine;
 import rulesengine.Type;
 
@@ -37,11 +36,9 @@ public class AdaptTest {
 		
 		
 		//create cards to be added to player's hand and target's display
-		Card purpleThree = new Card(Type.PURPLE, 3);
 		Card redThree = new Card(Type.RED, 3);
 		Card greenCard = new Card(Type.GREEN, 1);
 		Card yellowThree = new Card(Type.YELLOW, 3);
-		Card blueThree = new Card(Type.BLUE, 3);
 		Card blueFive = new Card(Type.BLUE, 5);
 		Card purpleFive = new Card(Type.PURPLE, 5);
 		Card redFour = new Card(Type.RED, 4);
@@ -87,11 +84,9 @@ public class AdaptTest {
 		
 		
 		//create cards to be added to player's hand and target's display
-		Card purpleThree = new Card(Type.PURPLE, 3);
 		Card redThree = new Card(Type.RED, 3);
 		Card greenCard = new Card(Type.GREEN, 1);
 		Card yellowThree = new Card(Type.YELLOW, 3);
-		Card blueThree = new Card(Type.BLUE, 3);
 		Card blueFive = new Card(Type.BLUE, 5);
 		Card purpleFive = new Card(Type.PURPLE, 5);
 		Card redFour = new Card(Type.RED, 4);
@@ -174,6 +169,7 @@ public class AdaptTest {
 		int cardPos = game.getHand(0).deckSize()-1;
 		int targetPlayer = 1;
 		int targetPlayer2 = 2;
+		
 		/*
 		 * test to make sure the player has cards of values 3 and 5 at the proper positions
 		 * also test to make sure their display size is correct

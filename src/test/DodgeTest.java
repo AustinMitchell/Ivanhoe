@@ -129,7 +129,6 @@ public class DodgeTest {
 		
 		int cardPos = game.getHand(0).deckSize()-1;
 		int targetPlayer = 1;
-		int targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
 		/*
 		 * test to make sure the target has a squire at the 5th position
 		*/
@@ -146,9 +145,6 @@ public class DodgeTest {
 		
 		//test the size of discard deck after playing dodge
 		assertEquals(game.getDiscardDeck().deckSize(), 2);
-		
-		//Update this variable after a card has been removed from the display
-		targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
 
 		/*
 		 * test to make sure the target does not have a squire at the 5th position anymore
@@ -192,7 +188,7 @@ public class DodgeTest {
 		RulesEngine.dodge(game, cardPos, targetPlayer, 0);
 		
 		//test the size of discard deck after playing dodge
-		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 		
 		//Update this variable after a card has been removed from the display
 		targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
@@ -226,19 +222,13 @@ public class DodgeTest {
 		RulesEngine.dodge(game, cardPos, targetPlayer, 4);
 		
 		//test the size of discard deck after playing dodge
-		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 
 		/*
 		 * test to make sure the target does not have a squire at the 5th position anymore
 		*/
 		assertTrue(game.getDisplay(1).getCard(4).getCardType() == Type.WHITE);
 		assertTrue(game.getDisplay(1).getCard(4).getCardValue() == 2);
-		
-		/*
-		 * test to make sure the first card in the discard deck is a dodge
-		*/
-		assertEquals(game.getDiscardDeck().getCard(0).getCardType(), Type.ACTION);
-		assertEquals(game.getDiscardDeck().getCard(0).getCardValue(), Card.DODGE);
 	}
 
 

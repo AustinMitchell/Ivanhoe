@@ -137,7 +137,6 @@ public class CounterChargeTest {
 		
 		//Give target player a custom display
 		game.getDisplay(0).add(yellowFour);
-		game.getDisplay(0).add(yellowFour);
 		game.getDisplay(1).add(yellowThree);
 		game.getDisplay(2).add(yellowFour);
 	}
@@ -336,8 +335,7 @@ public class CounterChargeTest {
 		 * cards as the last played cards
 		*/
 		int playerSize = game.getDisplay(0).deckSize();
-		assertTrue(playerSize == 2);
-		assertTrue(playerSize == 2);
+		assertTrue(playerSize == 1);
 		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.YELLOW);
 		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 4);
 		
@@ -360,8 +358,8 @@ public class CounterChargeTest {
 		
 		
 		//test the size of discard deck after playing countercharge
-		//a total of 1 card should have been discarded (1 player's card + 1 countercharge card)
-		assertEquals(game.getDiscardDeck().deckSize(), 2);
+		//a total of 0 card should have been discarded
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 		
 		/*
 		 * test to make sure the player and targets have the right size display and proper cards in their display

@@ -354,8 +354,8 @@ public class DisgraceTest {
 		
 		
 		//test the size of discard deck after playing disgrace
-		//a total of 1 card should have been discarded (1 disgrace card)
-		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		//a total of 0 card should have been discarded
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 		
 		/*
 		 * test to make sure the player and targets have the right size display and proper cards in their display

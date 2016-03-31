@@ -162,7 +162,6 @@ public class OutwitTest {
 		
 		int cardPos = game.getHand(0).deckSize()-1;
 		int targetPlayer = 1;
-		int targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
 		/*
 		 * test to make sure the target has a maiden at the 4th position
 		*/
@@ -347,7 +346,7 @@ public class OutwitTest {
 		targetDisplaySize = game.getDisplay(targetPlayer).deckSize();
 		
 		//test the size of discard deck after playing outwit
-		assertEquals(game.getDiscardDeck().deckSize(), 1);
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
 
 		//test the size of the player's display
 		assertEquals(game.getDisplay(0).deckSize(), 2);

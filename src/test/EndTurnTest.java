@@ -10,7 +10,6 @@ import org.junit.Test;
 import models.GameState;
 import models.Player;
 import rulesengine.RulesEngine;
-import rulesengine.Type;
 
 public class EndTurnTest {
 	Player player1;
@@ -34,7 +33,7 @@ public class EndTurnTest {
 	
 	@Test
 	public void twoPlayerEndTurnTest() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		game = new GameState();
@@ -51,7 +50,7 @@ public class EndTurnTest {
 	
 	@Test
 	public void threePlayerEndTurnTest() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
@@ -74,7 +73,7 @@ public class EndTurnTest {
 	
 	@Test
 	public void fourPlayerEndTurnTest() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
@@ -104,7 +103,7 @@ public class EndTurnTest {
 	
 	@Test
 	public void fivePlayerEndTurnTest() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
