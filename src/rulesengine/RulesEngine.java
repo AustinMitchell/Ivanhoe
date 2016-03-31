@@ -191,7 +191,7 @@ public class RulesEngine {
 	public static String unhorse(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
-		returnString = (Flag.CARD + ":" + cardPos + ":" + colour);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos + ":" + colour);
 		if(game.getTournamentColour() == Type.PURPLE) {
 			//discard unhorse
 			game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
@@ -204,7 +204,7 @@ public class RulesEngine {
 	public static String changeWeapon(GameState game, int cardPos, int colour) {
 		String returnString;
 		int playerPos = game.getTurn();
-		returnString = (Flag.CARD + ":" + cardPos + ":" + colour);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos + ":" + colour);
 		if (game.getTournamentColour() != Type.PURPLE && game.getTournamentColour() != Type.GREEN && game.getTournamentColour() != colour) {
 			//Discard change Weapon card
 			game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
@@ -217,7 +217,7 @@ public class RulesEngine {
 	public static String dropWeapon(GameState game, int cardPos) {
 		String returnString;
 		int playerPos = game.getTurn();
-		returnString = (Flag.CARD + ":" + cardPos);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos);
 		if(game.getTournamentColour() != Type.GREEN && game.getTournamentColour() != Type.PURPLE) {
 			//discard drop weapon card
 			game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
@@ -229,7 +229,7 @@ public class RulesEngine {
 	
 	//Process break lance card
 	public static String breakLance(GameState game, int cardPos, int targetPos) {
-		String returnString = (Flag.CARD + ":" + cardPos + targetPos);
+		String returnString = (Flag.ACTION_CARD + ":" + cardPos + targetPos);
 		int playerPos = game.getTurn();
 		boolean discardedCard = false;
 		
@@ -249,7 +249,7 @@ public class RulesEngine {
 	
 	//Process Riposte card
 	public static String riposte(GameState game, int cardPos, int targetPos) {
-		String returnString = (Flag.CARD + ":" + cardPos + targetPos);
+		String returnString = (Flag.ACTION_CARD + ":" + cardPos + targetPos);
 		int playerPos = game.getTurn();
 		/*
 		 * remove the last card in a target's display and add to player's display
@@ -266,7 +266,7 @@ public class RulesEngine {
 
 	//Process Dodge
 	public static String dodge(GameState game, int cardPos, int targetPos, int targetCardPos) {
-		String returnString = Flag.CARD + ":" + cardPos + targetPos + targetCardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos + targetPos + targetCardPos;
 		int playerPos = game.getTurn();
 		
 		//Discard the target's card only if the display's size is bigger than 1 and if the target doesn't have a shield
@@ -280,7 +280,7 @@ public class RulesEngine {
 	
 	//Process Retreat
 	public static String retreat(GameState game, int cardPos, int targetCardPos) {
-		String returnString = Flag.CARD + ":" + cardPos + ":" + targetCardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos + ":" + targetCardPos;
 		int playerPos = game.getTurn();
 		
 		//Move card from player's display to their hand
@@ -294,7 +294,7 @@ public class RulesEngine {
 	
 	//Process KnockDown
 	public static String knockdown(GameState game, int cardPos, int targetPos, int targetCardPos) {
-		String returnString = Flag.CARD + ":" + cardPos + targetPos + targetCardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos + targetPos + targetCardPos;
 		int playerPos = game.getTurn();
 		
 		//Take the target's card and add it to player's hand
@@ -308,7 +308,7 @@ public class RulesEngine {
 	
 	//Process Outmaneuver
 	public static String outmaneuver(GameState game, int cardPos) {
-		String returnString = Flag.CARD + ":" + cardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos;
 		int playerPos = game.getTurn();
 		boolean discardedCard = false;
 		
@@ -333,7 +333,7 @@ public class RulesEngine {
 	
 	//Process Charge
 	public static String charge(GameState game, int cardPos) {
-		String returnString = Flag.CARD + ":" + cardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos;
 		int playerPos = game.getTurn();
 		boolean discardedCard = false;
 		//variable to keep track of the lowest value card
@@ -371,7 +371,7 @@ public class RulesEngine {
 	
 	//Process Countercharge
 	public static String countercharge(GameState game, int cardPos) {
-		String returnString = Flag.CARD + ":" + cardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos;
 		int playerPos = game.getTurn();
 		boolean discardedCard = false;
 		//variable to keep track of the lowest value card
@@ -409,7 +409,7 @@ public class RulesEngine {
 	
 	//Process Disgrace
 	public static String disgrace(GameState game, int cardPos) {
-		String returnString = Flag.CARD + ":" + cardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos;
 		int playerPos = game.getTurn();
 		
 		boolean discardedCard = false;
@@ -434,7 +434,7 @@ public class RulesEngine {
 	
 	//Process Adapt (absolve)
 	public static String adapt(GameState game, int cardPos) {
-		String returnString = Flag.CARD + ":" + cardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos;
 		Boolean[] values = new Boolean[8];
 		int playerPos = game.getTurn();
 		boolean discardedCard = false;
@@ -463,7 +463,7 @@ public class RulesEngine {
 	
 	//Process Outwit
 	public static String outwit(GameState game, int cardPos, String playerDeck, int playerCardPos, int targetPos, String targetDeck, int targetCardPos) {
-		String returnString = Flag.CARD + ":" + cardPos + ":" + playerDeck + ":" + playerCardPos + ":" + targetPos + ":" + targetDeck + ":" + targetCardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos + ":" + playerDeck + ":" + playerCardPos + ":" + targetPos + ":" + targetDeck + ":" + targetCardPos;
 		int playerPos = game.getTurn();
 		Card playerCard;
 		int playerCardType;
@@ -554,7 +554,7 @@ public class RulesEngine {
 	
 	//Process Shield
 	public static String shield(GameState game, int cardPos) {
-		String returnString = Flag.CARD + ":" + cardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos;
 		int playerPos = game.getTurn();
 		game.getHand(playerPos).moveCardTo(cardPos, game.getShield(playerPos));		
 		return returnString;
@@ -562,14 +562,32 @@ public class RulesEngine {
 	
 	//Process Stun
 	public static String stun(GameState game, int cardPos) {
-		String returnString = Flag.CARD + ":" + cardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos;
 		int playerPos = game.getTurn();
 		game.getHand(playerPos).moveCardTo(cardPos, game.getStun(playerPos));
+
 		return returnString;
 	}
 	
+	public static String ivanhoe(GameState game, int actionCardPos, int ivanhoePlayer) {
+		String result = (Flag.IVANHOE_PLAYED + ":" + actionCardPos + ":" + ivanhoePlayer);
+		int playerPos = game.getTurn();
+		game.getAllPlayers().get(playerPos).getHand().moveCardTo(actionCardPos, game.getDiscardDeck());
+		
+		int ivanhoeCardPos = -1;
+		for (Card c: game.getAllPlayers().get(ivanhoePlayer).getHand().getAllCards()) {
+			ivanhoeCardPos++;
+			if (c.getCardType() == Type.ACTION && c.getCardValue() == Card.IVANHOE) {
+				break;
+			}
+		}
+		game.getAllPlayers().get(ivanhoePlayer).getHand().moveCardTo(ivanhoeCardPos, game.getDiscardDeck());
+		
+		return result;
+	}
+	
 	public static String unimplementedActionCard(GameState game, int cardPos) {
-		String result = (Flag.CARD + ":" + cardPos);
+		String result = (Flag.ACTION_CARD + ":" + cardPos);
 		int playerPos = game.getTurn();
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return result;

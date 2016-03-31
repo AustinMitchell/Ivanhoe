@@ -70,6 +70,7 @@ public class Client implements Runnable {
 	
 
 	public void sendMessage(String message) {
+		System.out.println("Message to server: " + message);
 		synchronized(OUT_LOCK) {
 			out.sendMessage(message);
 		}

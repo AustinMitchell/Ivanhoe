@@ -1,9 +1,10 @@
-package ui;
+package models;
 
 import java.util.*;
 import java.io.*;
 
 import simple.gui.Image;
+import ui.ResLoader;
 
 // Static utility class to store data for cards (i.e. name, description and image)
 public class CardData {

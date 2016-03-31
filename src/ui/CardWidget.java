@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.Color;
 
+import models.CardData;
 import simple.gui.*;
 
 // Represents a card. Stores type and value, and specific CardWidgets can change what card they are and whether they display as facedown or not
