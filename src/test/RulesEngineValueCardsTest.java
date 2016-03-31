@@ -5,7 +5,6 @@ import rulesengine.Type;
 import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
-import models.*;
 import models.GameState;
 import models.Player;
 import rulesengine.RulesEngine;
@@ -19,7 +18,7 @@ public class RulesEngineValueCardsTest {
 	
 	@Before
 	public void setupGameState() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		player1 = new Player("Nick");
 		player1.enterTournament();
 		player2 = new Player("Austin");
@@ -36,9 +35,6 @@ public class RulesEngineValueCardsTest {
 		String returnString = "";
 		for(int i = 0; i < game.getAllPlayers().get(0).getHand().deckSize(); i++) {
 			if(!(game.getAllPlayers().get(game.getTurn()).getHand().getCard(i).getCardType() == Type.ACTION)) {
-				int playerPos = game.getTurn();
-				int cardType = game.getAllPlayers().get(game.getTurn()).getHand().getCard(i).getCardType();
-				int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(i).getCardValue();
 				int cardPos = i;
 				returnString = ("card:" + cardPos);
 				assertEquals(returnString, RulesEngine.playValueCard(game, i));

@@ -26,7 +26,7 @@ public class GameStateTest {
 		player2.enterTournament();
 		player3 = new Player("Austin");
 		player3.enterTournament();
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);

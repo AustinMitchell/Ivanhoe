@@ -1,3 +1,4 @@
+
 package models;
 import rulesengine.Type;
 
@@ -15,6 +16,7 @@ public class GameState {
 	private boolean gameOver;
 	private boolean tournamentStarted;
 	private int prevTournamentColour;
+	private boolean playedValueCard = false; //toggle to true every time a player plays a value card. useful for STUNNED implementation
 	
 	private static final int[] cardTypeData = {Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
 												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
@@ -61,6 +63,11 @@ public class GameState {
 												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
 												Card.COUNTERCHARGE, Card.DISGRACE, Card.ADAPT, Card.OUTWIT, Card.SHIELD, 
 												Card.STUNNED, Card.IVANHOE, Card.RIPOSTE, Card.RIPOSTE, Card.KNOCKDOWN};
+//												Card.UNHORSE, Card.CHANGE_WEAPON, Card.DROP_WEAPON, Card.BREAK_LANCE, Card.RIPOSTE, 
+//												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
+//												Card.COUNTERCHARGE, Card.DISGRACE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, 
+//												Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE};
+	
 	
 	public GameState() {
 		discardDeck = new Deck();
@@ -96,6 +103,7 @@ public class GameState {
 		return result;
 	}
 	
+	//Initialize the game on the client side by receiving the participating players and card data
 	public void initializeClient(ArrayList<Player> newPlayers, int[][] cardData) {
 		players = newPlayers;
 		drawDeck = new Deck();
@@ -110,6 +118,7 @@ public class GameState {
 		setUpStartingHands();
 	}
 	
+	//Function to get player by name
 	public Player getPlayer(String pName) {
 		Player player = null;
 		for(int i = 0; i < players.size(); i++) {
@@ -120,7 +129,30 @@ public class GameState {
 		return player;
 	}
 	
+	//Function to get player by index
+	public Player getPlayer(int playerPos) {
+		return players.get(playerPos);
+	}
 	
+	//Function to get the player's hand
+	public Deck getHand(int playerPos) {
+		return players.get(playerPos).getHand();
+	}
+	
+	//Function to get player's display
+	public Deck getDisplay(int playerPos) {
+		return players.get(playerPos).getDisplay();
+	}
+	
+	//Function to get player's stun deck
+	public Deck getStun(int playerPos) {
+		return players.get(playerPos).getStunDeck();
+	}
+	
+	//Function to get player's shield deck
+		public Deck getShield(int playerPos) {
+			return players.get(playerPos).getShieldDeck();
+		}
 	
 	public boolean hasTournamentStarted() {
 		return tournamentStarted;
@@ -173,6 +205,14 @@ public class GameState {
 	
 	public int getTournamentNumber() {
 		return tournamentNumber;
+	}
+	
+	public boolean getPlayedValueCard() {
+		return playedValueCard;
+	}
+	
+	public void setplayedValueCard(boolean bool) {
+		playedValueCard = bool;
 	}
 	
 	public Deck getDrawDeck() {

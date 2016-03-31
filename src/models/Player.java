@@ -59,7 +59,6 @@ public class Player {
 	public boolean hasShield() {
 		if(shieldDeck.deckSize() == 0)
 			return false;
-		
 		else
 			return true;
 	}
@@ -78,6 +77,19 @@ public class Player {
 	
 	public boolean checkToken(int i) {
 		return tokens[i];
+	}
+	
+	public boolean[] getTokens() {
+		return tokens;
+	}
+	
+	public boolean playerHasToken() {
+		for(int i = 0; i < tokens.length; i++) {
+			if (checkToken(i)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void setToken(int i, boolean val) {
@@ -102,6 +114,14 @@ public class Player {
 	
 	public Deck getHand() {
 		return hand;
+	}
+	
+	// purely for testing purposes
+	public void setHand(Card[] cards) {
+		hand = new Deck();
+		for (Card c: cards) {
+			hand.add(c);
+		}
 	}
 	
 	public void enterTournament() {

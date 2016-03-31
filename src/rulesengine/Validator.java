@@ -1,5 +1,8 @@
 package rulesengine;
 import rulesengine.*;
+
+import java.util.ArrayList;
+
 import models.*;
 
 public class Validator {
@@ -35,8 +38,6 @@ public class Validator {
 		return playableCards;
 	}
 	
-	
-	
 	public static boolean[] cardsAbleToPlay(GameState game) {
 		Deck hand = game.getAllPlayers().get(game.getTurn()).getHand();
 		Card card;
@@ -55,12 +56,149 @@ public class Validator {
 			}
 			
 			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.CHANGE_WEAPON) {
-				playableCards[i] = validateChangeWeapon(game);
+				boolean[] availableCards = validateChangeWeapon(game);
+				for(int j = 0; j < availableCards.length; j++) {
+					if(availableCards[j]) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
 			}
 			
 			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.DROP_WEAPON) {
 				playableCards[i] = validateDropWeapon(game);
 			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.BREAK_LANCE) {
+				ArrayList<Boolean> availableTargets = validateBreakLance(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.RIPOSTE) {
+				ArrayList<Boolean> availableTargets = validateRiposte(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.DODGE) {
+				ArrayList<Boolean> availableTargets = validateDodge(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.RETREAT) {
+				playableCards[i] = validateRetreat(game);
+			}
+			
+			else if(card.getCardType() == Type.ACTION && card.getCardValue() == Card.KNOCKDOWN) {
+				ArrayList<Boolean> availableTargets = validateKnockdown(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.OUTMANEUVER) {
+				ArrayList<Boolean> availableTargets = validateOutmaneuver(game);
+				if(availableTargets.size() > 0) {
+					playableCards[i] = true;
+				}
+				else {
+					playableCards[i] = false;
+				}
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.CHARGE) {
+				ArrayList<Boolean> availableTargets = validateCharge(game);
+				if(availableTargets.size() > 0) {
+					playableCards[i] = true;
+				}
+				else {
+					playableCards[i] = false;
+				}
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.COUNTERCHARGE) {
+				ArrayList<Boolean> availableTargets = validateCountercharge(game);
+				if(availableTargets.size() > 0) {
+					playableCards[i] = true;
+				}
+				else {
+					playableCards[i] = false;
+				}
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.DISGRACE) {
+				ArrayList<Boolean> availableTargets = validateDisgrace(game);
+				if(availableTargets.size() > 0) {
+					playableCards[i] = true;
+				}
+				else {
+					playableCards[i] = false;
+				}
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.ADAPT) {
+				ArrayList<Boolean> availableTargets = validateAdapt(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.OUTWIT) {
+				ArrayList<Boolean> availableTargets = validateOutwit(game);
+				for(int j = 0; j < availableTargets.size(); j++) {
+					if(availableTargets.get(j)) {
+						playableCards[i] = true;
+						break;
+					}
+					else {
+						playableCards[i] = false;
+					}
+				}
+			}
+			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.SHIELD) {
+				playableCards[i] = validateShield(game);
+			}
+			
+			
 			else {
 				playableCards[i] = true;
 			}
@@ -69,20 +207,22 @@ public class Validator {
 	}
 	
 	public static boolean validateValueCard(GameState game, Card card, boolean displayHasMaiden) {
-		if(card.getCardType() == game.getTournamentColour()) {
-			return true;
-		}
-		
-		else if (card.getCardType() == Type.WHITE && !card.isMaiden()) {
-			return true;
-		}
-		
-		else if (card.getCardType() == Type.WHITE && card.isMaiden()) {
-			if(displayHasMaiden) {
-				return false;
-			}
-			else {
+		if((!game.getPlayer(game.getTurn()).isStunned()) || (game.getPlayer(game.getTurn()).isStunned() && !game.getPlayedValueCard()) ) {
+			if(card.getCardType() == game.getTournamentColour()) {
 				return true;
+			}
+			
+			else if (card.getCardType() == Type.WHITE && !card.isMaiden()) {
+				return true;
+			}
+			
+			else if (card.getCardType() == Type.WHITE && card.isMaiden()) {
+				if(displayHasMaiden) {
+					return false;
+				}
+				else {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -99,27 +239,270 @@ public class Validator {
 		}
 	}
 	
-	public static boolean validateChangeWeapon(GameState game) {
+	public static boolean[] validateChangeWeapon(GameState game) {
+		boolean[] validColours = new boolean[5];
+		validColours[Type.PURPLE] = false;
+		validColours[Type.RED] = false;
+		validColours[Type.YELLOW] = false;
+		validColours[Type.BLUE] = false;
+		validColours[Type.GREEN] = false;
 		
-		if (game.getTournamentColour() != Type.PURPLE && game.getTournamentColour() != Type.GREEN) {
-			return true;
+		if(game.getTournamentColour() == Type.RED) {
+			validColours[Type.YELLOW] = true;
+			validColours[Type.BLUE] = true;
+		}
+		else if(game.getTournamentColour() == Type.YELLOW) {
+			validColours[Type.RED] = true;
+			validColours[Type.BLUE] = true;
+		}
+		else if(game.getTournamentColour() == Type.BLUE) {
+			validColours[Type.RED] = true;
+			validColours[Type.YELLOW] = true;
 		}
 		
-		else {
-			return false;
-		}
+		return validColours;
 	}
 	
 	public static boolean validateDropWeapon(GameState game) {
 		if (game.getTournamentColour() != Type.PURPLE && game.getTournamentColour() != Type.GREEN) {
 			return true;
 		}
-		
 		else {
 			return false;
 		}
 	}
 	
+	/*
+	 * Function to validate break lance.
+	 */
+	public static ArrayList<Boolean> validateBreakLance(GameState game) {
+		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if (game.getPlayer(i).hasShield()) {
+				availableTargets.add(false);
+			}
+			else if(i == game.getTurn()) {
+				availableTargets.add(false);
+			}
+			else{
+				boolean hasPurple = false;
+				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+					if(game.getDisplay(i).getCard(j).getCardType() == Type.PURPLE && game.getDisplay(i).deckSize() > 1) {
+						hasPurple = true;
+						break;
+					}
+				}
+				availableTargets.add(hasPurple);
+			}
+		}
+		return availableTargets;
+	}
+
+	
+	/*
+	 * Function to validate riposte.
+	 */
+	public static ArrayList<Boolean> validateRiposte(GameState game) {
+		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			
+			if(i != game.getTurn() && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+				availableTargets.add(true);
+			}
+			else {
+				availableTargets.add(false);
+			}
+		}
+		return availableTargets;
+	}
+	
+	/*
+	 * Function to validate Dodge. 
+	 */
+	public static ArrayList<Boolean> validateDodge (GameState game) {
+		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			
+			if(i != game.getTurn() && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+				availableTargets.add(true);
+			}
+			else {
+				availableTargets.add(false);
+			}
+		}
+		return availableTargets;
+	}
+	
+	/*
+	 * Function to validate Retreat
+	 */
+	public static boolean validateRetreat(GameState game) {
+		boolean valid = false;
+		if (game.getDisplay(game.getTurn()).deckSize() > 1) {
+			valid = true;
+		}
+		return valid;
+	}
+	
+	/*
+	 * Function to validate Knockdown.
+	 */
+	public static ArrayList<Boolean> validateKnockdown (GameState game) {
+		ArrayList<Boolean> availableTargets = new ArrayList<Boolean>();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			
+			if(i != game.getTurn() && game.getHand(i).deckSize() > 0) {
+				availableTargets.add(true);
+			}
+			else {
+				availableTargets.add(false);
+			}
+		}
+		return availableTargets;
+	}
+	
+	/*
+	 * Function to validate outmaneuver
+	 */
+	public static ArrayList<Boolean> validateOutmaneuver(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		int playerPos = game.getTurn();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(i != playerPos && game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+				validTargets.add(true);
+			}
+		}
+		return validTargets;
+	}
+	
+	
+	/*
+	 * Function to validate charge
+	 */
+	public static ArrayList<Boolean> validateCharge(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+				validTargets.add(true);
+			}
+		}
+		return validTargets;
+	}
+	
+	
+	/*
+	 * Function to validate countercharge
+	 */
+	public static ArrayList<Boolean> validateCountercharge(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+				validTargets.add(true);
+			}
+		}
+		return validTargets;
+	}
+	
+	
+	/*
+	 * Function to validate disgrace
+	 */
+	public static ArrayList<Boolean> validateDisgrace(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		//int playerPos = game.getTurn();
+		for (int i = 0; i < game.getAllPlayers().size(); i++) {
+			if(game.getDisplay(i).deckSize() > 1 && !game.getPlayer(i).hasShield()) {
+				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+					if(game.getDisplay(i).getCard(j).getCardType() == Type.WHITE) {
+						validTargets.add(true);
+						break;
+					}
+				}
+			}
+		}
+		return validTargets;
+	}
+	
+	/*
+	 * Function to validate adapt
+	 */
+	public static ArrayList<Boolean> validateAdapt(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		Boolean[] values = new Boolean[8];
+		
+		for(int i = 0; i < game.getAllPlayers().size(); i++) {
+			for(int j = 0; j < values.length; j++) {
+				values[j] = false;
+			}
+			for(int j=0; j<game.getDisplay(i).deckSize(); j++)  {
+				if(values[game.getDisplay(i).getCard(j).getCardValue()] == true) {
+					validTargets.add(true);
+					break;
+				}
+				else if (j == game.getDisplay(i).deckSize()-1){
+					validTargets.add(false);
+				}
+				else {
+					values[game.getDisplay(i).getCard(j).getCardValue()] = true;
+				}
+			}
+		}
+		return validTargets;
+	}
+	
+	/*
+	 * Function to validate outwit
+	 */
+	public static ArrayList<Boolean> validateOutwit(GameState game) {
+		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+		int playerPos = game.getTurn();
+		if (game.getDisplay(playerPos).deckSize() > 1 || game.getPlayer(playerPos).hasShield()|| game.getPlayer(playerPos).isStunned()) {
+			for(int i = 0; i < game.getAllPlayers().size(); i++) {
+				if(i != playerPos) {
+					if (game.getDisplay(i).deckSize() > 1 || game.getPlayer(i).hasShield()|| game.getPlayer(i).isStunned()) {
+					validTargets.add(true);
+					} else {
+						validTargets.add(false);
+					}
+				}
+				else {
+					validTargets.add(false);
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < game.getAllPlayers().size(); i ++) {
+				validTargets.add(false);
+			}
+			
+		}
+		return validTargets;
+	}
+	
+	
+	/*
+	 * Function to validate Shield
+	 */
+	public static boolean validateShield(GameState game) {
+		return true;
+	}
+	
+	
+	/*
+	 * Function to validate Stun
+	 */
+	public static boolean validateStun(GameState game) {
+		return true;
+	}
+	
+	
+	/*
+	 * Function to validate Ivanhoe
+	 */
+	public static boolean validateIvanhoe(GameState game) {
+		return false;
+	}
+
 	
 	public static boolean isGameOver(GameState game) {
 		for(Player p: game.getAllPlayers()) {
@@ -133,53 +516,5 @@ public class Validator {
 		}
 		return false;
 	}
-	
-	
-	/*public static boolean validateValueCard (GameState game, int cardPos) {
-		Card card = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos);
-		int colour = card.getCardType();
-		Player player = game.getAllPlayers().get(game.getTurn());
-		if(colour == Type.WHITE) {
-			if(card.isMaiden() && player.displayHasMaiden()) {
-				return false;
-			}
-			return true;
-		}
-		else if(colour == game.getTournamentColour()) {
-			return true;
-		}
-		return false;
-	}*/
-	
-	
-	//Picking the colour can be done in the update engine. Restrict the GUI to only show RED, BLUE, YELLOW
-	/*public static boolean validateUnhorse(GameState game) {
-		if(game.getTournamentColour() == Type.PURPLE) {
-			return true;
-		}
-		return false;
-	}*/
-	
-
-	//Picking the colour can be done in the update engine. Restrict the GUI to only show RED, BLUE, YELLOW
-	//and grey out which ever colour that is already the tournament colour 
-	/*public static boolean validateChangeWeapon(GameState game) {
-		if(game.getTournamentColour() == Type.PURPLE || game.getTournamentColour() == Type.GREEN) {
-			return false;
-		}
-		return true;
-	}*/
-	
-	
-	/*public static boolean validateDropWeapon(GameState game) {
-		if(game.getTournamentColour() == Type.PURPLE || game.getTournamentColour() == Type.GREEN) {
-			return false;
-		}
-		return true;
-	}*/
-	
-	
-	
-	
 
 }

@@ -1,16 +1,26 @@
+/*
+ * This Test needs to be modified in order to pass since the functionality of end turn has changed.
+ * Take a look at how endTurn in the rules engine works.
+ * 
+ * This test file is actually redundant now anyway 
+ */
+
+
 package test;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import network.Flag;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import models.Card;
 import models.GameState;
 import models.Player;
 import rulesengine.RulesEngine;
-import rulesengine.Type;
 
 public class EndTurnTest {
 	Player player1;
@@ -34,47 +44,82 @@ public class EndTurnTest {
 	
 	@Test
 	public void twoPlayerEndTurnTest() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
 		
-		//ending turn after starting from index 0 (which is the current turn)
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		// sets everyones hands to a series of blue cards
+		for (Player p: players) {
+			Card[] cards = new Card[8];
+			for (int i=0; i<cards.length; i++) {
+				cards[i] = new Card(3, 3);
+			}
+			p.setHand(cards);
+		}
+		String BLUE = "3";
+		// sets tournament colour to BLUE
+		RulesEngine.setColour(game, BLUE);
+		// starts the tournament
+		RulesEngine.startTournament(game);
 		
-		//ending a turn with the withdrawal of index 1 (which is the current turn)
-		//since there are only 2 players, the winning player is at index 0
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		// Ends the first players turn
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
+		
+		// Player 1 ends turn, withdraws with a lower display, and ends tournament
+		// Expecting END TURN, WITHDRAW with the player position, and an END_TOURNAMENT with the tournament colour
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":1" + Flag.NEW_COM + Flag.END_TOURNAMENT + ":" + BLUE, 
+			         RulesEngine.endTurn(game));
 	}
 	
 	
 	@Test
 	public void threePlayerEndTurnTest() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
 		
+		// sets everyones hands to a series of blue cards
+		for (Player p: players) {
+			Card[] cards = new Card[8];
+			for (int i=0; i<cards.length; i++) {
+				cards[i] = new Card(3, 3);
+			}
+			p.setHand(cards);
+		}
+		String BLUE = "3";
+		// sets tournament colour to BLUE
+		RulesEngine.setColour(game, BLUE);
+		// starts the tournament
+		RulesEngine.startTournament(game);
+		
 		//ending turn after starting from index 0 (which is the current turn)
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
 		
 		//ending a turn with the withdrawal of index 1 (which is the current turn)
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":1", RulesEngine.endTurn(game));
 		
 		//player at index 2 ended their turn normally
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		RulesEngine.playValueCard(game, 0);
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
 		
-		//player at index 0 withdrew from the game leaving only 1 winner at index 2
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		// Player 0 ends turn, withdraws with a lower display, and ends tournament
+		// Expecting END TURN, WITHDRAW with the player position, and an END_TOURNAMENT with the tournament colour
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":0" + Flag.NEW_COM + Flag.END_TOURNAMENT + ":" + BLUE, 
+			         RulesEngine.endTurn(game));
 	}
 	
 	
 	@Test
 	public void fourPlayerEndTurnTest() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
@@ -82,29 +127,50 @@ public class EndTurnTest {
 		game = new GameState();
 		game.initializeServer(players);
 		
+		// sets everyones hands to a series of blue cards
+		for (Player p: players) {
+			Card[] cards = new Card[8];
+			for (int i=0; i<cards.length; i++) {
+				cards[i] = new Card(3, 3);
+			}
+			p.setHand(cards);
+		}
+		String BLUE = "3";
+		// sets tournament colour to BLUE
+		RulesEngine.setColour(game, BLUE);
+		// starts the tournament
+		RulesEngine.startTournament(game);
+		
 		//ending turn after starting from index 0 (which is the current turn)
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
 		
 		//ending a turn with the withdrawal of index 1 (which is the current turn)
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":1", RulesEngine.endTurn(game));
 		
 		//player at index 2 ended their turn normally
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		RulesEngine.playValueCard(game, 0);
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
 		
 		//player at index 3 withdrew from the game
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":3", RulesEngine.endTurn(game));
 		
 		//player at index 0 ends their turn normally
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		RulesEngine.playValueCard(game, 0);
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
 		
-		//player at index 2 withdrew from the game leaving only 1 winner at index 0
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		// Player 2 ends turn, withdraws with a lower display, and ends tournament
+		// Expecting END TURN, WITHDRAW with the player position, and an END_TOURNAMENT with the tournament colour
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":2" + Flag.NEW_COM + Flag.END_TOURNAMENT + ":" + BLUE, 
+		         RulesEngine.endTurn(game));
 	}
 
 	
 	@Test
 	public void fivePlayerEndTurnTest() {
-		players = new ArrayList();
+		players = new ArrayList<Player>();
 		players.add(player1);
 		players.add(player2);
 		players.add(player3);
@@ -113,25 +179,48 @@ public class EndTurnTest {
 		game = new GameState();
 		game.initializeServer(players);
 		
+		
+		// sets everyones hands to a series of blue cards
+		for (Player p: players) {
+			Card[] cards = new Card[8];
+			for (int i=0; i<cards.length; i++) {
+				cards[i] = new Card(3, 3);
+			}
+			p.setHand(cards);
+		}
+		String BLUE = "3";
+		// sets tournament colour to BLUE
+		RulesEngine.setColour(game, BLUE);
+		// starts the tournament
+		RulesEngine.startTournament(game);
+		
 		//ending turn after starting from index 0 (which is the current turn)
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
 		
 		//ending a turn with the withdrawal of index 1 (which is the current turn)
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":1", RulesEngine.endTurn(game));
 		
 		//player at index 2 ended their turn normally
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		RulesEngine.playValueCard(game, 0);
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
 		
 		//player at index 3 withdraws from tournament
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":3", RulesEngine.endTurn(game));
 		
 		//player at index 4 ended their turn normally
-		assertEquals("endTurn:false", RulesEngine.endTurn(game, "false"));
+		RulesEngine.playValueCard(game, 0);
+		RulesEngine.playValueCard(game, 0);
+		RulesEngine.playValueCard(game, 0);
+		assertEquals(Flag.END_TURN, RulesEngine.endTurn(game));
 		
 		//player at index 0 withdrew from the game
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":0", RulesEngine.endTurn(game));
 		
-		//player at index 2 withdrew from the game leaving winning player at index 4
-		assertEquals("endTurn:true", RulesEngine.endTurn(game, "true"));
+		// Player 2 ends turn, withdraws with a lower display, and ends tournament
+		// Expecting END TURN, WITHDRAW with the player position, and an END_TOURNAMENT with the tournament colour
+		assertEquals(Flag.END_TURN + Flag.NEW_COM + Flag.WITHDRAW + ":2" + Flag.NEW_COM + Flag.END_TOURNAMENT + ":" + BLUE, 
+		         RulesEngine.endTurn(game));
 	}
 }
