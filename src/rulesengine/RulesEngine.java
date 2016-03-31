@@ -179,7 +179,7 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = (Flag.CARD + ":" + cardPos + ":" + colour);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos + ":" + colour);
 		game.setTournamentColour(colour);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
@@ -190,7 +190,7 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = (Flag.CARD + ":" + cardPos + ":" + colour);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos + ":" + colour);
 		game.setTournamentColour(colour);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
@@ -201,14 +201,31 @@ public class RulesEngine {
 		int playerPos = game.getTurn();
 		int cardType = game.getAllPlayers().get(playerPos).getHand().getCard(cardPos).getCardType();
 		int cardValue = game.getAllPlayers().get(game.getTurn()).getHand().getCard(cardPos).getCardValue();
-		returnString = (Flag.CARD + ":" + cardPos);
+		returnString = (Flag.ACTION_CARD + ":" + cardPos);
 		game.setTournamentColour(Type.GREEN);
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return returnString;
 	}
 	
+	public static String ivanhoe(GameState game, int actionCardPos, int ivanhoePlayer) {
+		String result = (Flag.IVANHOE_PLAYED + ":" + actionCardPos + ":" + ivanhoePlayer);
+		int playerPos = game.getTurn();
+		game.getAllPlayers().get(playerPos).getHand().moveCardTo(actionCardPos, game.getDiscardDeck());
+		
+		int ivanhoeCardPos = -1;
+		for (Card c: game.getAllPlayers().get(ivanhoePlayer).getHand().getAllCards()) {
+			ivanhoeCardPos++;
+			if (c.getCardType() == Type.ACTION && c.getCardValue() == Card.IVANHOE) {
+				break;
+			}
+		}
+		game.getAllPlayers().get(ivanhoePlayer).getHand().moveCardTo(ivanhoeCardPos, game.getDiscardDeck());
+		
+		return result;
+	}
+	
 	public static String unimplementedActionCard(GameState game, int cardPos) {
-		String result = (Flag.CARD + ":" + cardPos);
+		String result = (Flag.ACTION_CARD + ":" + cardPos);
 		int playerPos = game.getTurn();
 		game.getAllPlayers().get(playerPos).getHand().moveCardTo(cardPos, game.getDiscardDeck());
 		return result;
