@@ -58,6 +58,8 @@ public class Parser {
 		synchronized(game) {
 			switch (command[0]) {
 			
+				// First set of commands are names of players. Next, CARDS_BEGIN, then a series of pairs for type and value for 
+			    // each card in the new deck
 				case Flag.INIT_CLIENT: { //initializes draw deck on the client side
 					int i = 1;
 					ArrayList<Player> players = new ArrayList();
@@ -78,7 +80,8 @@ public class Parser {
 					break;
 				}
 					
-				case Flag.RENEW_DECK:
+				// Each pair of commands is the type and value of each card in the newly shuffled deck
+				case Flag.RENEW_DECK: {
 					
 					int[][] cardData = new int[(command.length-1) / 2][2];
 					for(int j = 0; j < cardData.length; j++) {
@@ -92,13 +95,14 @@ public class Parser {
 					result = Flag.RENEW_DECK;
 					
 					break;
+				}
 					
-			
-				case  Flag.START_GAME:
+				case  Flag.START_GAME: {
 					result = RulesEngine.startGame(game);	
 					break;
+				}
 				
-				case Flag.DRAW_CARD:
+				case Flag.DRAW_CARD: {
 					result = RulesEngine.drawCard(game);
 					if(!game.hasTournamentStarted()) {
 						result += Flag.NEW_COM + Flag.START_TOURNAMENT;
@@ -110,49 +114,82 @@ public class Parser {
 						}
 					}
 					break;
+				}
 					
-				case Flag.END_TURN:
+				// First command is true or false depending on whether they withdrew
+				case Flag.END_TURN: {
 					result = RulesEngine.endTurn(game, command[1]);
 					break;
+				}
 					
-				case Flag.START_TOURNAMENT:
+				case Flag.START_TOURNAMENT: {
 					result = RulesEngine.startTournament(game);
 					break;
+				}
 					
-				case Flag.SET_COLOUR:
+				// First command is the value of the new colour
+				case Flag.SET_COLOUR: {
 					result = RulesEngine.setColour(game, command[1]);
 					break;
+				}
+				
+				// Signifies that an action card will perform its action; No one played IVANHOE on it.
+				// First command is the player ID of who played the card, then position of the card being played. 
+				// Possible other commands depending on the action taken.
+				case Flag.ACTION_CARD: {
+					int currPlayer = game.getTurn();
+					int type = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardType();
+					int value = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardValue();
 					
-				case Flag.CARD:
+					switch (value) {
+						case Card.UNHORSE: {
+							result = RulesEngine.unhorse(game, Integer.parseInt(command[1]), Integer.parseInt(command[2]));
+							break;
+						}	
+						case Card.CHANGE_WEAPON: {
+							result = RulesEngine.changeWeapon(game, Integer.parseInt(command[1]), Integer.parseInt(command[2]));
+							break;
+						}
+						case Card.DROP_WEAPON: {
+							result = RulesEngine.dropWeapon(game, Integer.parseInt(command[1]));
+							break;
+						}
+						case Card.IVANHOE: {
+							result = RulesEngine.ivanhoe(game, Integer.parseInt(command[1]), Integer.parseInt(command[2]));
+							break;
+						}
+						default: {
+							result = RulesEngine.unimplementedActionCard(game, Integer.parseInt(command[1]));
+							break;
+						}
+					}
+
+					System.out.println("PARSER: " + result);
+					break;
+				}
+				
+				case Flag.IVANHOE_PLAYED: {
+					result = RulesEngine.ivanhoe(game, Integer.parseInt(command[1]), Integer.parseInt(command[2]));
+					System.out.println("PARSER: " + result);
+					break;
+				}
+				
+				// First command is the position of the card being played. Possible other commands depending on the action taken.
+				case Flag.CARD: {
 					int currPlayer = game.getTurn();
 					int type = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardType();
 					int value = game.getAllPlayers().get(currPlayer).getHand().getCard(Integer.parseInt(command[1])).getCardValue();
 					
 					switch (type) {
 						case Type.ACTION: 
-							switch (value) {
-								case Card.UNHORSE:
-									result = RulesEngine.unhorse(game, Integer.parseInt(command[1]), Integer.parseInt(command[2]));
-									break;
-									
-								case Card.CHANGE_WEAPON:
-									result = RulesEngine.changeWeapon(game, Integer.parseInt(command[1]), Integer.parseInt(command[2]));
-									break;
-									
-								case Card.DROP_WEAPON:
-									result = RulesEngine.dropWeapon(game, Integer.parseInt(command[1]));
-									break;
-									
-								default:
-									result = RulesEngine.unimplementedActionCard(game, Integer.parseInt(command[1]));
-								
-							}
+							result = String.join(":", command);
 							break;
 						default: 
 							result = RulesEngine.playValueCard(game, Integer.parseInt(command[1]));
 							break;
 					}	
-				break;
+					break;
+				}
 			}
 			
 		}
