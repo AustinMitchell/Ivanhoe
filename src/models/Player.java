@@ -79,6 +79,19 @@ public class Player {
 		return tokens[i];
 	}
 	
+	public boolean[] getTokens() {
+		return tokens;
+	}
+	
+	public boolean playerHasToken() {
+		for(int i = 0; i < tokens.length; i++) {
+			if (checkToken(i)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void setToken(int i, boolean val) {
 		tokens[i] = val;
 	}

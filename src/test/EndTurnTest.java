@@ -1,3 +1,11 @@
+/*
+ * This Test needs to be modified in order to pass since the functionality of end turn has changed.
+ * Take a look at how endTurn in the rules engine works.
+ * 
+ * This test file is actually redundant now anyway 
+ */
+
+
 package test;
 
 import static org.junit.Assert.*;
