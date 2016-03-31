@@ -180,4 +180,8 @@ public class UpdateEngine {
 		String result = (Flag.CARD + ":" + cardPos);
 		return result;
 	}
+	
+	public static String ivanhoe(GameState game, boolean played) {
+		return Flag.IVANHOE_RESPONSE + ":" + (played?"true":"false");
+	}
 }
