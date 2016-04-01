@@ -242,7 +242,7 @@ public class RulesEngine {
 		boolean discardedCard = false;
 		
 		//Discard all purple cards from the target's display while making sure at least one card remains
-		for(int i = 0; i < game.getDisplay(targetPos).deckSize(); i++) {
+		for(int i = game.getDisplay(targetPos).deckSize()-1; i >= 0; i--) {
 			int type = game.getDisplay(targetPos).getCard(i).getCardType();
 			if(type == Type.PURPLE && game.getDisplay(targetPos).deckSize() > 1 && !game.getPlayer(targetPos).hasShield()) {
 				if(discardedCard == false) {
@@ -361,7 +361,7 @@ public class RulesEngine {
 		 */
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(!game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
-				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+				for(int j = game.getDisplay(i).deckSize()-1; j >= 0; j--) {
 					if(game.getDisplay(i).getCard(j).getCardValue() == lowest) {
 						
 						if(discardedCard == false) {
@@ -369,7 +369,9 @@ public class RulesEngine {
 							discardedCard = true;
 						}
 						
-						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+						if(game.getDisplay(i).deckSize() > 1) {
+							game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+						}
 					}
 				}
 			}
@@ -399,7 +401,7 @@ public class RulesEngine {
 		 */
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(!game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
-				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+				for(int j = game.getDisplay(i).deckSize()-1; j >= 0; j--) {
 					if(game.getDisplay(i).getCard(j).getCardValue() == highest) {
 						
 						if(discardedCard == false) {
@@ -407,7 +409,9 @@ public class RulesEngine {
 							discardedCard = true;
 						}
 						
-						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+						if(game.getDisplay(i).deckSize() > 1) {
+							game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+						}
 					}
 				}
 			}
@@ -424,15 +428,16 @@ public class RulesEngine {
 		//discard all supporter cards given it isn't the player and the target doesn't have a shield
 		for (int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(!game.getPlayer(i).hasShield() && game.getDisplay(i).deckSize() > 1) {
-				for(int j = 0; j < game.getDisplay(i).deckSize(); j++) {
+				for(int j = game.getDisplay(i).deckSize()-1; j >= 0; j--) {
 					if(game.getDisplay(i).getCard(j).getCardType() == Type.WHITE) {
 						
 						if(discardedCard == false) {
 							game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck()); //Discard the disgrace card
 							discardedCard = true;
 						}
-						
-						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+						if(game.getDisplay(i).deckSize() > 1) {
+							game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+						}
 					}
 				}
 			}
@@ -452,13 +457,15 @@ public class RulesEngine {
 				values[j] = false;
 			}
 			if(!game.getPlayer(i).hasShield()) {
-				for(int j=0; j<game.getDisplay(i).deckSize(); j++)  {
+				for(int j = game.getDisplay(i).deckSize()-1; j >= 0; j--) {
 					if(values[game.getDisplay(i).getCard(j).getCardValue()] == true) {
 						if(discardedCard == false) {
 							game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck()); //Discard the adapt card
 							discardedCard = true;
 						}
-						game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+						if(game.getDisplay(i).deckSize() > 1) {
+							game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
+						}
 					}
 					else {
 						values[game.getDisplay(i).getCard(j).getCardValue()] = true;

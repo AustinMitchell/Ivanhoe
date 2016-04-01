@@ -31,7 +31,7 @@ public class CounterChargeTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		
@@ -82,7 +82,7 @@ public class CounterChargeTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		
@@ -123,7 +123,7 @@ public class CounterChargeTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		
@@ -153,7 +153,7 @@ public class CounterChargeTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		

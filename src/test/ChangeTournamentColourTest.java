@@ -33,7 +33,7 @@ public class ChangeTournamentColourTest {
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 	}
 
 	@Test

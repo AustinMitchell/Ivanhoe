@@ -30,7 +30,7 @@ public class AdaptTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
 		
 		game.setTurn(0);
 		
@@ -78,7 +78,7 @@ public class AdaptTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
 		
 		game.setTurn(0);
 		
@@ -128,7 +128,7 @@ public class AdaptTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
 		
 		game.setTurn(0);
 		
@@ -206,7 +206,7 @@ public class AdaptTest {
 		*/
 		assertEquals(game.getDisplay(0).getCard(1).getCardValue(), 4);
 		assertEquals(game.getDisplay(0).getCard(game.getDisplay(0).deckSize()-1).getCardValue(), 5);
-		assertEquals(game.getDisplay(0).getCard(game.getDisplay(0).deckSize()-1).getCardType(), Type.PURPLE);
+		assertEquals(game.getDisplay(0).getCard(game.getDisplay(0).deckSize()-1).getCardType(), Type.BLUE);
 		assertEquals(game.getDisplay(0).deckSize(), 3);
 		
 		/*
@@ -267,7 +267,7 @@ public class AdaptTest {
 		*/
 		assertEquals(game.getDisplay(0).getCard(1).getCardValue(), 4);
 		assertEquals(game.getDisplay(0).getCard(game.getDisplay(0).deckSize()-1).getCardValue(), 5);
-		assertEquals(game.getDisplay(0).getCard(game.getDisplay(0).deckSize()-1).getCardType(), Type.PURPLE);
+		assertEquals(game.getDisplay(0).getCard(game.getDisplay(0).deckSize()-1).getCardType(), Type.BLUE);
 		assertEquals(game.getDisplay(0).deckSize(), 3);
 		
 		/*

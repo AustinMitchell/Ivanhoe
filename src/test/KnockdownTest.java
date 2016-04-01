@@ -27,7 +27,7 @@ public class KnockdownTest {
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		
 		//Empty players hands
 		game.getHand(0).emptyDeck(game.getDiscardDeck());
@@ -56,7 +56,7 @@ public class KnockdownTest {
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		
 		//Empty players hands
 		game.getHand(0).emptyDeck(game.getDiscardDeck());

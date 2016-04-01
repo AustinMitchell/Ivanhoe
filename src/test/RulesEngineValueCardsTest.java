@@ -27,7 +27,7 @@ public class RulesEngineValueCardsTest {
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
 		
 	}
 	@Test

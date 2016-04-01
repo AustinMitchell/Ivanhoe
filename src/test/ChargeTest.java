@@ -31,7 +31,7 @@ public class ChargeTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		
@@ -82,7 +82,7 @@ public class ChargeTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		
@@ -121,7 +121,7 @@ public class ChargeTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		
@@ -137,6 +137,45 @@ public class ChargeTest {
 		game.getDisplay(1).add(greenOne);
 		game.getDisplay(2).add(greenOne);
 	}
+
+	//Setup a game where all target displays have only one card
+	public void greenCardDisplays() {
+		players = new ArrayList<Player>();
+		player1 = new Player("Nick");
+		player2 = new Player("Ausitn");
+		player3 = new Player("Ahmed");
+		players.add(player1);
+		players.add(player2);
+		players.add(player3);
+		game = new GameState();
+		game.initializeServer(players);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
+		game.setTurn(0);
+		
+		
+		//create cards to be added to player's hand and target's display
+		Card greenOne = new Card(Type.GREEN, 1);
+		
+		//Give one of the players a charge card to play
+		Card charge = new Card(Type.ACTION, Card.CHARGE);
+		game.getAllPlayers().get(0).getHand().add(charge);
+		
+		//Give target player a custom display
+		game.getDisplay(0).add(greenOne);
+		game.getDisplay(0).add(greenOne);
+		game.getDisplay(0).add(greenOne);
+		game.getDisplay(0).add(greenOne);
+		
+		game.getDisplay(1).add(greenOne);
+		game.getDisplay(1).add(greenOne);
+		game.getDisplay(1).add(greenOne);
+		game.getDisplay(1).add(greenOne);
+		
+		game.getDisplay(2).add(greenOne);
+		game.getDisplay(2).add(greenOne);
+		game.getDisplay(2).add(greenOne);
+		game.getDisplay(2).add(greenOne);
+	}
 	
 	
 	//Setup a game where one of the targets has a shield
@@ -150,7 +189,7 @@ public class ChargeTest {
 		players.add(player3);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		
@@ -254,7 +293,7 @@ public class ChargeTest {
 	
 
 	//A test where some targets have only one card in their display 
-	@Test
+	//@Test
 	public void chargeSomeValidTargetsTest() {
 		oneDisplayWithOneCard();
 		int cardPos = game.getHand(0).deckSize()-1;
@@ -362,6 +401,65 @@ public class ChargeTest {
 		*/
 		playerSize = game.getDisplay(0).deckSize();
 		assertTrue(playerSize == 1);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 1);
+		
+		
+		firstTargetSize = game.getDisplay(1).deckSize();
+		assertTrue(firstTargetSize == 1);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 1);
+		
+
+		secondTargetSize = game.getDisplay(2).deckSize();
+		assertTrue(secondTargetSize == 1);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 1);
+	}
+
+
+	//A test where the targets' displays hold only green cards
+	@Test
+	public void chargeGreenCardsTest() {
+		greenCardDisplays();
+		int cardPos = game.getHand(0).deckSize()-1;
+		/*
+		 * test to make sure the player and targets have the proper display size and proper
+		 * cards as the last played cards
+		*/
+		int playerSize = game.getDisplay(0).deckSize();
+		assertTrue(playerSize == 4);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 1);
+		
+		
+		int firstTargetSize = game.getDisplay(1).deckSize();
+		assertTrue(firstTargetSize == 4);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(1).getCard(firstTargetSize-1).getCardValue() == 1);
+		
+
+		int secondTargetSize = game.getDisplay(2).deckSize();
+		assertTrue(secondTargetSize == 4);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardType() == Type.GREEN);
+		assertTrue(game.getDisplay(2).getCard(secondTargetSize-1).getCardValue() == 1);
+		
+		//test the size of discard deck before playing charge
+		assertEquals(game.getDiscardDeck().deckSize(), 0);
+		//play charge
+		RulesEngine.charge(game, cardPos);
+		
+		
+		//test the size of discard deck after playing charge
+		//a total of 10 card should have been discarded (1 charge card + 9 green cards)
+		assertEquals(game.getDiscardDeck().deckSize(), 10);
+		
+		/*
+		 * test to make sure the player and targets have the right size display and proper cards in their display
+		 * as their last played cards
+		*/
+		playerSize = game.getDisplay(0).deckSize();
+		assertEquals(playerSize, 1);
 		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardType() == Type.GREEN);
 		assertTrue(game.getDisplay(0).getCard(playerSize-1).getCardValue() == 1);
 		

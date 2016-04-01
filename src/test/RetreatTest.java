@@ -30,7 +30,7 @@ public class RetreatTest {
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
 		game.setTurn(0);
 		
 		//Empty first player's hand

@@ -1079,5 +1079,3 @@ public class tournamentsTest {
 		assertFalse(game.getPlayer(currentPlayer).checkToken(Type.YELLOW));
 	}
 }
-
-

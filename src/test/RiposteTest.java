@@ -28,7 +28,7 @@ public class RiposteTest {
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
 		
 		game.setTurn(0);
 		
@@ -66,7 +66,7 @@ public class RiposteTest {
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
 		
 		game.setTurn(0);
 		
@@ -92,7 +92,7 @@ public class RiposteTest {
 		players.add(player2);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.PURPLE);
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
 		
 		game.setTurn(0);
 		

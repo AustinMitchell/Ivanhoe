@@ -35,23 +35,37 @@ public class GameStateTest {
 		game.initializeServer(players);
 	}
 	
+	/*
+	 * Test the right size of each player's hand
+	 */
 	@Test
 	public void testStartingHand() {
-		assertEquals(8, game.getPlayer("Ahmed").getHand().deckSize());
+		assertEquals(8, game.getHand(0).deckSize());
+		assertEquals(8, game.getHand(1).deckSize());
+		assertEquals(8, game.getHand(2).deckSize());
 	}
 	
+	/*
+	 * Test the right size of the draw deck after giving out hands to players
+	 * Since we have given out 24 cards to 3 players (see above test), the draw deck should have 
+	 * 86 remaining cards
+	 */
 	@Test
 	public void testDrawDeck() {
 		assertEquals(game.getDrawDeck().deckSize(), 86);
 	}
 	
+	/*
+	 * Test the functionality of renewing an empty draw deck using the discard deck
+	 */
 	@Test
 	public void testRenewDeck() {
-		game.getDrawDeck().draw(game.getDiscardDeck());
-		game.getDrawDeck().draw(game.getDiscardDeck());
-		game.getDrawDeck().draw(game.getDiscardDeck());
+		game.getDrawDeck().emptyDeck(game.getDiscardDeck());
+		assertEquals(0, game.getDrawDeck().deckSize());
+		assertEquals(86, game.getDiscardDeck().deckSize());
 		game.renewDrawDeck();
-		assertEquals(3, game.getDrawDeck().deckSize());
+		assertEquals(86, game.getDrawDeck().deckSize());
+		assertEquals(0, game.getDiscardDeck().deckSize());
 	}
 	
 	@Test
