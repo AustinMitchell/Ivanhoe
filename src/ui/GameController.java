@@ -14,6 +14,8 @@ public class GameController {
 	private PanelCollection screen;
 	private Client client;
 	
+	private ArrayList<String> playerNames;
+	
 	public GameController(SimpleGUIApp mainApp) {
 		this.mainApp = mainApp;
 		client = new Client();
@@ -24,6 +26,10 @@ public class GameController {
 	}
 	
 	public Client getClient() { return client; }
+	
+	public void setPlayerNames(ArrayList<String> playerNames) {
+		this.playerNames = playerNames;
+	}
 	
 	// Called from IvanhoeApp to update the current UI and draw it to the screen
 	public void loop() {
@@ -112,9 +118,15 @@ public class GameController {
 	}
 	
 	// Creates a new game with the given number of players (2 to 5)
-	public void startNewGame(ArrayList<String> playerNames) {
+	public void startNewGame() {
 		screen.clear();
 		screen.addPanel(new GamePanel(this, playerNames));
+		screen.setCurrentPanel(0);
+	}
+	
+	public void beginDrawToken() {
+		screen.clear();
+		screen.addPanel(new DrawTokenPanel(this));
 		screen.setCurrentPanel(0);
 	}
 }

@@ -92,6 +92,17 @@ public class NetworkTest {
 			
 			server.createGame();
 			
+			assertEquals(server.getServerState(), Server.ServerState.BEGIN_DRAW_TOKEN);
+			
+			client.get(0).sendMessage(Flag.DRAW_TOKEN);
+			client.get(1).sendMessage(Flag.DRAW_TOKEN);
+			server.beginDrawTokenIteration();
+			server.beginDrawTokenIteration();
+			client.get(0).sendMessage(Flag.BEGIN_TOKEN_DRAW_CONTINUE);
+			client.get(1).sendMessage(Flag.BEGIN_TOKEN_DRAW_CONTINUE);
+			server.beginDrawTokenIteration();
+			server.beginDrawTokenIteration();
+			
 			assertEquals(server.getServerState(), Server.ServerState.IN_GAME);
 			
 			cleanup();

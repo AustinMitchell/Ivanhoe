@@ -144,7 +144,7 @@ public class GamePanel extends ScaledPanel {
 			
 			// Card widget for the deck
 			deck = new CardWidget(0, 0, false);
-			if (realPlayerIndex != THIS_PLAYER) {
+			if (realPlayerIndex != game.getTurn()) {
 				deck.setEnabled(false);
 			}
 			
@@ -258,7 +258,7 @@ public class GamePanel extends ScaledPanel {
 		addWidget(sidePanel, 	80, 0, 20, 100, 0);
 		
 		messageScrollBox.addLine("Welcome to IVANHOE");
-		if (realPlayerIndex == THIS_PLAYER) {
+		if (realPlayerIndex == game.getTurn()) {
 			messageScrollBox.addLine("The first player is you.");
 		} else {
 			messageScrollBox.addLine("The first player is " + playerNames.get(0));
@@ -284,6 +284,15 @@ public class GamePanel extends ScaledPanel {
 	}
 	@Override
 	public void draw() {
+		
+		for (int i=0; i<display.length; i++) {
+			if (game.getAllPlayers().get(toGameTurn(i)).isInTournament()) {
+				CardDisplayPanel p = display[i];
+				draw.setColors(new Color(255, 255, 255, 30), null);
+				draw.rect(p.getX()-3, p.getY()-3, p.getWidth()+3, p.getHeight()+3);
+			}
+		}
+		
 		// Display panel for the current player's turn
 		CardDisplayPanel p = display[toGUITurn(game.getTurn())];
 		draw.setColors(null, new Color(0, 200, 200), 4);
@@ -306,18 +315,12 @@ public class GamePanel extends ScaledPanel {
 	// Bulk of the game logic. This reads the messages that will affect the GameState object, and adjusts the UI models accordingly
 	private void handleClientMessages() {
 		if (client.hasFlags()) {
-			String commandString = client.readGuiFlag();
-			System.out.println("Message from server: " + commandString);
-			
+			String commandString = client.readGuiFlag();			
 			String[] command = commandString.split(":");
 			int gameTurn = game.getTurn();
 			int guiTurn = toGUITurn(gameTurn);
 			Player player = client.getGame().getAllPlayers().get(gameTurn);
 			switch(command[0]) {
-				// Not yet implemented
-				case  Flag.START_GAME: {
-					break;
-				}
 				// After drawing, if a player can start a tournament
 				case Flag.CAN_START_TOURNAMENT : {
 					switch(command[1]) {
@@ -371,11 +374,11 @@ public class GamePanel extends ScaledPanel {
 				case Flag.END_TURN: {
 					messageScrollBox.addRepeatedTextLine("-");
 					if (guiTurn == THIS_PLAYER) {
-						messageScrollBox.addLine("It is now your turn");
+						messageScrollBox.addLine(" > It is now your turn");
 						deck.setEnabled(true);
 						endTurn.setText("(draw card first)");
 					} else {
-						messageScrollBox.addLine("It is now " + playerNames.get(gameTurn) + "'s turn");
+						messageScrollBox.addLine(" > It is now " + playerNames.get(gameTurn) + "'s turn");
 						for (Widget w: hand[THIS_PLAYER].getWidgetList()) {
 							w.setEnabled(false);
 						}
@@ -385,9 +388,9 @@ public class GamePanel extends ScaledPanel {
 				case Flag.WITHDRAW: {
 					int lastTurn = Integer.parseInt(command[1]);
 					if (lastTurn == realPlayerIndex) {
-						messageScrollBox.addLine("You withdrew from the tournament");
+						messageScrollBox.addLine(" > You withdrew from the tournament");
 					} else {
-						messageScrollBox.addLine(playerNames.get(lastTurn) + " withdrew from the tournament");
+						messageScrollBox.addLine(" > " + playerNames.get(lastTurn) + " withdrew from the tournament");
 					}
 					display[toGUITurn(lastTurn)].clear();
 					playerStatus[lastTurn].clearStatus();
@@ -410,11 +413,11 @@ public class GamePanel extends ScaledPanel {
 					
 					//messageScrollBox.addRepeatedTextLine("* ");
 					if (guiTurn == THIS_PLAYER) {
-						messageScrollBox.addLine("You won the tournament!");
-						messageScrollBox.addLine("You were awarded a " + colour + " token");
+						messageScrollBox.addLine(" > You won the tournament!");
+						messageScrollBox.addLine(" > You were awarded a " + colour + " token");
 					} else {
-						messageScrollBox.addLine(playerNames.get(gameTurn) + " won the tournament!");
-						messageScrollBox.addLine(playerNames.get(gameTurn) + " was awarded a " + colour + " token");
+						messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " won the tournament!");
+						messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " was awarded a " + colour + " token");
 					}
 					//messageScrollBox.addRepeatedTextLine("* ");
 					playerStatus[gameTurn].collectToken(type);

@@ -5,6 +5,7 @@ import rulesengine.*; // does contain parser, etc?
 
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
@@ -12,7 +13,7 @@ import java.io.*;
 
 public class Server{
 	public enum ServerState {
-		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, IN_GAME, IVANHOE
+		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE
 	}
 	
 	static final Logger             log = Logger.getLogger("Server");
@@ -27,6 +28,9 @@ public class Server{
     private int          	        maxPlayers;
 	private String                  updateString;
 	private ServerState             serverState;
+	
+	private ArrayList<Integer>      beginDrawTokens;
+	private int                     beginContinueResponses;
 
 	// Ivanhoe action card specific stuff
 	private String                  currentActionCardCommand;
@@ -151,7 +155,7 @@ public class Server{
 	}
 
 	public void updateClients(String update) throws IOException {
-		System.out.println("Message to clients: " + updateString);
+		System.out.println("Message to clients: " + update);
 		for(int i = 0; i < out.size(); i++) {
 			log.info("Sending to client " + i +": " + update);
          	out.get(i).sendMessage(update);
@@ -194,7 +198,15 @@ public class Server{
 		updateString = game.initializeServer(players); // make initializeServer return shuffled array of cards as string
 		updateClients(updateString);
 		RulesEngine.startGame(game); // this should call static rules engine method and start first tournament
-		serverState = ServerState.IN_GAME;
+		
+		serverState = ServerState.BEGIN_DRAW_TOKEN;
+		beginContinueResponses = players.size();
+		// starts arraylist with some values from 1 to 4, and definitely 0 (i.e. Type.PURPLE)
+		beginDrawTokens = new ArrayList<Integer>() {{ 
+			for (int i=1; i<players.size(); i++) add(i); 
+			add(Type.PURPLE);
+		}};
+		Collections.shuffle(beginDrawTokens);
 	}
 	
 	public void gameIteration() throws IOException {
@@ -219,6 +231,23 @@ public class Server{
 		
 		updateString = Parser.networkSplitter(updateString, game);
 		updateClients(updateString);
+	}
+	
+	public void beginDrawTokenIteration() throws IOException {
+		Object[] update = getUpdate();
+		String updateString = (String)update[1];
+		String[] splitString = updateString.split(":");
+		
+		if (splitString[0].equals(Flag.DRAW_TOKEN)) {
+			updateClients(Flag.GET_TOKEN + ":" + (Integer)update[0] + ":" + beginDrawTokens.remove(0));
+		} else if (splitString[0].equals(Flag.BEGIN_TOKEN_DRAW_CONTINUE)) {
+			System.out.println("GOT CONTINUE RESPONSE");
+			beginContinueResponses -= 1;
+			if (beginContinueResponses == 0) {
+				serverState = ServerState.IN_GAME;
+				updateClients(Flag.START_GAME);
+			}
+		}
 	}
 	
 	public void ivanhoeIteration() throws IOException {
@@ -255,6 +284,9 @@ public class Server{
 	
 	public void handleState(ServerState st) throws IOException {
 		switch (st) {
+			case BEGIN_DRAW_TOKEN:
+				beginDrawTokenIteration();
+				break;
 			case WAITING_FOR_FIRST:
 				waitForPlayer();
 				while(!waitForFirstPlayerSetupInfo()) {}
