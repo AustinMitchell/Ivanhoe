@@ -206,6 +206,7 @@ public class Client implements Runnable {
 	public String readGuiFlag() {
 		synchronized (GUI_LOCK) {
 			String flag = guiFlags.remove();
+			System.out.println("Message from server: " + flag);
 			return flag;
 		}
 	}

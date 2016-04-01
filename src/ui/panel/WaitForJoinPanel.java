@@ -18,9 +18,7 @@ public class WaitForJoinPanel extends ScaledPanel {
 	Label message, currentPlayersMessage;
 	
 	int maxPlayers, currentPlayers;
-	
-	int joinTimer;
-	
+		
 	public WaitForJoinPanel(GameController gc) {
 		super();
 		
@@ -47,7 +45,6 @@ public class WaitForJoinPanel extends ScaledPanel {
 	
 		addWidget(messagePanel, 35, 15, 30, 20);
 		
-		joinTimer = 120;
 	}
 	
 	@Override
@@ -78,7 +75,8 @@ public class WaitForJoinPanel extends ScaledPanel {
 						playerNames.add(command[i]);
 						i++;
 					}
-					controller.startNewGame(playerNames);
+					controller.setPlayerNames(playerNames);
+					controller.beginDrawToken();
 					break;
 				case Flag.CURRENT_NUM_PLAYERS:
 					currentPlayers = Integer.parseInt(command[1]);
