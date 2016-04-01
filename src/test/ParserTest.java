@@ -77,14 +77,6 @@ public class ParserTest {
 		assertEquals(clientGame.getDrawDeck().deckSize(), 3);
 	}
 	
-	@Test
-	public void startGameTest() {
-		GameState serverGame = new GameState();
-		serverGame.initializeServer(players);
-		String[] command = {"startGame"};
-		
-		assertEquals(Parser.parse(command, serverGame), "startGame");
-	}
 	
 	@Test
 	public void drawCardTest() {

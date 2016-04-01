@@ -39,7 +39,11 @@ public class tournamentsTest {
 		players.add(player4);
 		game = new GameState();
 		game.initializeServer(players);
-		game.setTournamentColour(Type.BLUE);
+
+		//Setting tournament colour through the rules engine method in order to set tournamentStarted in game state to true 
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
+		//game.setTournamentColour(Type.BLUE);
+		
 		
 
 		//create cards to be added to player's hand and target's display
