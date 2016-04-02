@@ -169,7 +169,12 @@ public class GameState {
 	}
 	
 	public void setTournamentColour(int colour) {
+		if(getPrevTournamentColour() == Type.PURPLE && colour == Type.PURPLE) {
+			tournamentColour = -1;
+			return;
+		}
 		tournamentColour = colour;
+		setPrevTournamentColour(colour);
 	}
 	
 	public int getTournamentColour() {

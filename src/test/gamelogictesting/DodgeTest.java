@@ -1,4 +1,4 @@
-package test;
+package test.gamelogictesting;
 
 import static org.junit.Assert.*;
 

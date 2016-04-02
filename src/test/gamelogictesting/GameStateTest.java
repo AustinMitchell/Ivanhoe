@@ -1,4 +1,4 @@
-package test;
+package test.gamelogictesting;
 
 import models.GameState;
 import models.Player;
