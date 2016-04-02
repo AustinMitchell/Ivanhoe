@@ -33,9 +33,12 @@ public class IvanhoeOverlay extends OverlayPanel {
 			}
 		}
 		
-		addWidget(doNothing, 39, 90, 8, 8);
+		
 		if (hasIvanhoe) {
+			addWidget(doNothing, 39, 90, 8, 8);
 			addWidget(playIvanhoe, 61, 90, 8, 8);
+		} else {
+			addWidget(doNothing, 45, 90, 10, 8);
 		}
 		
 		startTime = System.currentTimeMillis();

@@ -6,7 +6,7 @@ public class Flag {
 	
 	public static final String ACTION_CARD               = "actionCard";
 	public static final String BEGIN_TOKEN_DRAW          = "beginTokenDraw";
-	public static final String BEGIN_TOKEN_DRAW_CONTINUE = "beginTokenDraw";
+	public static final String BEGIN_TOKEN_DRAW_CONTINUE = "beginTokenDrawContinue";
 	public static final String CAN_START_TOURNAMENT      = "canStartTournament";
 	public static final String CARD                      = "card";
 	public static final String CARDS_BEGIN               = "cardsBegin";

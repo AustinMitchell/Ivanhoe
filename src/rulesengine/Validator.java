@@ -44,6 +44,13 @@ public class Validator {
 		boolean displayHasMaiden = game.getAllPlayers().get(game.getTurn()).displayHasMaiden();
 		boolean[] playableCards = new boolean[hand.deckSize()];
 		
+		if (game.getTournamentColour() == game.TOURNAMENT_NOT_STARTED) {
+			for (int i=0; i<playableCards.length; i++) {
+				playableCards[i] = false;
+			}
+			return playableCards;
+		}
+		
 		for(int i = 0; i < hand.deckSize(); i++) {
 			card = hand.getCard(i);
 			
@@ -198,6 +205,9 @@ public class Validator {
 				playableCards[i] = validateShield(game);
 			}
 			
+			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.IVANHOE) {
+				playableCards[i] = false;
+			}
 			
 			else {
 				playableCards[i] = true;

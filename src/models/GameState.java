@@ -59,22 +59,24 @@ public class GameState {
 												2, 2, 2, 3, 3, 
 												3, 3, 3, 3, 3, 
 												3, 6, 6, 6, 6, 
-												Card.UNHORSE, Card.CHANGE_WEAPON, Card.DROP_WEAPON, Card.BREAK_LANCE, Card.RIPOSTE, 
-												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
-												Card.COUNTERCHARGE, Card.DISGRACE, Card.ADAPT, Card.OUTWIT, Card.SHIELD, 
-												Card.STUNNED, Card.IVANHOE, Card.RIPOSTE, Card.RIPOSTE, Card.KNOCKDOWN};
 //												Card.UNHORSE, Card.CHANGE_WEAPON, Card.DROP_WEAPON, Card.BREAK_LANCE, Card.RIPOSTE, 
 //												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
-//												Card.COUNTERCHARGE, Card.DISGRACE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, 
-//												Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE};
+//												Card.COUNTERCHARGE, Card.DISGRACE, Card.ADAPT, Card.OUTWIT, Card.SHIELD, 
+//												Card.STUNNED, Card.IVANHOE, Card.RIPOSTE, Card.RIPOSTE, Card.KNOCKDOWN};
+												Card.UNHORSE, Card.CHANGE_WEAPON, Card.DROP_WEAPON, Card.BREAK_LANCE, Card.RIPOSTE, 
+												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
+												Card.COUNTERCHARGE, Card.DISGRACE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, 
+												Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE};
+	
+	public static final int TOURNAMENT_NOT_STARTED = -1;
 	
 	
 	public GameState() {
 		discardDeck = new Deck();
 		tournamentNumber = 0;
-		tournamentColour = -1;
+		tournamentColour = TOURNAMENT_NOT_STARTED;
 		tournamentStarted = false;
-		prevTournamentColour = -1;
+		prevTournamentColour = TOURNAMENT_NOT_STARTED;
 		//setUpStartingHands();
 	}
 	
@@ -263,4 +265,15 @@ public class GameState {
 		return turn;
 	}
 	
+	public boolean playerCanContinue(int playerPos) {
+		int display = players.get(playerPos).getDisplayValue(tournamentColour);
+		for (int i=0; i<players.size(); i++) {
+			if (i != playerPos && players.get(i).isInTournament()) {
+				if (display <= players.get(i).getDisplayValue(tournamentColour)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }

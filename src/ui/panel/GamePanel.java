@@ -255,13 +255,13 @@ public class GamePanel extends ScaledPanel {
 		
 		
 		addWidget(mainGamePanel, 0, 0, 80, 100, 1);
-		addWidget(sidePanel, 	80, 0, 20, 100, 0);
+		addWidget(sidePanel, 	80, 0, 20, 100, 0); 
 		
 		messageScrollBox.addLine("Welcome to IVANHOE");
 		if (realPlayerIndex == game.getTurn()) {
 			messageScrollBox.addLine("The first player is you.");
 		} else {
-			messageScrollBox.addLine("The first player is " + playerNames.get(0));
+			messageScrollBox.addLine("The first player is " + playerNames.get(game.getTurn()));
 		}
 	}
 	
@@ -394,6 +394,7 @@ public class GamePanel extends ScaledPanel {
 					}
 					display[toGUITurn(lastTurn)].clear();
 					playerStatus[lastTurn].clearStatus();
+					break;
 				}
 				case Flag.START_TOURNAMENT: {
 					//messageScrollBox.addRepeatedTextLine("* ");
@@ -490,15 +491,7 @@ public class GamePanel extends ScaledPanel {
 						hand[THIS_PLAYER].setEnabled(true);
 						
 						endTurn.setEnabled(true);
-						int currentValue = playerStatus[realPlayerIndex].getDisplayValue();
-						boolean greatest = true;
-						for (int i=0; i<playerStatus.length; i++) {
-							if (i != realPlayerIndex && playerStatus[i].getDisplayValue() >= currentValue) {
-								greatest = false;
-								break;
-							}
-						}
-						if (greatest) {
+						if (game.playerCanContinue(toGameTurn(0))) {
 							endTurn.setText("End Turn");
 						}
 						boolean[] canPlay = Validator.cardsAbleToPlay(game);
@@ -524,9 +517,22 @@ public class GamePanel extends ScaledPanel {
 					hand[toGUITurn(ivanhoePlayer)].removeIndex(ivanhoeIndex);
 					
 					if (guiTurn == THIS_PLAYER) {
+						hand[THIS_PLAYER].setEnabled(true);
+						
+						endTurn.setEnabled(true);
+						if (game.playerCanContinue(toGameTurn(0))) {
+							endTurn.setText("End Turn");
+						}
+						boolean[] canPlay = Validator.cardsAbleToPlay(game);
+						for (int i=0; i<canPlay.length; i++) {
+							hand[guiTurn].getIndex(i).setEnabled(canPlay[i]);
+						}
+					}
+					
+					if (guiTurn == THIS_PLAYER) {
 						messageScrollBox.addLine(" > " + playerNames.get(ivanhoePlayer) + " blocked your " 
 								+ CardData.getCardName(blockedCard.getType(), blockedCard.getValue()) + " with IVANHOE");
-					} else if (toGUITurn(ivanhoeIndex) == THIS_PLAYER) {
+					} else if (toGUITurn(ivanhoePlayer) == THIS_PLAYER) {
 						messageScrollBox.addLine(" > You blocked " + playerNames.get(gameTurn) + "'s " 
 								+ CardData.getCardName(blockedCard.getType(), blockedCard.getValue()) + " with IVANHOE");
 					} else {
@@ -564,15 +570,7 @@ public class GamePanel extends ScaledPanel {
 								hand[THIS_PLAYER].setEnabled(true);
 								
 								endTurn.setEnabled(true);
-								int currentValue = playerStatus[realPlayerIndex].getDisplayValue();
-								boolean greatest = true;
-								for (int i=0; i<playerStatus.length; i++) {
-									if (i != realPlayerIndex && playerStatus[i].getDisplayValue() >= currentValue) {
-										greatest = false;
-										break;
-									}
-								}
-								if (greatest) {
+								if (game.playerCanContinue(toGameTurn(0))) {
 									endTurn.setText("End Turn");
 								}
 								boolean[] canPlay = Validator.cardsAbleToPlay(game);
@@ -630,20 +628,7 @@ public class GamePanel extends ScaledPanel {
 	private void handleEndTurn() {
 		if (endTurn.isClicked()) {
 			endTurn.setEnabled(false);
-			
-			int currentValue = playerStatus[realPlayerIndex].getDisplayValue();
-			boolean greatest = true;
-			for (int i=0; i<playerStatus.length; i++) {
-				if (i != realPlayerIndex && playerStatus[i].getDisplayValue() >= currentValue) {
-					greatest = false;
-					break;
-				}
-			}
-			if (greatest) {
-				client.sendMessage(Flag.END_TURN);
-			} else {
-				client.sendMessage(Flag.END_TURN);
-			}
+			client.sendMessage(Flag.END_TURN);
 		}
 	}
 	
@@ -696,6 +681,7 @@ public class GamePanel extends ScaledPanel {
 						break;
 					}
 				}
+				endTurn.setEnabled(false);
 				hand[THIS_PLAYER].setEnabled(false);
 				break;
 			}

@@ -75,8 +75,7 @@ public class RulesEngine {
 				playersInTournament++;
 			}
 		}
-		if(playersInTournament == 1) return true;
-		else return false;
+		return (playersInTournament == 1);
 	}
 	
 	public static String endTournament(GameState game) { 
@@ -88,7 +87,7 @@ public class RulesEngine {
 		game.setPrevTournamentColour(game.getTournamentColour());
 		int winningColour = game.getTournamentColour();
 		String result = Flag.END_TOURNAMENT + ":" + winningColour;
-		game.setTournamentColour(-1);
+		game.setTournamentColour(game.TOURNAMENT_NOT_STARTED);
 		game.setTournamentStarted(false);
 		int playerPos = game.getTurn();
 		game.getPlayer(playerPos).setToken(winningColour, true); // give player a winning token
@@ -131,6 +130,7 @@ public class RulesEngine {
 			for(int i = 0; i < game.getPlayer(playerPos).getTokens().length; i++) {
 				if(game.getPlayer(playerPos).checkToken(i)) {
 					game.getPlayer(playerPos).setToken(i, false);
+					break;
 				}
 			}
 		}
@@ -164,17 +164,7 @@ public class RulesEngine {
 	public static boolean remainInTournament(GameState game) {
 		if (!game.hasTournamentStarted()) { return true; }
 		
-		Player player = game.getAllPlayers().get(game.getTurn());
-		for(Player p:game.getAllPlayers()) {
-			
-			if(p != player) {
-				if(player.getDisplayValue(game.getTournamentColour()) <= 
-						p.getDisplayValue(game.getTournamentColour())) {
-					return false;
-				}
-			}
-		}
-		return true;
+		return game.playerCanContinue(game.getTurn());
 	}
 	
 	public static String playValueCard(GameState game, int cardPos) {

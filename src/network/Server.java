@@ -35,7 +35,7 @@ public class Server{
 	// Ivanhoe action card specific stuff
 	private String                  currentActionCardCommand;
 	private int                     ivanhoePlayed;
-	private int                     ivanhoeResponses;
+	private int                     ivanhoeResponsesNeeded;
 	
 	public Server(int port) throws IOException {
 		this.maxPlayers = 1;
@@ -221,7 +221,7 @@ public class Server{
 				// Stores what the desired action is
 				currentActionCardCommand = updateString;
 				// Number of responses to Ivanhoe
-				ivanhoeResponses = 0;
+				ivanhoeResponsesNeeded = players.size()-1;
 				// If a player plays ivanhoe, it will be indicated through this
 				ivanhoePlayed = -1;
 				// Changes the state to handle ivanhoe messages
@@ -239,9 +239,10 @@ public class Server{
 		String[] splitString = updateString.split(":");
 		
 		if (splitString[0].equals(Flag.DRAW_TOKEN)) {
-			updateClients(Flag.GET_TOKEN + ":" + (Integer)update[0] + ":" + beginDrawTokens.remove(0));
+			updateString = Flag.GET_TOKEN + ":" + (Integer)update[0] + ":" + beginDrawTokens.remove(0);
+			updateClients(updateString);
+			Parser.networkSplitter(updateString, game);
 		} else if (splitString[0].equals(Flag.BEGIN_TOKEN_DRAW_CONTINUE)) {
-			System.out.println("GOT CONTINUE RESPONSE");
 			beginContinueResponses -= 1;
 			if (beginContinueResponses == 0) {
 				serverState = ServerState.IN_GAME;
@@ -261,9 +262,9 @@ public class Server{
 			if (splitString[1].equals("true")) {
 				ivanhoePlayed = (int)update[0];
 			}
-			ivanhoeResponses += 1;
+			ivanhoeResponsesNeeded--;
 			// If we receive responses equal to 1 less than the number of players (as the instigator does not give input)
-			if (ivanhoeResponses == players.size()-1) {
+			if (ivanhoeResponsesNeeded == 0) {
 				String[] actionCommand = currentActionCardCommand.split(":");
 				if (ivanhoePlayed == -1) {
 					// Takes the original command and replaces Flag.CARD with Flag.ACTION_CARD.
