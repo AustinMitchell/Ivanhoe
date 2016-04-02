@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import models.Card;
-import models.GameState;
-import models.Player;
-import rulesengine.RulesEngine;
-import rulesengine.Type;
+import controller.rulesengine.RulesEngine;
+import model.Card;
+import model.GameState;
+import model.Player;
+import model.Type;
 
 public class tournamentsTest {
 	Player player1;
@@ -42,7 +42,6 @@ public class tournamentsTest {
 
 		//Setting tournament colour through the rules engine method in order to set tournamentStarted in game state to true 
 		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
-		//game.setTournamentColour(Type.BLUE);
 		
 		
 
@@ -856,6 +855,36 @@ public class tournamentsTest {
 		assertFalse(game.getPlayer(3).isInTournament());
 	}
 
+	/*
+	 * trying to play invalid cards (wrong color)
+	 */
+	@Test
+	public void playingWrongColourTest() {
+		int currentPlayer = game.getTurn();
+		
+		//Test to make sure the player's hand is of size 4
+		assertEquals(game.getHand(currentPlayer).deckSize(), 4);
+		
+		//first player draws card
+		RulesEngine.drawCard(game);
+
+		//create a different coloured card to be given to the player
+		Card redFour = new Card(Type.RED, 4);
+		game.getHand(currentPlayer).add(redFour);
+		
+		//Test to make sure the first player's hand increased after drawing a card and adding the red card
+		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
+		
+		//first player plays red four (wrong colour)
+		RulesEngine.playValueCard(game, 5);
+		
+		//test to make sure the player's hand and display remain unchanged
+		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
+		assertEquals(game.getDisplay(currentPlayer).deckSize(), 0);
+		
+		//end turn and move on to next player
+		RulesEngine.endTurn(game);
+	}
 	
 	/*
 	 * restriction to 1 maiden per player per tournament

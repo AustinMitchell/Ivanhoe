@@ -8,12 +8,15 @@ import java.util.Queue;
 import org.junit.Before;
 import org.junit.Test;
 
-import models.GameState;
-import models.Player;
-import network.*;
-import rulesengine.RulesEngine;
-import rulesengine.Type;
-import rulesengine.Validator;
+import controller.*;
+import controller.network.Client;
+import controller.network.Parser;
+import controller.rulesengine.RulesEngine;
+import controller.rulesengine.Validator;
+import model.Flag;
+import model.GameState;
+import model.Player;
+import model.Type;
 
 public class ParserTest {
 	Queue<String> queue;

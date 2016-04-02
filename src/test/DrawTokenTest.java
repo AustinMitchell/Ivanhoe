@@ -5,10 +5,11 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import org.junit.Test;
-import models.GameState;
-import models.Player;
-import rulesengine.RulesEngine;
-import rulesengine.Type;
+
+import controller.rulesengine.RulesEngine;
+import model.GameState;
+import model.Player;
+import model.Type;
 
 
 public class DrawTokenTest {

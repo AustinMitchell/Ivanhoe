@@ -6,12 +6,12 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import models.Card;
-import models.GameState;
-import models.Player;
-import network.Flag;
-import rulesengine.RulesEngine;
-import rulesengine.Type;
+import controller.rulesengine.RulesEngine;
+import model.Card;
+import model.Flag;
+import model.GameState;
+import model.Player;
+import model.Type;
 
 public class OutwitTest {
 	Player player1;

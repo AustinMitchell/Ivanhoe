@@ -1,13 +1,13 @@
 package test.gamelogictesting;
 
-import models.GameState;
-import models.Player;
-import rulesengine.Type;
-
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
+
+import model.GameState;
+import model.Player;
+import model.Type;
 
 public class GameStateTest {
 	Player player1;

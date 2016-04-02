@@ -1,10 +1,12 @@
 package test;
 
 import static org.junit.Assert.*;
-import models.Deck;
-import models.Card;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import model.Card;
+import model.Deck;
 
 public class DeckTest {
 	Card card1;

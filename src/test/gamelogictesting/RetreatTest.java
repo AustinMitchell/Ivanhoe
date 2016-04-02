@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import models.Card;
-import models.GameState;
-import models.Player;
-import rulesengine.RulesEngine;
-import rulesengine.Type;
+import controller.rulesengine.RulesEngine;
+import model.Card;
+import model.GameState;
+import model.Player;
+import model.Type;
 
 public class RetreatTest {
 

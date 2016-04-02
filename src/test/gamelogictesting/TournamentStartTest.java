@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import models.Card;
-import models.GameState;
-import models.Player;
-import rulesengine.RulesEngine;
-import rulesengine.Type;
-import rulesengine.Validator;
+import controller.rulesengine.RulesEngine;
+import controller.rulesengine.Validator;
+import model.Card;
+import model.GameState;
+import model.Player;
+import model.Type;
 
 public class TournamentStartTest {
 	Player player1;
@@ -102,7 +102,6 @@ public class TournamentStartTest {
 		assertFalse(Validator.canStartTournament(game));
 	}
 
-
 	/*
 	 * last tournament was purple, cannot be purple again
 	 */
@@ -115,7 +114,16 @@ public class TournamentStartTest {
 		
 		//setting the tournament to purple after a purple tournament
 		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
-		assertTrue(game.getTournamentColour() == Type.PURPLE);		
+		
+		//test to make sure the tournament cannot be purple again
+		assertTrue(game.getTournamentColour() == GameState.TOURNAMENT_NOT_STARTED);
+		
+		//setting the tournament to blue then to purple
+		RulesEngine.setColour(game, String.valueOf(Type.BLUE));
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
+		
+		//test to make sure the tournament colour has been successfully set to purple after it was blue
+		assertTrue(game.getTournamentColour() == Type.PURPLE);
 		
 		
 	}
