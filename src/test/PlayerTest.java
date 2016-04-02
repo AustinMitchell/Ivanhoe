@@ -4,9 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import models.Player;
-import models.Card;
-import rulesengine.Type;
+
+import model.Card;
+import model.Player;
+import model.Type;
 public class PlayerTest {
 
 	Player player1;
