@@ -116,6 +116,16 @@ public class Parser {
 			// First command is true or false depending on whether they withdrew
 			case Flag.END_TURN: {
 				result = RulesEngine.endTurn(game);
+				
+				if(RulesEngine.isTournamentOver(game)) {
+					result += Flag.NEW_COM + RulesEngine.pickToken();
+				}
+				break;
+			}
+			
+			case Flag.AWARD_TOKEN: {
+				result = RulesEngine.awardToken(game, command[1]);
+				result += Flag.NEW_COM + RulesEngine.endGame(game);
 				break;
 			}
 

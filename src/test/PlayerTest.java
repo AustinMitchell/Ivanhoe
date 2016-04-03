@@ -34,11 +34,11 @@ public class PlayerTest {
 	
 	@Test
 	public void test() {
-		assertFalse(player1.hasWon());
+		assertFalse(player1.hasWonAll());
 		for(int i = 0; i < 5; i++) {
 			player1.setToken(i, true);
 		}
-		assertTrue(player1.hasWon());
+		assertTrue(player1.hasWonAll());
 	}
 	
 	@Test

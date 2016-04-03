@@ -1107,4 +1107,19 @@ public class tournamentsTest {
 		//test to make sure the player four indeed has a yellow token
 		assertFalse(game.getPlayer(currentPlayer).checkToken(Type.YELLOW));
 	}
+
+	/*
+	 * winning the game
+	 */
+	public void winningGameTest() {
+		int playerPos = 0;
+		game.getPlayer(playerPos).setToken(Type.BLUE, true);
+		game.getPlayer(playerPos).setToken(Type.GREEN, true);
+		game.getPlayer(playerPos).setToken(Type.PURPLE, true);
+		game.getPlayer(playerPos).setToken(Type.RED, true);
+		game.getPlayer(playerPos).setToken(Type.YELLOW, true);
+		
+		assertTrue(game.getPlayer(playerPos).hasWonAll());
+		
+	}
 }
