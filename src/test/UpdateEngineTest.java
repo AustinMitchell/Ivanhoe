@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import controller.rulesengine.RulesEngine;
 import controller.rulesengine.UpdateEngine;
-import model.Card;
 import model.Flag;
 import model.GameState;
 import model.Player;

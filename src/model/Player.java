@@ -1,6 +1,4 @@
 package model;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class Player {
 	private String name;
@@ -94,12 +92,32 @@ public class Player {
 		tokens[i] = val;
 	}
 	
-	public boolean hasWon() {
+	/*
+	 * check if player is winning by having all tokens 
+	 */
+	public boolean hasWonAll() {
 		boolean won = false;
 		for(int i = 0; i < 5; i++) {
 			if(tokens[i] == true) won = true;
 			else {
 				won = false;
+				break;
+			}
+		}
+		return won;
+	}
+	
+	
+	/*
+	 * Check if player is winning by having 4 tokens
+	 */
+	public boolean hasWonFour() {
+		int tokensWon = 0;
+		boolean won = false;
+		for(int i = 0; i < 5; i++) {
+			if(tokens[i] == true) tokensWon++;
+			if(tokensWon >= 4) {
+				won = true;
 				break;
 			}
 		}

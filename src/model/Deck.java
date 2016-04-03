@@ -1,6 +1,5 @@
 package model;
 
-import java.security.KeyStore.Entry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,7 +11,7 @@ public class Deck {
 	private ArrayList<Card> deck;
 	
 	public Deck() {
-		deck = new ArrayList();
+		deck = new ArrayList<Card>();
 	}
 	
 	public void shuffle() {

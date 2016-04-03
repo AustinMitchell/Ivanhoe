@@ -2,7 +2,6 @@ package view.panel.overlay;
 
 import controller.rulesengine.Validator;
 import model.GameState;
-import model.Type;
 import simple.gui.*;
 import view.*;
 import view.utilitypanel.CardDisplayPanel;
@@ -12,8 +11,8 @@ public class ChangeWeaponOverlay extends OverlayPanel {
 	private CardDisplayPanel playerHand;
 	private TokenBar tokenChoice;
 	
-	public ChangeWeaponOverlay(DescriptionBox descriptionBox, CardDisplayPanel playerHand, GameState game) {
-		super("Change Weapon - Select Tournament Colour...", descriptionBox);
+	public ChangeWeaponOverlay(DescriptionBox descriptionBox, GameState game, int realPlayerIndex, CardDisplayPanel playerHand) {
+		super("Change Weapon - Select Tournament Colour...", descriptionBox, game, realPlayerIndex);
 		
 		
 		tokenChoice = new TokenBar();
@@ -23,11 +22,6 @@ public class ChangeWeaponOverlay extends OverlayPanel {
 				tokenChoice.enableToken(i);
 			}
 		}
-		
-		/*tokenChoice.enableToken(Type.RED);
-		tokenChoice.enableToken(Type.YELLOW);
-		tokenChoice.enableToken(Type.BLUE);*/
-		//tokenChoice.disableToken(game.getTournamentColour());
 		
 		this.playerHand = new CardDisplayPanel(Image.Orientation.UP, true);
 		for (Widget w: playerHand.getWidgetList()) {

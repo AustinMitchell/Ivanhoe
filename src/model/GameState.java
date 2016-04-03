@@ -13,56 +13,10 @@ public class GameState {
 	private boolean tournamentStarted;
 	private int prevTournamentColour;
 	private boolean playedValueCard = false; //toggle to true every time a player plays a value card. useful for STUNNED implementation
-	
-	private static final int[] cardTypeData = {Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
-												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
-												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.RED, 
-												Type.RED, Type.RED, Type.RED, Type.RED, Type.RED, 
-												Type.RED, Type.RED, Type.RED, Type.RED, Type.RED, 
-												Type.RED, Type.RED, Type.RED, Type.BLUE, Type.BLUE, 
-												Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, 
-												Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, 
-												Type.BLUE, Type.BLUE, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
-												Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
-												Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
-												Type.YELLOW, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
-												Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
-												Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
-												Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
-												Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
-												Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
-												Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
-												Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
-												Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
-												Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
-												Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION};
-	
-	private static final int[] cardValueData = {3, 3, 3, 3, 4, 
-												4, 4, 4, 5, 5, 
-												5, 5, 7, 7, 3, 
-												3, 3, 3, 3, 3, 
-												4, 4, 4, 4, 4, 
-												4, 5, 5, 2, 2, 
-												2, 2, 3, 3, 3, 
-												3, 4, 4, 4, 4, 
-												5, 5, 2, 2, 2, 
-												2, 3, 3, 3, 3, 
-												3, 3, 3, 3, 4, 
-												4, 1, 1, 1, 1, 
-												1, 1, 1, 1, 1, 
-												1, 1, 1, 1, 1, 
-												2, 2, 2, 2, 2, 
-												2, 2, 2, 3, 3, 
-												3, 3, 3, 3, 3, 
-												3, 6, 6, 6, 6, 
-												Card.UNHORSE, Card.CHANGE_WEAPON, Card.DROP_WEAPON, Card.BREAK_LANCE, Card.RIPOSTE, 
-												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
-												Card.COUNTERCHARGE, Card.DISGRACE, Card.ADAPT, Card.OUTWIT, Card.SHIELD, 
-												Card.STUNNED, Card.IVANHOE, Card.RIPOSTE, Card.RIPOSTE, Card.KNOCKDOWN};
-//												Card.UNHORSE, Card.CHANGE_WEAPON, Card.DROP_WEAPON, Card.BREAK_LANCE, Card.RIPOSTE, 
-//												Card.DODGE, Card.RETREAT, Card.KNOCKDOWN, Card.OUTMANEUVER, Card.CHARGE, 
-//												Card.COUNTERCHARGE, Card.DISGRACE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, 
-//												Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE, Card.IVANHOE};
+	private int winningPlayer;
+	private int tokenDrawn;
+		
+	private static final Card[] INITIAL_DECK = CardData.specificActionDeck(Card.KNOCKDOWN);
 	
 	public static final int TOURNAMENT_NOT_STARTED = -1;
 	
@@ -86,9 +40,8 @@ public class GameState {
 		}
 		result += Flag.CARDS_BEGIN;
 		setTurn(0);
-		for(int i = 0; i < 110; i++) {
-			Card card = new Card(cardTypeData[i], cardValueData[i]);
-			drawDeck.add(card);
+		for(Card c: INITIAL_DECK) {
+			drawDeck.add(c);
 		}
 		drawDeck.shuffle();
 		
@@ -192,13 +145,20 @@ public class GameState {
 		return prevTournamentColour;
 	}
 	
-	/*public boolean isGameOver() {
-		for(int i = 0; i < players.size(); i++) {
-			if(players.get(i).hasWon()) gameOver = true;
-			else gameOver = false;
+	public boolean isGameOver() {
+		if(players.size()  < 4) {
+			for(int i = 0; i < players.size(); i++) {
+				if(players.get(i).hasWonAll()) gameOver = true;
+				else gameOver = false;
+			}
+		} else {
+			for(int i = 0; i < players.size(); i++) {
+				if(players.get(i).hasWonFour()) gameOver = true;
+				else gameOver = false;
+			}
 		}
 		return gameOver;
-	}*/
+	}
 	
 	public void setGameOver(boolean status) {
 		gameOver = status;
@@ -283,5 +243,20 @@ public class GameState {
 			}
 		}
 		return true;
+	}
+	
+	public void setWinningPlayer(int pos) {
+		winningPlayer = pos;
+	}
+	public int getWinningPlayer() {
+		return winningPlayer;
+	}
+	
+	public void setTokenDrawn(int colour) {
+		tokenDrawn = colour;
+	}
+	
+	public int getTokenDrawn() {
+		return tokenDrawn;
 	}
 }

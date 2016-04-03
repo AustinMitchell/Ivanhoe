@@ -1,38 +1,12 @@
 package controller.rulesengine;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import model.Card;
 import model.Deck;
 import model.Flag;
 import model.GameState;
-import model.Player;
 import model.Type;
 
 public class RulesEngine {	
-	
-	public static void drawToken(GameState game) {
-		ArrayList tokens = new ArrayList();
-		tokens.add(Type.PURPLE);
-		tokens.add(Type.RED);
-		tokens.add(Type.BLUE);
-		tokens.add(Type.YELLOW);
-		tokens.add(Type.GREEN);
-		
-		while(tokens.size() > game.getAllPlayers().size()) {
-			tokens.remove(tokens.size()-1);
-		}
-		Random rand = new Random();
-		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			int randomToken = rand.nextInt((tokens.size()));
-			game.getAllPlayers().get(i).setDrawnToken(Integer.valueOf(tokens.get(randomToken).toString()));
-			//game.getAllPlayers().get(i).setToken(Integer.valueOf(tokens.get(randomToken).toString()), true);
-			System.out.println("Random Token Number is: " + randomToken);
-			tokens.remove(randomToken);
-		}
-		setInitialTurn(game);
-	}
 	
 	public static String setInitialTurn(GameState game) {
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
@@ -86,20 +60,38 @@ public class RulesEngine {
 		}
 		game.setPrevTournamentColour(game.getTournamentColour());
 		int winningColour = game.getTournamentColour();
+		game.setTokenDrawn(winningColour);
 		String result = Flag.END_TOURNAMENT + ":" + winningColour;
 		game.setTournamentColour(game.TOURNAMENT_NOT_STARTED);
 		game.setTournamentStarted(false);
 		int playerPos = game.getTurn();
-		game.getPlayer(playerPos).setToken(winningColour, true); // give player a winning token
-		System.out.println("Giving player " + playerPos + " a token: " + winningColour);
+		game.setWinningPlayer(playerPos);
+		//game.getPlayer(playerPos).setToken(winningColour, true); // give player a winning token
+		//System.out.println("Giving player " + playerPos + " a token: " + winningColour);
+		/*
 		if(endGame(game)) {
 			result += Flag.NEW_COM + Flag.END_GAME;
 		}
+		*/
 		return result;
 	}
 	
-	public static boolean endGame(GameState game) {
-		return Validator.isGameOver(game);
+	public static String awardToken(GameState game, String col) {
+		int colour = Integer.valueOf(col);
+		
+		int playerPos = game.getWinningPlayer();
+		game.getPlayer(playerPos).setToken(colour, true); // give player a winning token
+		System.out.println("Giving player " + playerPos + " a token: " + colour);
+		
+		return Flag.AWARD_TOKEN + Flag.COM_SPLIT + colour;
+	}
+	
+	public static String endGame(GameState game) {
+		
+		if(Validator.isGameOver(game)) {
+			return Flag.END_GAME;
+		}
+		return "";
 	}
 	
 	public static String endTurn(GameState game) {

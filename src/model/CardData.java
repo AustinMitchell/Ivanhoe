@@ -8,16 +8,89 @@ import view.ResLoader;
 
 // Static utility class to store data for cards (i.e. name, description and image)
 public class CardData {
-	public static int[][] ALL_CARD_VALUES = {
-		{0, 3}, {0, 4},{0, 5},{0, 7},
-		{1, 3}, {1, 4},{1, 5},
-		{2, 2}, {2, 3},{2, 4},
-		{3, 2}, {3, 3},{3, 4},{3, 5},
-		{4, 1},
-		{5, 2}, {5, 3},{5, 6},
+	
+	private static final int[] INITIAL_DECK_TYPE = {Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
+		Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
+		Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.RED, 
+		Type.RED, Type.RED, Type.RED, Type.RED, Type.RED, 
+		Type.RED, Type.RED, Type.RED, Type.RED, Type.RED, 
+		Type.RED, Type.RED, Type.RED, Type.BLUE, Type.BLUE, 
+		Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, 
+		Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, 
+		Type.BLUE, Type.BLUE, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
+		Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
+		Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
+		Type.YELLOW, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
+		Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
+		Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
+		Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
+		Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
+		Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
+		Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
+		Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
+		Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
+		Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
+		Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION};
+	
+	private static Card[] UNMODIFIED_ARRAY() {
+		int[] arr =    {3, 3, 3, 3, 4, 
+						4, 4, 4, 5, 5, 
+						5, 5, 7, 7, 3, 
+						3, 3, 3, 3, 3, 
+						4, 4, 4, 4, 4, 
+						4, 5, 5, 2, 2, 
+						2, 2, 3, 3, 3, 
+						3, 4, 4, 4, 4, 
+						5, 5, 2, 2, 2, 
+						2, 3, 3, 3, 3, 
+						3, 3, 3, 3, 4, 
+						4, 1, 1, 1, 1, 
+						1, 1, 1, 1, 1, 
+						1, 1, 1, 1, 1, 
+						2, 2, 2, 2, 2, 
+						2, 2, 2, 3, 3, 
+						3, 3, 3, 3, 3, 
+						3, 6, 6, 6, 6};
+		Card[] cards = new Card[110];
+		for (int i=0; i<90; i++) {
+			cards[i] = new Card(INITIAL_DECK_TYPE[i], arr[i]);
+		}
+		return cards;
+	}
+	
+	public static final Card[] basicDeck() {
+		Card[] cards = UNMODIFIED_ARRAY();
 		
-		{6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {6, 5}, {6, 6}, {6, 7}, {6, 8},
-		{6, 9}, {6, 10}, {6, 11}, {6, 12}, {6, 13}, {6, 14}, {6, 15}, {6, 16}};
+		cards[90]  = new Card(Type.ACTION, Card.UNHORSE);
+		cards[91]  = new Card(Type.ACTION, Card.CHANGE_WEAPON);
+		cards[92]  = new Card(Type.ACTION, Card.DROP_WEAPON);
+		cards[93]  = new Card(Type.ACTION, Card.BREAK_LANCE);
+		cards[94]  = new Card(Type.ACTION, Card.RIPOSTE);
+		cards[95]  = new Card(Type.ACTION, Card.DODGE);
+		cards[96]  = new Card(Type.ACTION, Card.RETREAT);
+		cards[97]  = new Card(Type.ACTION, Card.KNOCKDOWN);
+		cards[98]  = new Card(Type.ACTION, Card.OUTMANEUVER);
+		cards[99]  = new Card(Type.ACTION, Card.CHARGE);
+		cards[100] = new Card(Type.ACTION, Card.COUNTERCHARGE);
+		cards[101] = new Card(Type.ACTION, Card.DISGRACE);
+		cards[102] = new Card(Type.ACTION, Card.ADAPT);
+		cards[103] = new Card(Type.ACTION, Card.OUTWIT);
+		cards[104] = new Card(Type.ACTION, Card.SHIELD);
+		cards[105] = new Card(Type.ACTION, Card.STUNNED);
+		cards[106] = new Card(Type.ACTION, Card.IVANHOE);
+		cards[107] = new Card(Type.ACTION, Card.RIPOSTE);
+		cards[108] = new Card(Type.ACTION, Card.RIPOSTE);
+		cards[109] = new Card(Type.ACTION, Card.KNOCKDOWN);
+		return cards;
+	}
+	
+	public static final Card[] specificActionDeck(int actionCardValue) {
+		Card[] cards = UNMODIFIED_ARRAY();
+		for (int i=90; i<110; i++) {
+			cards[i] = new Card(Type.ACTION, actionCardValue);
+		}
+		return cards;
+	}
 	
 	private static Image BACK_IMAGE;
 	

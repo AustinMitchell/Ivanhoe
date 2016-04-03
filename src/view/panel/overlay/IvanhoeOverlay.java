@@ -10,8 +10,8 @@ public class IvanhoeOverlay extends OverlayPanel {
 	Button doNothing;
 	long startTime;
 	
-	public IvanhoeOverlay(DescriptionBox descriptionBox, String[] command, GameState game, int thisPlayer) {
-		super("", descriptionBox);
+	public IvanhoeOverlay(DescriptionBox descriptionBox, String[] command, GameState game, int realPlayerIndex) {
+		super("", descriptionBox, game, realPlayerIndex);
 		Player instigator = game.getAllPlayers().get(game.getTurn());
 		int cardType = instigator.getHand().getCard(Integer.parseInt(command[1])).getCardType();
 		int cardValue = instigator.getHand().getCard(Integer.parseInt(command[1])).getCardValue();
@@ -22,9 +22,9 @@ public class IvanhoeOverlay extends OverlayPanel {
 		doNothing = new Button("Continue");
 		
 		boolean hasIvanhoe = false;
-		if (game.getAllPlayers().get(thisPlayer).isInTournament()) {
-			for (int i=0; i<game.getAllPlayers().get(thisPlayer).getHand().deckSize(); i++) {
-				Card c = game.getAllPlayers().get(thisPlayer).getHand().getCard(i);
+		if (game.getAllPlayers().get(realPlayerIndex).isInTournament()) {
+			for (int i=0; i<game.getAllPlayers().get(realPlayerIndex).getHand().deckSize(); i++) {
+				Card c = game.getAllPlayers().get(realPlayerIndex).getHand().getCard(i);
 				if (c.getCardType() == Type.ACTION && c.getCardValue() == Card.IVANHOE) {
 					hasIvanhoe = true;
 					break;

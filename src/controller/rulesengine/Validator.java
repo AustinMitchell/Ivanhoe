@@ -1,7 +1,6 @@
 package controller.rulesengine;
 import java.util.ArrayList;
 
-import controller.rulesengine.*;
 import model.*;
 
 public class Validator {
@@ -19,7 +18,6 @@ public class Validator {
 		}
 		return false;
 	}
-	
 	
 	public static boolean[] cardsAbleToStart(GameState game) {
 		Deck hand = game.getAllPlayers().get(game.getTurn()).getHand();
@@ -306,7 +304,6 @@ public class Validator {
 		}
 		return availableTargets;
 	}
-
 	
 	/*
 	 * Function to validate riposte.
@@ -322,6 +319,7 @@ public class Validator {
 				availableTargets.add(false);
 			}
 		}
+		
 		return availableTargets;
 	}
 	
@@ -384,7 +382,6 @@ public class Validator {
 		return validTargets;
 	}
 	
-	
 	/*
 	 * Function to validate charge
 	 */
@@ -398,7 +395,6 @@ public class Validator {
 		return validTargets;
 	}
 	
-	
 	/*
 	 * Function to validate countercharge
 	 */
@@ -411,7 +407,6 @@ public class Validator {
 		}
 		return validTargets;
 	}
-	
 	
 	/*
 	 * Function to validate disgrace
@@ -488,7 +483,6 @@ public class Validator {
 		return validTargets;
 	}
 	
-	
 	/*
 	 * Function to validate Shield
 	 */
@@ -496,34 +490,43 @@ public class Validator {
 		return true;
 	}
 	
-	
 	/*
 	 * Function to validate Stun
 	 */
 	public static boolean validateStun(GameState game) {
 		return true;
 	}
-	
-	
+
 	/*
 	 * Function to validate Ivanhoe
 	 */
 	public static boolean validateIvanhoe(GameState game) {
 		return false;
 	}
-
 	
-	public static boolean isGameOver(GameState game) {
-		for(Player p: game.getAllPlayers()) {
-			if(p.hasWon()) {
-				game.setGameOver(true);
-				return true;
-			}
-			else {
-				game.setGameOver(false);
+	/*
+	 * function to validate available tokens
+	 */
+	public static boolean[] validateToken(GameState game) {
+		boolean[] tokens = new boolean[5];
+		int colour = game.getTokenDrawn();
+		for(int i = 0; i < 5; i++) {
+			tokens[i] = false;
+		}
+		if(colour != Type.PURPLE) {
+			tokens[colour] = true;
+		} else {
+			int player = game.getWinningPlayer();
+			for(int i = 0; i < 5; i++) {
+				if(!game.getPlayer(player).checkToken(i)) {
+					tokens[i] = true;
+				}
 			}
 		}
-		return false;
+		return tokens;
 	}
 
+	public static boolean isGameOver(GameState game) {
+		return game.isGameOver();
+	}
 }
