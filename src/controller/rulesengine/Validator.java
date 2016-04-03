@@ -507,7 +507,7 @@ public class Validator {
 	/*
 	 * function to validate available tokens
 	 */
-	public boolean[] validateToken(GameState game) {
+	public static boolean[] validateToken(GameState game) {
 		boolean[] tokens = new boolean[5];
 		int colour = game.getTokenDrawn();
 		for(int i = 0; i < 5; i++) {

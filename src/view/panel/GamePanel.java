@@ -23,7 +23,7 @@ import view.utilitypanel.*;
 
 public class GamePanel extends ScaledPanel {
 	public enum OverlayCommand {
-		START_TOURNAMENT, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE
+		START_TOURNAMENT, WIN_TOKEN, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE
 	}
 	
 	public static final int THIS_PLAYER = 0;
@@ -412,16 +412,11 @@ public class GamePanel extends ScaledPanel {
 					int type = Integer.parseInt(command[1]);
 					String colour = Type.toString(type);
 					
-					//messageScrollBox.addRepeatedTextLine("* ");
 					if (guiTurn == THIS_PLAYER) {
 						messageScrollBox.addLine(" > You won the tournament!");
-						messageScrollBox.addLine(" > You were awarded a " + colour + " token");
 					} else {
 						messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " won the tournament!");
-						messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " was awarded a " + colour + " token");
 					}
-					//messageScrollBox.addRepeatedTextLine("* ");
-					playerStatus[gameTurn].collectToken(type);
 					tournamentColourBar.disableAllTokens();
 					for (CardDisplayPanel cp: display) {
 						cp.clear();
@@ -429,6 +424,30 @@ public class GamePanel extends ScaledPanel {
 					for (StatusBar sb: playerStatus) {
 						sb.setDisplayValue(0);
 						sb.clearStatus();
+					}
+					break;
+				}
+				case Flag.PICK_TOKEN: {
+					if (guiTurn == THIS_PLAYER) {
+						prepareOverlay(OverlayCommand.WIN_TOKEN, -1);
+					}
+					break;
+				}
+				case Flag.AWARD_TOKEN: {
+					if (guiTurn == THIS_PLAYER) {
+						deck.setEnabled(true);
+						endTurn.setText("(draw card first)");
+					}
+					int colour = Integer.parseInt(command[1]);
+					String colourName = Type.toString(colour);
+					
+					playerStatus[gameTurn].collectToken(colour);
+					tournamentColourBar.disableAllTokens();
+					
+					if (guiTurn == THIS_PLAYER) {
+						messageScrollBox.addLine("You collected a " + colourName + " token");
+					} else {
+						messageScrollBox.addLine(playerNames.get(gameTurn) + " collected a " + colourName + " token");
 					}
 					break;
 				}
@@ -772,6 +791,9 @@ public class GamePanel extends ScaledPanel {
 				case START_TOURNAMENT:
 					currentOverlay = new NewTournamentOverlay(descriptionBox, game, realPlayerIndex, hand[THIS_PLAYER]);
 					break;
+				case WIN_TOKEN:
+					currentOverlay = new WinningTokenOverlay(descriptionBox, game, realPlayerIndex);
+					break;
 				case UNHORSE:
 					currentOverlay = new UnhorseOverlay(descriptionBox, game, realPlayerIndex, hand[THIS_PLAYER]);
 					break;
@@ -799,6 +821,9 @@ public class GamePanel extends ScaledPanel {
 				switch(overlayCommand) {
 					case START_TOURNAMENT:
 						client.sendMessage(Flag.SET_COLOUR + ":" + result[0] + Flag.NEW_COM + Flag.START_TOURNAMENT);
+						break;
+					case WIN_TOKEN:
+						client.sendMessage(UpdateEngine.awardToken(game, result[0]));
 						break;
 					case UNHORSE:
 						client.sendMessage(UpdateEngine.unhorse(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));

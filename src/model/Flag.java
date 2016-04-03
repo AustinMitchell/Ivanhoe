@@ -34,6 +34,7 @@ public class Flag {
 	public static final String START_TOURNAMENT          = "startTournament";
 	public static final String STUN 				     = "stun";
 	public static final String WITHDRAW                  = "withdraw";
+	
 	public static final String PICK_TOKEN				 = "pickToken";
 	public static final String AWARD_TOKEN				 = "awardToken";
 
