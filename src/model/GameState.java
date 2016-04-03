@@ -13,6 +13,8 @@ public class GameState {
 	private boolean tournamentStarted;
 	private int prevTournamentColour;
 	private boolean playedValueCard = false; //toggle to true every time a player plays a value card. useful for STUNNED implementation
+	private int winningPlayer;
+	private int tokenDrawn;
 	
 	private static final int[] cardTypeData = {Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
 												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
@@ -227,13 +229,20 @@ public class GameState {
 		return prevTournamentColour;
 	}
 	
-	/*public boolean isGameOver() {
-		for(int i = 0; i < players.size(); i++) {
-			if(players.get(i).hasWon()) gameOver = true;
-			else gameOver = false;
+	public boolean isGameOver() {
+		if(players.size()  < 4) {
+			for(int i = 0; i < players.size(); i++) {
+				if(players.get(i).hasWonAll()) gameOver = true;
+				else gameOver = false;
+			}
+		} else {
+			for(int i = 0; i < players.size(); i++) {
+				if(players.get(i).hasWonFour()) gameOver = true;
+				else gameOver = false;
+			}
 		}
 		return gameOver;
-	}*/
+	}
 	
 	public void setGameOver(boolean status) {
 		gameOver = status;
@@ -318,5 +327,20 @@ public class GameState {
 			}
 		}
 		return true;
+	}
+	
+	public void setWinningPlayer(int pos) {
+		winningPlayer = pos;
+	}
+	public int getWinningPlayer() {
+		return winningPlayer;
+	}
+	
+	public void setTokenDrawn(int colour) {
+		tokenDrawn = colour;
+	}
+	
+	public int getTokenDrawn() {
+		return tokenDrawn;
 	}
 }

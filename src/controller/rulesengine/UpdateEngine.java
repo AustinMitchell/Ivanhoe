@@ -107,8 +107,25 @@ public class UpdateEngine {
 	}
 	
 	public static String ivanhoe(GameState game, boolean played) {
-		return Flag.IVANHOE_RESPONSE + ":" + (played?"true":"false");
+		String returnString = Flag.IVANHOE_RESPONSE + ":" + (played?"true":"false");
+		return returnString;
 	}
+	
+	public static String pickToken() {
+		String returnString =  Flag.PICK_TOKEN;
+		return returnString;
+	}
+	
+	public static String awardToken(GameState game, String col) {
+		String returnString =  Flag.AWARD_TOKEN + Flag.COM_SPLIT + col;
+		return returnString;
+	}
+	
+	public static String endGame(GameState game) {
+		String returnString =  Flag.END_GAME;
+		return returnString;
+	}
+	
 
 	public static Object endTurn(GameState game) {
 		return Flag.END_TURN;
