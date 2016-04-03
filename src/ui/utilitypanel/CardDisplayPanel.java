@@ -12,6 +12,8 @@ public class CardDisplayPanel extends Panel {
 	Image.Orientation orientation;
 	boolean faceUp, cardMoveOnHover;
 	
+	public Image.Orientation getOrientation() { return orientation; }
+	
 	@Override
 	public void setSize(int w, int h) {
 		super.setSize(w, h);

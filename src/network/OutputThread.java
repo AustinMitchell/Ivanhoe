@@ -29,6 +29,12 @@ public class OutputThread implements Runnable {
 		@Override
 		public void run() {
 			while (!exit) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				synchronized (updateOut) {
 					if (!updateOut.isEmpty()) {
 						out.println(updateOut.poll());

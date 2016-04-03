@@ -12,8 +12,8 @@ public class UnhorseOverlay extends OverlayPanel {
 	private CardDisplayPanel playerHand;
 	private TokenBar tokenChoice;
 	
-	public UnhorseOverlay(DescriptionBox descriptionBox, CardDisplayPanel playerHand) {
-		super("Unhorse - Select Tournament Colour...", descriptionBox);
+	public UnhorseOverlay(DescriptionBox descriptionBox, GameState game, int realPlayerIndex, CardDisplayPanel playerHand) {
+		super("Unhorse - Select Tournament Colour...", descriptionBox, game, realPlayerIndex);
 		
 		tokenChoice = new TokenBar();
 		tokenChoice.enableToken(Type.RED);

@@ -3,11 +3,15 @@ package ui.panel.overlay;
 import java.awt.Color;
 import java.awt.Font;
 
+import models.GameState;
 import simple.gui.panel.ScaledPanel;
 import simple.gui.*;
 import ui.DescriptionBox;
 
 public abstract class OverlayPanel extends ScaledPanel {
+	protected GameState game;
+	protected int realPlayerIndex;
+	
 	protected String finalCommandString;
 	protected DescriptionBox descriptionBox;
 	protected boolean overlayActionComplete;
@@ -19,7 +23,7 @@ public abstract class OverlayPanel extends ScaledPanel {
 	
 	public abstract void handleDescriptionBox();
 	
-	public OverlayPanel(String titleText, DescriptionBox descriptionBox) {
+	public OverlayPanel(String titleText, DescriptionBox descriptionBox, GameState game, int realPlayerIndex) {
 		super(0, 0, 10, 10);
 		finalCommandString = "";
 		overlayActionComplete = false;
@@ -27,6 +31,8 @@ public abstract class OverlayPanel extends ScaledPanel {
 		title.setFont(new Font("Tahoma", Font.BOLD, 25));
 		title.setTextColor(Color.WHITE);
 		
+		this.game = game;
+		this.realPlayerIndex = realPlayerIndex;
 		this.descriptionBox = descriptionBox;
 		
 		drawContainingPanel = true;
@@ -34,6 +40,13 @@ public abstract class OverlayPanel extends ScaledPanel {
 		fillColor = new Color(0, 0, 0, 210);
 		
 		addWidget(title, 0, 0, 100, 10);
+	}
+	
+	public int toGameTurn(int turn) {
+		return Math.floorMod((turn+realPlayerIndex), game.getAllPlayers().size());
+	}
+	public int toGUITurn(int turn) {
+		return Math.floorMod((turn-realPlayerIndex), game.getAllPlayers().size());
 	}
 	
 	@Override

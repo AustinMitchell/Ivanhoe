@@ -1,12 +1,7 @@
 package rulesengine;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import network.Flag;
-import models.Card;
 import models.GameState;
-import rulesengine.Type;
 
 public class UpdateEngine {
 

@@ -10,6 +10,7 @@ public class Flag {
 	public static final String CAN_START_TOURNAMENT      = "canStartTournament";
 	public static final String CARD                      = "card";
 	public static final String CARDS_BEGIN               = "cardsBegin";
+	public static final String CLIENT_DISCONNECT         = "clientDisconnect";
 	public static final String CURRENT_NUM_PLAYERS       = "currentNumPlayers";
 	public static final String DISPLAY				     = "display";
 	public static final String DRAW_CARD                 = "drawCard";
@@ -25,6 +26,7 @@ public class Flag {
 	public static final String MAX_PLAYERS_SET           = "maxPlayersSet";
 	public static final String PLAYER_ID                 = "playerID";
 	public static final String RENEW_DECK                = "renewDeck";
+	public static final String SERVER_ACCEPT             = "serverAccept";
 	public static final String SET_COLOUR                = "setColour";
 	public static final String SET_TURN                  = "setTurn";
 	public static final String SHIELD				     = "shield";

@@ -1,5 +1,4 @@
 package rulesengine;
-import rulesengine.*;
 
 import java.util.ArrayList;
 
@@ -323,6 +322,7 @@ public class Validator {
 				availableTargets.add(false);
 			}
 		}
+		
 		return availableTargets;
 	}
 	

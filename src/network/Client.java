@@ -125,18 +125,25 @@ public class Client implements Runnable {
 
 			in = new InputThread(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 			out = new OutputThread(new PrintWriter(socket.getOutputStream(), true));
-
-			out.sendMessage(username);
 			
 			long startTime = System.currentTimeMillis();
 			while(!in.hasMessage()) {
 				if (System.currentTimeMillis() - startTime > connectTimeoutMillis) {
+					System.out.println("DISCONNECT");
+					out.sendMessage(Flag.CLIENT_DISCONNECT);
+					Thread.sleep(500);
 					throw new TimeLimitExceededException();
 				}
 			}
 			
-			// Expecting Flag.PLAYER_ID
+			// Expecting Flag.SERVER_ACCEPT
 			String message = in.readMessage();
+			
+			out.sendMessage(username);
+			
+			// Expecting Flag.PLAYER_ID
+			while (!in.hasMessage()) {}
+			message = in.readMessage();
 			id = Integer.parseInt(message.split(":")[1]) - 1;
 			guiFlags.add(message);
 			

@@ -12,8 +12,8 @@ public class NewTournamentOverlay extends OverlayPanel {
 	private CardDisplayPanel playerHand;
 	private TokenBar tokenChoice;
 	
-	public NewTournamentOverlay(DescriptionBox descriptionBox, CardDisplayPanel playerHand, GameState game) {
-		super("Select New Tournament Colour...", descriptionBox);
+	public NewTournamentOverlay(DescriptionBox descriptionBox, GameState game, int realPlayerIndex, CardDisplayPanel playerHand) {
+		super("Select New Tournament Colour...", descriptionBox, game, realPlayerIndex);
 		
 		tokenChoice = new TokenBar();
 		

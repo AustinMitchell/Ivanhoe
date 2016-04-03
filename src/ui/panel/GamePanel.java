@@ -10,7 +10,6 @@ import models.GameState;
 import models.Player;
 import network.Client;
 import network.Flag;
-import rulesengine.RulesEngine;
 import rulesengine.Type;
 import rulesengine.UpdateEngine;
 import rulesengine.Validator;
@@ -23,7 +22,7 @@ import ui.utilitypanel.*;
 
 public class GamePanel extends ScaledPanel {
 	public enum OverlayCommand {
-		START_TOURNAMENT, UNHORSE, CHANGE_WEAPON, IVANHOE
+		START_TOURNAMENT, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE
 	}
 	
 	public static final int THIS_PLAYER = 0;
@@ -328,7 +327,7 @@ public class GamePanel extends ScaledPanel {
 							if (guiTurn == THIS_PLAYER) {
 								// Allows player to start a new tournament
 								messageScrollBox.addLine(" > You can start a new tournament");
-								prepareOverlay(OverlayCommand.START_TOURNAMENT);
+								prepareOverlay(OverlayCommand.START_TOURNAMENT, -1);
 							} else {
 								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " can start a tournament");
 							}
@@ -483,6 +482,51 @@ public class GamePanel extends ScaledPanel {
 							}
 							break;
 						}
+						case Card.BREAK_LANCE: {
+							int targetIndex = toGUITurn(Integer.parseInt(command[2]));
+							
+							if (targetIndex == THIS_PLAYER) {
+								messageScrollBox.addLine(" > Your PURPLE cards were removed");
+							} else {
+								messageScrollBox.addLine(" > " + playerNames.get(targetIndex) + "'s PURPLE cards were removed");
+							}
+							
+							display[targetIndex].clear();
+							for (Card c: game.getAllPlayers().get(toGameTurn(targetIndex)).getDisplay().getAllCards()) {
+								display[targetIndex].addCard(new CardWidget(c.getCardType(), c.getCardValue()));
+							}
+							
+							for (int i=0; i<numPlayers; i++) {
+								playerStatus[i].setDisplayValue(game.getAllPlayers().get(i).getDisplayValue(tournamentColour));
+							}
+							break;
+						}
+						case Card.RIPOSTE: {
+							int targetIndex = toGUITurn(Integer.parseInt(command[2]));
+							CardWidget stolenCard = (CardWidget)display[targetIndex].removeIndex(display[targetIndex].numWidgets()-1);
+							
+							if (targetIndex == THIS_PLAYER) {
+								messageScrollBox.addLine(" > " + playerNames.get(guiTurn) + " stole your " + CardData.getCardName(stolenCard.getType(),
+																																	  stolenCard.getValue()));
+							} else if (guiTurn == THIS_PLAYER) {
+								messageScrollBox.addLine(" > You stole " + playerNames.get(targetIndex) + "'s " + CardData.getCardName(stolenCard.getType(),
+										  																							   stolenCard.getValue()));
+							} else {
+								messageScrollBox.addLine(" > " + playerNames.get(guiTurn) + " stole " + playerNames.get(targetIndex) + "'s " 
+											+ CardData.getCardName(stolenCard.getType(),
+										   			               stolenCard.getValue()));
+							}
+							
+							display[guiTurn].addCard(stolenCard);
+							
+							for (int i=0; i<numPlayers; i++) {
+								playerStatus[i].setDisplayValue(game.getAllPlayers().get(i).getDisplayValue(tournamentColour));
+							}
+							break;
+						}
+						case Card.DODGE: {
+							
+						}
 						default: {
 							break;
 						}
@@ -550,7 +594,7 @@ public class GamePanel extends ScaledPanel {
 					switch(type) {
 						case Type.ACTION: {		
 							if (guiTurn != THIS_PLAYER) {
-								prepareOverlay(OverlayCommand.IVANHOE);
+								prepareOverlay(OverlayCommand.IVANHOE, -1);
 								ivanhoeOverlayCommand = command;
 							}
 							break;
@@ -657,17 +701,23 @@ public class GamePanel extends ScaledPanel {
 					case Type.ACTION: {
 						switch (c.getValue()) {
 							case Card.UNHORSE: {
-								overlayCardReferenceIndex = i;
-								prepareOverlay(OverlayCommand.UNHORSE);
+								prepareOverlay(OverlayCommand.UNHORSE, i);
 								break;
 							}
 							case Card.CHANGE_WEAPON: {
-								overlayCardReferenceIndex = i;
-								prepareOverlay(OverlayCommand.CHANGE_WEAPON);
+								prepareOverlay(OverlayCommand.CHANGE_WEAPON, i);
 								break;
 							}
 							case Card.DROP_WEAPON: {
 								client.sendMessage(UpdateEngine.dropWeapon(game, i));
+								break;
+							}
+							case Card.BREAK_LANCE: {
+								prepareOverlay(OverlayCommand.BREAK_LANCE, i);
+								break;
+							}
+							case Card.RIPOSTE: {
+								prepareOverlay(OverlayCommand.RIPOSTE, i);
 								break;
 							}
 							default: {
@@ -688,9 +738,10 @@ public class GamePanel extends ScaledPanel {
 		}
 	}
 
-	private void prepareOverlay(OverlayCommand oc) {
+	private void prepareOverlay(OverlayCommand oc, int cardReferenceIndex) {
 		startNewOverlay = true;
 		overlayCommand = oc;
+		overlayCardReferenceIndex = cardReferenceIndex;
 	}
 	private void handleOverlay() {
 		// Checks if a new overlay needs to start
@@ -698,16 +749,22 @@ public class GamePanel extends ScaledPanel {
 			switch(overlayCommand) {
 				// A new tournament is starting, and you are starting the tournament
 				case START_TOURNAMENT:
-					currentOverlay = new NewTournamentOverlay(descriptionBox, hand[THIS_PLAYER], game);
+					currentOverlay = new NewTournamentOverlay(descriptionBox, game, realPlayerIndex, hand[THIS_PLAYER]);
 					break;
 				case UNHORSE:
-					currentOverlay = new UnhorseOverlay(descriptionBox, hand[THIS_PLAYER]);
+					currentOverlay = new UnhorseOverlay(descriptionBox, game, realPlayerIndex, hand[THIS_PLAYER]);
 					break;
 				case CHANGE_WEAPON:
-					currentOverlay = new ChangeWeaponOverlay(descriptionBox, hand[THIS_PLAYER], game);
+					currentOverlay = new ChangeWeaponOverlay(descriptionBox, game, realPlayerIndex, hand[THIS_PLAYER]);
 					break;
 				case IVANHOE:
 					currentOverlay = new IvanhoeOverlay(descriptionBox, ivanhoeOverlayCommand, game, toGameTurn(THIS_PLAYER));
+					break;
+				case BREAK_LANCE:
+					currentOverlay = new BreakLanceOverlay(descriptionBox, game, realPlayerIndex, display);
+					break;
+				case RIPOSTE: 
+					currentOverlay = new RiposteOverlay(descriptionBox, game, realPlayerIndex, display);
 					break;
 				default:
 					break;
@@ -727,6 +784,12 @@ public class GamePanel extends ScaledPanel {
 						break;
 					case CHANGE_WEAPON:
 						client.sendMessage(UpdateEngine.changeWeapon(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						break;
+					case BREAK_LANCE:
+						client.sendMessage(UpdateEngine.breakLance(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						break;
+					case RIPOSTE:
+						client.sendMessage(UpdateEngine.riposte(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
 						break;
 					case IVANHOE:
 						client.sendMessage(UpdateEngine.ivanhoe(game, result[0].equals("true")));

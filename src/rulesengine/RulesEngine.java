@@ -7,13 +7,12 @@ import network.Flag;
 import models.Card;
 import models.Deck;
 import models.GameState;
-import models.Player;
 import rulesengine.Type;
 
 public class RulesEngine {	
 	
 	public static void drawToken(GameState game) {
-		ArrayList tokens = new ArrayList();
+		ArrayList<Integer> tokens = new ArrayList<Integer>();
 		tokens.add(Type.PURPLE);
 		tokens.add(Type.RED);
 		tokens.add(Type.BLUE);
@@ -227,7 +226,7 @@ public class RulesEngine {
 	
 	//Process break lance card
 	public static String breakLance(GameState game, int cardPos, int targetPos) {
-		String returnString = (Flag.ACTION_CARD + ":" + cardPos + targetPos);
+		String returnString = (Flag.ACTION_CARD + ":" + cardPos + ":" + targetPos);
 		int playerPos = game.getTurn();
 		boolean discardedCard = false;
 		
@@ -247,7 +246,7 @@ public class RulesEngine {
 	
 	//Process Riposte card
 	public static String riposte(GameState game, int cardPos, int targetPos) {
-		String returnString = (Flag.ACTION_CARD + ":" + cardPos + targetPos);
+		String returnString = (Flag.ACTION_CARD + ":" + cardPos + ":" + targetPos);
 		int playerPos = game.getTurn();
 		/*
 		 * remove the last card in a target's display and add to player's display
@@ -264,7 +263,7 @@ public class RulesEngine {
 
 	//Process Dodge
 	public static String dodge(GameState game, int cardPos, int targetPos, int targetCardPos) {
-		String returnString = Flag.ACTION_CARD + ":" + cardPos + targetPos + targetCardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos + ":" + targetPos + ":" + targetCardPos;
 		int playerPos = game.getTurn();
 		
 		//Discard the target's card only if the display's size is bigger than 1 and if the target doesn't have a shield
@@ -292,7 +291,7 @@ public class RulesEngine {
 	
 	//Process KnockDown
 	public static String knockdown(GameState game, int cardPos, int targetPos, int targetCardPos) {
-		String returnString = Flag.ACTION_CARD + ":" + cardPos + targetPos + targetCardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos + ":" + targetPos + ":" + targetCardPos;
 		int playerPos = game.getTurn();
 		
 		//Take the target's card and add it to player's hand

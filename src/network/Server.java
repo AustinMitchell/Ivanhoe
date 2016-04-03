@@ -100,12 +100,22 @@ public class Server{
 			in.add(playerIn);
 			out.add(playerOut);
 			
+			playerOut.sendMessage(Flag.SERVER_ACCEPT);
+			
 			String name = null;
 			try {
 				while(!playerIn.hasMessage()) {}
 				name = playerIn.readMessage();
 			} catch (Exception e) {
 				throw new RuntimeException("Input thread has died.");
+			}
+			
+			if (name.equals(Flag.CLIENT_DISCONNECT)) {
+				in.remove(in.size()-1);
+				out.remove(out.size()-1);
+				playerIn.killThread();
+				playerOut.killThread();
+				throw new IOException("Client disconnected");
 			}
 			
 			updateClients(Flag.PLAYER_ID + ":" + in.size());
@@ -136,6 +146,7 @@ public class Server{
 		Object[] update = null;
 		try {
 			while(update == null) {
+				Thread.sleep(10);
 				for (int i=0; i<in.size(); i++) {
 					if (in.get(i).hasMessage()) {
 						update = new Object[2];
@@ -164,7 +175,7 @@ public class Server{
 	
 	// Watis to accept a new player
 	public void waitForPlayer() {
-		acceptPlayer();
+		while (acceptPlayer() == null);
 		
 		if (players.size() == maxPlayers) {
 			serverState = ServerState.CREATE_GAME;

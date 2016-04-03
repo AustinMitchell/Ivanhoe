@@ -58,7 +58,7 @@ public class Parser {
 			// each card in the new deck
 			case Flag.INIT_CLIENT: { // initializes draw deck on the client side
 				int i = 1;
-				ArrayList<Player> players = new ArrayList();
+				ArrayList<Player> players = new ArrayList<Player>();
 				while (!command[i].equals(Flag.CARDS_BEGIN)) {
 					players.add(new Player(command[i]));
 					i++;
@@ -157,6 +157,18 @@ public class Parser {
 				case Card.DROP_WEAPON: {
 					result = RulesEngine.dropWeapon(game,
 							Integer.parseInt(command[1]));
+					break;
+				}
+				case Card.BREAK_LANCE: {
+					result = RulesEngine.breakLance(game,
+							Integer.parseInt(command[1]),
+							Integer.parseInt(command[2]));
+					break;
+				}
+				case Card.RIPOSTE: {
+					result = RulesEngine.riposte(game,
+							Integer.parseInt(command[1]),
+							Integer.parseInt(command[2]));
 					break;
 				}
 				case Card.IVANHOE: {
