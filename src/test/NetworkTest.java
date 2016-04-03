@@ -5,9 +5,12 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import network.*;
-
 import org.junit.Test;
+
+import controller.*;
+import controller.network.Client;
+import controller.network.Server;
+import model.Flag;
 
 
 public class NetworkTest {	

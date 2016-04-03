@@ -4,17 +4,16 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import network.Flag;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import models.Card;
-import models.GameState;
-import models.Player;
-import rulesengine.RulesEngine;
-import rulesengine.Type;
-import rulesengine.UpdateEngine;
+import controller.rulesengine.RulesEngine;
+import controller.rulesengine.UpdateEngine;
+import model.Card;
+import model.Flag;
+import model.GameState;
+import model.Player;
+import model.Type;
 
 public class UpdateEngineTest {
 	UpdateEngine update;

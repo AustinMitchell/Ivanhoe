@@ -1,11 +1,11 @@
 package test;
-import models.Card;
-import rulesengine.Type;
-
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import model.Card;
+import model.Type;
 
 public class CardTest {
 	Card purple;
