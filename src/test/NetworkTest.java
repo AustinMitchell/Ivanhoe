@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import controller.*;
 import controller.network.Client;
 import controller.network.Server;
 import model.Flag;

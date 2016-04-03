@@ -13,6 +13,7 @@ public class CardDisplayPanel extends Panel {
 	boolean faceUp, cardMoveOnHover;
 	
 	public Image.Orientation getOrientation() { return orientation; }
+	public boolean isFaceUp() { return faceUp; }
 	
 	@Override
 	public void setSize(int w, int h) {

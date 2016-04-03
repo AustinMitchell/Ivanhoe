@@ -13,9 +13,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import controller.*;
-
-
 public class Trace {
 	
 	private static Trace _instance = null;

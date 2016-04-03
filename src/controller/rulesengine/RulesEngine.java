@@ -1,8 +1,5 @@
 package controller.rulesengine;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import model.Card;
 import model.Deck;
 import model.Flag;
