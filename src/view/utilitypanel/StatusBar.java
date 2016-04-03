@@ -121,6 +121,9 @@ public class StatusBar extends ScaledPanel {
 	public void collectToken(int type) {
 		tokens.enableToken(type);
 	}
+	public void removeToken(int type) {
+		tokens.disableToken(type);
+	}
 	
 	public void enableShield() {
 		shield.setImage(SHIELD_IMAGE);

@@ -45,7 +45,7 @@ public class UpdateEngine {
 	}
 	
 	public static String dodge(GameState game, int cardPos, int targetPos, int targetCardPos) {
-		String returnString = Flag.CARD + ":" + cardPos + targetPos + targetCardPos;
+		String returnString = Flag.CARD + ":" + cardPos + ":" + targetPos + ":" + targetCardPos;
 		return returnString;
 	}
 	
@@ -55,7 +55,7 @@ public class UpdateEngine {
 	}
 	
 	public static String knockdown(GameState game, int cardPos, int targetPos, int targetCardPos) {
-		String returnString = Flag.CARD + ":" + cardPos + targetPos + targetCardPos;
+		String returnString = Flag.CARD + ":" + cardPos + ":" + targetPos + ":" + targetCardPos;
 		return returnString;
 	}
 	

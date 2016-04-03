@@ -4,20 +4,17 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import controller.network.Client;
-import controller.network.Server;
 import simple.gui.panel.*;
 import simple.run.SimpleGUIApp;
 import view.panel.*;;
 
 public class GameController {
-	private SimpleGUIApp mainApp;
 	private PanelCollection screen;
 	private Client client;
 	
 	private ArrayList<String> playerNames;
 	
 	public GameController(SimpleGUIApp mainApp) {
-		this.mainApp = mainApp;
 		client = new Client();
 		mainApp.setBackgroundColor(new Color(175,117,68));
 		screen = new PanelCollection(0, 0, mainApp.getWidth(), mainApp.getHeight());

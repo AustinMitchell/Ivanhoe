@@ -2,11 +2,9 @@ package controller.network;
 
 import org.apache.log4j.Logger;
 
-import controller.rulesengine.*;
 import model.*;
 
 import java.net.*;
-import java.sql.Time;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.io.*;
@@ -112,6 +110,7 @@ public class Client implements Runnable {
 		}
 	}
 	
+	@SuppressWarnings("resource")
 	@Override
 	public void run() {
 		try {

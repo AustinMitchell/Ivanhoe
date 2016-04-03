@@ -23,7 +23,7 @@ import view.utilitypanel.*;
 
 public class GamePanel extends ScaledPanel {
 	public enum OverlayCommand {
-		START_TOURNAMENT, WIN_TOKEN, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE
+		START_TOURNAMENT, WIN_TOKEN, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE, RETREAT, KNOCKDOWN
 	}
 	
 	public static final int THIS_PLAYER = 0;
@@ -421,9 +421,14 @@ public class GamePanel extends ScaledPanel {
 					for (CardDisplayPanel cp: display) {
 						cp.clear();
 					}
-					for (StatusBar sb: playerStatus) {
-						sb.setDisplayValue(0);
-						sb.clearStatus();
+					for (int i=0; i<playerStatus.length; i++) {
+						playerStatus[i].setDisplayValue(0);
+						playerStatus[i].clearStatus();
+						for (int j=0; j<5; j++) {
+							if (!game.getPlayer(i).checkToken(j)) {
+								playerStatus[i].removeToken(j);
+							}
+						}
 					}
 					break;
 				}
@@ -445,9 +450,9 @@ public class GamePanel extends ScaledPanel {
 					tournamentColourBar.disableAllTokens();
 					
 					if (guiTurn == THIS_PLAYER) {
-						messageScrollBox.addLine("You collected a " + colourName + " token");
+						messageScrollBox.addLine(" > You collected a " + colourName + " token");
 					} else {
-						messageScrollBox.addLine(playerNames.get(gameTurn) + " collected a " + colourName + " token");
+						messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " collected a " + colourName + " token");
 					}
 					break;
 				}
@@ -546,25 +551,56 @@ public class GamePanel extends ScaledPanel {
 						}
 						case Card.DODGE: {
 							int targetIndex = toGUITurn(Integer.parseInt(command[2]));
-							CardWidget stolenCard = (CardWidget)display[targetIndex].removeIndex(display[targetIndex].numWidgets()-1);
-							
+							int targetCardIndex = Integer.parseInt(command[3]);
+							CardWidget discardCard = (CardWidget)display[targetIndex].removeIndex(targetCardIndex);
+						
 							if (targetIndex == THIS_PLAYER) {
-								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " stole your " + CardData.getCardName(stolenCard.getType(),
-																																	  stolenCard.getValue()));
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " discarded your " + CardData.getCardName(discardCard.getType(),
+																																	   discardCard.getValue()));
 							} else if (guiTurn == THIS_PLAYER) {
-								messageScrollBox.addLine(" > You stole " + playerNames.get(toGameTurn(targetIndex)) + "'s " + CardData.getCardName(stolenCard.getType(),
-										  																							   stolenCard.getValue()));
+								messageScrollBox.addLine(" > You discarded " + playerNames.get(toGameTurn(targetIndex)) + "'s " + CardData.getCardName(discardCard.getType(),
+										                         																			           discardCard.getValue()));
 							} else {
-								messageScrollBox.addLine(" > " + playerNames.get(guiTurn) + " stole " + playerNames.get(toGameTurn(targetIndex)) + "'s " 
-											+ CardData.getCardName(stolenCard.getType(),
-										   			               stolenCard.getValue()));
+								messageScrollBox.addLine(" > " + playerNames.get(guiTurn) + " discarded " + playerNames.get(toGameTurn(targetIndex)) + "'s " 
+											+ CardData.getCardName(discardCard.getType(),
+																   discardCard.getValue()));
+							}
+														
+							playerStatus[toGameTurn(targetCardIndex)].setDisplayValue(game.getPlayer(toGameTurn(targetCardIndex)).getDisplayValue(tournamentColour));
+							break;
+						}
+						case Card.RETREAT: {
+							int targetCardIndex = Integer.parseInt(command[2]);
+							CardWidget discardCard = (CardWidget)display[guiTurn].removeIndex(targetCardIndex);
+							hand[guiTurn].addCard(discardCard);
+							
+							if (guiTurn == THIS_PLAYER) {
+								messageScrollBox.addLine(" > You returned your " + CardData.getCardName(discardCard.getType(), discardCard.getValue()) + " to your hand");
+							} else {
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " returned their " + CardData.getCardName(discardCard.getType(), discardCard.getValue()) + " to their hand");
 							}
 							
-							display[guiTurn].addCard(stolenCard);
+							playerStatus[gameTurn].setDisplayValue(game.getPlayer(gameTurn).getDisplayValue(tournamentColour));
+							break;
+						}
+						case Card.KNOCKDOWN: {
+							int targetIndex = Integer.parseInt(command[2]);
+							int targetCardIndex = Integer.parseInt(command[3]);
 							
-							for (int i=0; i<numPlayers; i++) {
-								playerStatus[i].setDisplayValue(game.getAllPlayers().get(i).getDisplayValue(tournamentColour));
+							CardWidget stolenCard = (CardWidget)hand[toGUITurn(targetIndex)].removeIndex(targetCardIndex);
+							
+							if (toGUITurn(targetIndex) == THIS_PLAYER) {
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " took " + CardData.getCardName(stolenCard.getType(), stolenCard.getValue())
+										+ " from your hand");
+							} else if (guiTurn == THIS_PLAYER) {
+								messageScrollBox.addLine(" > You took " +  CardData.getCardName(stolenCard.getType(), stolenCard.getValue()) 
+										+ " from " + playerNames.get(targetIndex) + "'s hand");
+							} else {
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " took a card from " + playerNames.get(targetIndex) + "'s hand");
 							}
+							
+							hand[guiTurn].addCard(stolenCard);
+							
 							break;
 						}
 						default: {
@@ -750,6 +786,7 @@ public class GamePanel extends ScaledPanel {
 							}
 							case Card.DROP_WEAPON: {
 								client.sendMessage(UpdateEngine.dropWeapon(game, i));
+								messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
 								break;
 							}
 							case Card.BREAK_LANCE: {
@@ -758,6 +795,18 @@ public class GamePanel extends ScaledPanel {
 							}
 							case Card.RIPOSTE: {
 								prepareOverlay(OverlayCommand.RIPOSTE, i);
+								break;
+							}
+							case Card.DODGE: {
+								prepareOverlay(OverlayCommand.DODGE, i);
+								break;
+							}
+							case Card.RETREAT: {
+								prepareOverlay(OverlayCommand.RETREAT, i);
+								break;
+							}
+							case Card.KNOCKDOWN: {
+								prepareOverlay(OverlayCommand.KNOCKDOWN, i);
 								break;
 							}
 							default: {
@@ -809,6 +858,15 @@ public class GamePanel extends ScaledPanel {
 				case RIPOSTE: 
 					currentOverlay = new RiposteOverlay(descriptionBox, game, realPlayerIndex, display);
 					break;
+				case DODGE:
+					currentOverlay = new DodgeOverlay(descriptionBox, game, realPlayerIndex, display);
+					break;
+				case RETREAT:
+					currentOverlay = new RetreatOverlay(descriptionBox, game, realPlayerIndex, display[THIS_PLAYER]);
+					break;
+				case KNOCKDOWN:
+					currentOverlay = new KnockdownOverlay(descriptionBox, game, realPlayerIndex, hand);
+					break;
 				default:
 					break;
 			}
@@ -818,6 +876,7 @@ public class GamePanel extends ScaledPanel {
 		} else if (currentOverlay != null) {
 			if (currentOverlay.isOverlayActionComplete()) {
 				String[] result = currentOverlay.getFinalCommandString().split(":");
+				System.out.println(Arrays.toString(result));
 				switch(overlayCommand) {
 					case START_TOURNAMENT:
 						client.sendMessage(Flag.SET_COLOUR + ":" + result[0] + Flag.NEW_COM + Flag.START_TOURNAMENT);
@@ -827,15 +886,31 @@ public class GamePanel extends ScaledPanel {
 						break;
 					case UNHORSE:
 						client.sendMessage(UpdateEngine.unhorse(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
 						break;
 					case CHANGE_WEAPON:
 						client.sendMessage(UpdateEngine.changeWeapon(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
 						break;
 					case BREAK_LANCE:
 						client.sendMessage(UpdateEngine.breakLance(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
 						break;
 					case RIPOSTE:
 						client.sendMessage(UpdateEngine.riposte(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+						break;
+					case DODGE:
+						client.sendMessage(UpdateEngine.dodge(game, overlayCardReferenceIndex, Integer.parseInt(result[0]), Integer.parseInt(result[1])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+						break;
+					case RETREAT:
+						client.sendMessage(UpdateEngine.retreat(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+						break;
+					case KNOCKDOWN:
+						client.sendMessage(UpdateEngine.knockdown(game, overlayCardReferenceIndex, Integer.parseInt(result[0]), Integer.parseInt(result[1])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
 						break;
 					case IVANHOE:
 						client.sendMessage(UpdateEngine.ivanhoe(game, result[0].equals("true")));

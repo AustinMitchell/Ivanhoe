@@ -15,91 +15,8 @@ public class GameState {
 	private boolean playedValueCard = false; //toggle to true every time a player plays a value card. useful for STUNNED implementation
 	private int winningPlayer;
 	private int tokenDrawn;
-	
-	private static final int[] cardTypeData = {Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
-												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, 
-												Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.PURPLE, Type.RED, 
-												Type.RED, Type.RED, Type.RED, Type.RED, Type.RED, 
-												Type.RED, Type.RED, Type.RED, Type.RED, Type.RED, 
-												Type.RED, Type.RED, Type.RED, Type.BLUE, Type.BLUE, 
-												Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, 
-												Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, Type.BLUE, 
-												Type.BLUE, Type.BLUE, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
-												Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
-												Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, Type.YELLOW, 
-												Type.YELLOW, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
-												Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
-												Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, Type.GREEN, 
-												Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
-												Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
-												Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
-												Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, Type.WHITE, 
-												Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
-												Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
-												Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, 
-												Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION, Type.ACTION};
-	
-	private static int[] UNMODIFIED_ARRAY() {
-		int nil = 0;
-		int[] arr =    {3, 3, 3, 3, 4, 
-						4, 4, 4, 5, 5, 
-						5, 5, 7, 7, 3, 
-						3, 3, 3, 3, 3, 
-						4, 4, 4, 4, 4, 
-						4, 5, 5, 2, 2, 
-						2, 2, 3, 3, 3, 
-						3, 4, 4, 4, 4, 
-						5, 5, 2, 2, 2, 
-						2, 3, 3, 3, 3, 
-						3, 3, 3, 3, 4, 
-						4, 1, 1, 1, 1, 
-						1, 1, 1, 1, 1, 
-						1, 1, 1, 1, 1, 
-						2, 2, 2, 2, 2, 
-						2, 2, 2, 3, 3, 
-						3, 3, 3, 3, 3, 
-						3, 6, 6, 6, 6, 
-						nil, nil, nil, nil, nil, 
-						nil, nil, nil, nil, nil, 
-						nil, nil, nil, nil, nil, 
-						nil, nil, nil, nil, nil};
-		return arr;
-	}
-	
-	private static final int[] BASIC_CARDS() {
-		int[] cards = UNMODIFIED_ARRAY();
-		cards[90]  = Card.UNHORSE;
-		cards[91]  = Card.CHANGE_WEAPON;
-		cards[92]  = Card.DROP_WEAPON;
-		cards[93]  = Card.BREAK_LANCE;
-		cards[94]  = Card.RIPOSTE;
-		cards[95]  = Card.DODGE;
-		cards[96]  = Card.RETREAT;
-		cards[97]  = Card.KNOCKDOWN;
-		cards[98]  = Card.OUTMANEUVER;
-		cards[99]  = Card.CHARGE;
-		cards[100] = Card.COUNTERCHARGE;
-		cards[101] = Card.DISGRACE;
-		cards[102] = Card.ADAPT;
-		cards[103] = Card.OUTWIT;
-		cards[104] = Card.SHIELD;
-		cards[105] = Card.STUNNED;
-		cards[106] = Card.IVANHOE;
-		cards[107] = Card.RIPOSTE;
-		cards[108] = Card.RIPOSTE;
-		cards[109] = Card.KNOCKDOWN;
-		return cards;
-	}
-	
-	private static final int[] ALL_SPECIFIC_ACTION(int actionCard) {
-		int[] cards = UNMODIFIED_ARRAY();
-		for (int i=90; i<110; i++) {
-			cards[i] = actionCard;
-		}
-		return cards;
-	}
-	
-	private static final int[] cardValueData = ALL_SPECIFIC_ACTION(Card.RIPOSTE);
+		
+	private static final Card[] INITIAL_DECK = CardData.specificActionDeck(Card.KNOCKDOWN);
 	
 	public static final int TOURNAMENT_NOT_STARTED = -1;
 	
@@ -123,9 +40,8 @@ public class GameState {
 		}
 		result += Flag.CARDS_BEGIN;
 		setTurn(0);
-		for(int i = 0; i < 110; i++) {
-			Card card = new Card(cardTypeData[i], cardValueData[i]);
-			drawDeck.add(card);
+		for(Card c: INITIAL_DECK) {
+			drawDeck.add(c);
 		}
 		drawDeck.shuffle();
 		

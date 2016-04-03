@@ -187,6 +187,26 @@ public class Parser {
 							Integer.parseInt(command[2]));
 					break;
 				}
+				case Card.DODGE: {
+					result = RulesEngine.dodge(game, 
+							Integer.parseInt(command[1]),
+							Integer.parseInt(command[2]),
+							Integer.parseInt(command[3]));
+					break;
+				}
+				case Card.RETREAT: {
+					result = RulesEngine.retreat(game,
+							Integer.parseInt(command[1]),
+							Integer.parseInt(command[2]));
+					break;
+				}
+				case Card.KNOCKDOWN: {
+					result = RulesEngine.knockdown(game, 
+							Integer.parseInt(command[1]),
+							Integer.parseInt(command[2]),
+							Integer.parseInt(command[3]));
+					break;
+				}
 				case Card.IVANHOE: {
 					result = RulesEngine.ivanhoe(game,
 							Integer.parseInt(command[1]),
