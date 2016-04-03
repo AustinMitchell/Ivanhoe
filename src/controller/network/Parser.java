@@ -125,9 +125,11 @@ public class Parser {
 			
 			case Flag.AWARD_TOKEN: {
 				result = RulesEngine.awardToken(game, command[1]);
+
 				String endGameResult = RulesEngine.endGame(game);
 				if (!endGameResult.equals("")) {
 					result += Flag.NEW_COM + endGameResult;
+
 				}
 				break;
 			}
@@ -253,7 +255,6 @@ public class Parser {
 			}
 
 		}
-
 		return result;
 	}
 

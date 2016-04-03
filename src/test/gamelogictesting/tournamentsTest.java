@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import controller.rulesengine.RulesEngine;
+import controller.rulesengine.Validator;
 import model.Card;
 import model.GameState;
 import model.Player;
@@ -157,6 +158,9 @@ public class tournamentsTest {
 		
 		//end the fourth player's turn 
 		RulesEngine.endTurn(game);
+		
+		//award the winner a token
+		RulesEngine.awardToken(game, String.valueOf(game.getTokenDrawn()));
 		
 		//Make sure the first player has won a blue token
 		assertTrue(game.getPlayer(0).playerHasToken());
@@ -912,7 +916,6 @@ public class tournamentsTest {
 		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
 	}
 
-	
 	/*
 	 * winning and getting token
 	 */
@@ -983,6 +986,12 @@ public class tournamentsTest {
 		
 		//end the fourth player's turn 
 		RulesEngine.endTurn(game);
+
+		//award the winner a token
+		RulesEngine.awardToken(game, String.valueOf(game.getTokenDrawn()));
+		
+		//award the winner a token
+		RulesEngine.awardToken(game, String.valueOf(game.getTokenDrawn()));
 		
 		//Make sure the first player has won a blue token
 		assertTrue(game.getPlayer(0).playerHasToken());
@@ -995,11 +1004,108 @@ public class tournamentsTest {
 		assertFalse(game.getPlayer(3).isInTournament());
 	}
 
-	
 	/*
 	 *  winning and choosing token when purple tournament
 	 */
-	
+	@Test
+	public void chooseWinningTokenTest() {
+		int currentPlayer = game.getTurn();
+		
+		//give the player a purple and a red tokens
+		game.getPlayer(0).setToken(Type.PURPLE, true);
+		game.getPlayer(0).setToken(Type.RED, true);
+		
+		//Make sure the first player does not have any tokens
+		assertTrue(game.getPlayer(0).playerHasToken());
+		
+		//Test to make sure the player's hand is of size 4
+		assertEquals(game.getHand(currentPlayer).deckSize(), 4);
+		
+		//first player draws card
+		RulesEngine.drawCard(game);
+		
+		//Test to make sure the first player's hand increased after drawing a card
+		assertEquals(game.getHand(currentPlayer).deckSize(), 5);
+		
+		//first player plays blue two
+		RulesEngine.playValueCard(game, 2);
+		
+		//test to make sure the player's hand decreased by 1 card and his display increased by 1
+		assertEquals(game.getHand(currentPlayer).deckSize(), 4);
+		assertEquals(game.getDisplay(currentPlayer).deckSize(), 1);
+		
+		//end turn and move on to next player
+		RulesEngine.endTurn(game);
+		
+		currentPlayer = game.getTurn(); //update current player position
+		
+		//test to make sure second player's hand is of size 5
+		assertEquals(game.getHand(currentPlayer).deckSize(), 5);
+		
+		//second player draws a card 
+		RulesEngine.drawCard(game);
+		
+		//test to make sure second player's hand increased
+		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
+		
+		//end the second player's turn 
+		RulesEngine.endTurn(game);
+		
+		currentPlayer = game.getTurn(); //update current player position
+		
+		//test to make sure third player's hand is of size 5
+		assertEquals(game.getHand(currentPlayer).deckSize(), 5);
+		
+		//third player draws a card 
+		RulesEngine.drawCard(game);
+		
+		//test to make sure third player's hand increased
+		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
+		
+		//end the third player's turn 
+		RulesEngine.endTurn(game);
+
+		currentPlayer = game.getTurn(); //update current player position
+		
+		//test to make sure fourth player's hand is of size 5
+		assertEquals(game.getHand(currentPlayer).deckSize(), 5);
+		
+		//fourth player draws a card 
+		RulesEngine.drawCard(game);
+		
+		//test to make sure fourth player's hand increased
+		assertEquals(game.getHand(currentPlayer).deckSize(), 6);
+		
+		//set tournament colour to purple
+		RulesEngine.setColour(game, String.valueOf(Type.PURPLE));
+		
+		//end the fourth player's turn 
+		RulesEngine.endTurn(game);
+		
+		currentPlayer = game.getTurn();
+		
+		//test that the winning player has two tokens, purple and red
+		assertTrue(game.getPlayer(currentPlayer).checkToken(Type.PURPLE));
+		assertTrue(game.getPlayer(currentPlayer).checkToken(Type.RED));
+		
+		//call the validateToken function to return an array of tokens the player is able to pick from
+		boolean[] availableTokens = Validator.validateToken(game);
+		
+		//test to make sure the player has these three colours as options to pick from
+		assertTrue(availableTokens[Type.BLUE]);
+		assertTrue(availableTokens[Type.YELLOW]);
+		assertTrue(availableTokens[Type.GREEN]);
+		
+		//test to make sure the player does not have red or purple as available options
+		assertFalse(availableTokens[Type.RED]);
+		assertFalse(availableTokens[Type.PURPLE]);
+		
+		//pick a yellow token to win
+		RulesEngine.awardToken(game, String.valueOf(Type.YELLOW));
+		
+		//test to make sure the player managed to win a yellow token at the end of the purple tournament
+		assertTrue(game.getPlayer(currentPlayer).checkToken(Type.YELLOW));
+	}
 	
 	/*
 	 * losing with a maiden and losing a token
