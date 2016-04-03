@@ -158,6 +158,9 @@ public class tournamentsTest {
 		//end the fourth player's turn 
 		RulesEngine.endTurn(game);
 		
+		//award the winner a token
+		RulesEngine.awardToken(game, String.valueOf(game.getTokenDrawn()));
+		
 		//Make sure the first player has won a blue token
 		assertTrue(game.getPlayer(0).playerHasToken());
 		assertTrue(game.getPlayer(0).checkToken(Type.BLUE));
@@ -983,6 +986,9 @@ public class tournamentsTest {
 		
 		//end the fourth player's turn 
 		RulesEngine.endTurn(game);
+		
+		//award the winner a token
+		RulesEngine.awardToken(game, String.valueOf(game.getTokenDrawn()));
 		
 		//Make sure the first player has won a blue token
 		assertTrue(game.getPlayer(0).playerHasToken());

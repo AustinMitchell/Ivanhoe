@@ -125,7 +125,9 @@ public class Parser {
 			
 			case Flag.AWARD_TOKEN: {
 				result = RulesEngine.awardToken(game, command[1]);
-				result += Flag.NEW_COM + RulesEngine.endGame(game);
+				if(game.isGameOver()) {
+					result += Flag.NEW_COM + Flag.END_GAME;
+				}
 				break;
 			}
 
@@ -230,7 +232,6 @@ public class Parser {
 			}
 
 		}
-
 		return result;
 	}
 
