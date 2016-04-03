@@ -118,7 +118,7 @@ public class Parser {
 				result = RulesEngine.endTurn(game);
 				
 				if(RulesEngine.isTournamentOver(game)) {
-					result += Flag.NEW_COM + RulesEngine.pickToken();
+					result += Flag.NEW_COM + Flag.PICK_TOKEN;
 				}
 				break;
 			}

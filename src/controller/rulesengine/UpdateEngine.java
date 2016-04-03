@@ -116,8 +116,8 @@ public class UpdateEngine {
 		return returnString;
 	}
 	
-	public static String awardToken(GameState game, String col) {
-		String returnString =  Flag.AWARD_TOKEN + Flag.COM_SPLIT + col;
+	public static String awardToken(GameState game, String colour) {
+		String returnString =  Flag.AWARD_TOKEN + Flag.COM_SPLIT + colour;
 		return returnString;
 	}
 	

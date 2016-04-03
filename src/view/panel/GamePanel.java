@@ -507,13 +507,13 @@ public class GamePanel extends ScaledPanel {
 							CardWidget stolenCard = (CardWidget)display[targetIndex].removeIndex(display[targetIndex].numWidgets()-1);
 							
 							if (targetIndex == THIS_PLAYER) {
-								messageScrollBox.addLine(" > " + playerNames.get(guiTurn) + " stole your " + CardData.getCardName(stolenCard.getType(),
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " stole your " + CardData.getCardName(stolenCard.getType(),
 																																	  stolenCard.getValue()));
 							} else if (guiTurn == THIS_PLAYER) {
-								messageScrollBox.addLine(" > You stole " + playerNames.get(targetIndex) + "'s " + CardData.getCardName(stolenCard.getType(),
+								messageScrollBox.addLine(" > You stole " + playerNames.get(toGameTurn(targetIndex)) + "'s " + CardData.getCardName(stolenCard.getType(),
 										  																							   stolenCard.getValue()));
 							} else {
-								messageScrollBox.addLine(" > " + playerNames.get(guiTurn) + " stole " + playerNames.get(targetIndex) + "'s " 
+								messageScrollBox.addLine(" > " + playerNames.get(guiTurn) + " stole " + playerNames.get(toGameTurn(targetIndex)) + "'s " 
 											+ CardData.getCardName(stolenCard.getType(),
 										   			               stolenCard.getValue()));
 							}
@@ -526,7 +526,27 @@ public class GamePanel extends ScaledPanel {
 							break;
 						}
 						case Card.DODGE: {
+							int targetIndex = toGUITurn(Integer.parseInt(command[2]));
+							CardWidget stolenCard = (CardWidget)display[targetIndex].removeIndex(display[targetIndex].numWidgets()-1);
 							
+							if (targetIndex == THIS_PLAYER) {
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " stole your " + CardData.getCardName(stolenCard.getType(),
+																																	  stolenCard.getValue()));
+							} else if (guiTurn == THIS_PLAYER) {
+								messageScrollBox.addLine(" > You stole " + playerNames.get(toGameTurn(targetIndex)) + "'s " + CardData.getCardName(stolenCard.getType(),
+										  																							   stolenCard.getValue()));
+							} else {
+								messageScrollBox.addLine(" > " + playerNames.get(guiTurn) + " stole " + playerNames.get(toGameTurn(targetIndex)) + "'s " 
+											+ CardData.getCardName(stolenCard.getType(),
+										   			               stolenCard.getValue()));
+							}
+							
+							display[guiTurn].addCard(stolenCard);
+							
+							for (int i=0; i<numPlayers; i++) {
+								playerStatus[i].setDisplayValue(game.getAllPlayers().get(i).getDisplayValue(tournamentColour));
+							}
+							break;
 						}
 						default: {
 							break;

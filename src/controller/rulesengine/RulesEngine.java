@@ -11,28 +11,6 @@ import model.Type;
 
 public class RulesEngine {	
 	
-	public static void drawToken(GameState game) {
-		ArrayList<Integer> tokens = new ArrayList<Integer>();
-		tokens.add(Type.PURPLE);
-		tokens.add(Type.RED);
-		tokens.add(Type.BLUE);
-		tokens.add(Type.YELLOW);
-		tokens.add(Type.GREEN);
-		
-		while(tokens.size() > game.getAllPlayers().size()) {
-			tokens.remove(tokens.size()-1);
-		}
-		Random rand = new Random();
-		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			int randomToken = rand.nextInt((tokens.size()));
-			game.getAllPlayers().get(i).setDrawnToken(Integer.valueOf(tokens.get(randomToken).toString()));
-			//game.getAllPlayers().get(i).setToken(Integer.valueOf(tokens.get(randomToken).toString()), true);
-			System.out.println("Random Token Number is: " + randomToken);
-			tokens.remove(randomToken);
-		}
-		setInitialTurn(game);
-	}
-	
 	public static String setInitialTurn(GameState game) {
 		for(int i = 0; i < game.getAllPlayers().size(); i++) {
 			if(game.getAllPlayers().get(i).getDrawnToken() == Type.PURPLE) {
@@ -99,10 +77,6 @@ public class RulesEngine {
 		}
 		*/
 		return result;
-	}
-	
-	public static String pickToken() {
-		return Flag.PICK_TOKEN;
 	}
 	
 	public static String awardToken(GameState game, String col) {
