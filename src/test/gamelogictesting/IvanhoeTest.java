@@ -1,4 +1,4 @@
-package test;
+package test.gamelogictesting;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import controller.network.Client;
 import controller.network.Server;
+import controller.network.Server.ServerState;
 import controller.rulesengine.RulesEngine;
 import controller.rulesengine.UpdateEngine;
 import model.Card;
@@ -18,7 +19,7 @@ import model.Type;
 
 public class IvanhoeTest {
 	public static final String LOCAL = "localhost";
-	public static int PORT = Server.PORT;
+	public static int PORT = Server.PORT-1000;
 	
 	Server server;
 	ArrayList<Client> client;
@@ -39,7 +40,7 @@ public class IvanhoeTest {
 	}
 	
 	@Test
-	public void IvanhoeUnhorseTest() {
+	public void IvanhoeTest() {
 		Card ivanhoe = new Card(Type.ACTION, Card.IVANHOE);
 		Card unhorse = new Card(Type.ACTION, Card.UNHORSE);
 		int purple = Type.PURPLE;
@@ -74,9 +75,8 @@ public class IvanhoeTest {
 			int player1HandSize = client.get(0).getGame().getDrawDeck().deckSize();*/
 			
 			server.getGame().setTournamentColour(purple);
-			GameState serverGame = server.getGame();
-			serverGame.getHand(0).add(unhorse);
-			serverGame.getHand(1).add(ivanhoe);
+			server.getGame().getHand(0).add(unhorse);
+			server.getGame().getHand(1).add(ivanhoe);
 			
 			GameState game1 = client.get(0).getGame();
 			GameState game2 = client.get(1).getGame();
@@ -84,16 +84,17 @@ public class IvanhoeTest {
 
 			client.get(0).sendMessage(Flag.BEGIN_TOKEN_DRAW_CONTINUE);
 			client.get(1).sendMessage(Flag.BEGIN_TOKEN_DRAW_CONTINUE);
-			server.beginDrawTokenIteration();
-			server.beginDrawTokenIteration();
+			server.handleState();
+			server.handleState();
 			
-			
-			client.get(0).sendMessage(RulesEngine.unhorse(serverGame, 8, Type.BLUE));
+			int player1HandSize = server.getGame().getHand(0).deckSize();
+			client.get(0).sendMessage(UpdateEngine.unhorse(server.getGame(), player1HandSize-1, Type.BLUE));
+			server.handleState();
 			assertEquals(server.getServerState(), Server.ServerState.IVANHOE);
-			client.get(1).sendMessage(Flag.IVANHOE_PLAYED);
-			
+			client.get(1).sendMessage(Flag.IVANHOE_RESPONSE + ":" + "true");
+			server.handleState();
 			assertEquals(server.getGame().getTournamentColour(), Type.PURPLE);
-			assertEquals(server.getGame().getDiscardDeck().deckSize(), 0);
+			assertEquals(server.getGame().getDiscardDeck().deckSize(), 2);
 			
 			
 			

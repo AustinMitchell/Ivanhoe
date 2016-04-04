@@ -13,7 +13,7 @@ import java.io.*;
 
 public class Server{
 	public enum ServerState {
-		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE
+		WAITING_FOR_FIRST, WAITING_FOR_SETUP, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE
 	}
 	
 	static final Logger             log = Logger.getLogger("Server");
@@ -299,14 +299,17 @@ public class Server{
 		return game;
 	}
 	
-	public void handleState(ServerState st) throws IOException {
-		switch (st) {
+	public void handleState() throws IOException {
+		switch (serverState) {
 			case BEGIN_DRAW_TOKEN:
 				beginDrawTokenIteration();
 				break;
 			case WAITING_FOR_FIRST:
 				waitForPlayer();
-				while(!waitForFirstPlayerSetupInfo()) {}
+				serverState = ServerState.WAITING_FOR_SETUP;
+				break;
+			case WAITING_FOR_SETUP:
+				while(!waitForFirstPlayerSetupInfo());
 				break;
 			case WAITING_FOR_ALL:
 				waitForPlayer();
@@ -325,7 +328,7 @@ public class Server{
 
 	public void serverLoop() throws IOException {
 		while(true) {
-			handleState(serverState);
+			handleState();
 		}
 	}
 	
