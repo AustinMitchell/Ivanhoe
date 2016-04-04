@@ -294,6 +294,11 @@ public class Server{
 		}
 	}
 	
+	//function to return game instance. purely for testing purposes
+	public GameState getGame() {
+		return game;
+	}
+	
 	public void handleState(ServerState st) throws IOException {
 		switch (st) {
 			case BEGIN_DRAW_TOKEN:
