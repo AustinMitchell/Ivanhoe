@@ -1,4 +1,4 @@
-package test;
+package test.gamelogictesting;
 
 import static org.junit.Assert.*;
 
@@ -59,9 +59,9 @@ public class ChangeTournamentColourTest {
 	public void changeWeaponTest() {
 		String returnString = "";
 		int playerPos = game.getTurn();
-		Card dropWeaponCard = new Card(Type.ACTION, Card.DROP_WEAPON);
+		Card changeweapon = new Card(Type.ACTION, Card.CHANGE_WEAPON);
 		game.setTournamentColour(Type.BLUE);
-		game.getAllPlayers().get(playerPos).getHand().add(dropWeaponCard);
+		game.getAllPlayers().get(playerPos).getHand().add(changeweapon);
 		int cardPos = 0;
 		for(int i = 0; i < game.getAllPlayers().get(playerPos).getHand().deckSize(); i++) {
 			if((game.getAllPlayers().get(playerPos).getHand().getCard(i).getCardType() == Type.ACTION) &&
