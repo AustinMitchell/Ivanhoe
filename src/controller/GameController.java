@@ -15,7 +15,6 @@ public class GameController {
 	private ArrayList<String> playerNames;
 	
 	public GameController(SimpleGUIApp mainApp) {
-		client = new Client();
 		mainApp.setBackgroundColor(new Color(175,117,68));
 		screen = new PanelCollection(0, 0, mainApp.getWidth(), mainApp.getHeight());
 		
@@ -71,11 +70,15 @@ public class GameController {
 		screen.clear();
 		screen.addPanel(new ConnectPanel(this));
 		screen.setCurrentPanel(0);
+		if (client != null) {
+			client.killClient();
+		}
 	}
 	// Either sets up a new UI, or leaves the current panel and tells it the connection failed
 	public void connectToServer(ConnectPanel connectPanel, String address, String username) {
 		if (!username.trim().equals("")) {
 			if (isValidIPAddress(address)) {
+				client = new Client();
 				client.connect(address, username);
 				while (client.waitingForConnection()) {}
 				if (client.connectPassed()) {

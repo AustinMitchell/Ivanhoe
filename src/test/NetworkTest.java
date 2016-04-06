@@ -14,7 +14,7 @@ import model.Flag;
 
 public class NetworkTest {	
 	public static final String LOCAL = "localhost";
-	public static int PORT = Server.PORT;
+	public static int PORT = Server.getCurrentPort();
 	
 	Server server;
 	ArrayList<Client> client;

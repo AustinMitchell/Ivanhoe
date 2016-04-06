@@ -16,8 +16,8 @@ public class GameState {
 	private int winningPlayer;
 	private int tokenDrawn;
 		
-	private static final float[] proportions = {0.5f, 0.5f};
-	private static final int[] actionCards = {Card.IVANHOE, Card.RIPOSTE, Card.KNOCKDOWN};
+	private static final float[] proportions = {0.3f, 0.7f};
+	private static final int[] actionCards = {Card.IVANHOE, Card.OUTWIT};
 	private static final Card[] INITIAL_DECK = CardData.splitActionDeck(proportions, actionCards);
 	
 	public static final int TOURNAMENT_NOT_STARTED = -1;
@@ -152,14 +152,20 @@ public class GameState {
 	}
 	
 	public boolean isGameOver() {
-		if(players.size()  < 4) {
+		if(players.size() < 4) {
 			for(int i = 0; i < players.size(); i++) {
-				if(players.get(i).hasWonAll()) gameOver = true;
+				if(players.get(i).hasWonAll()) { 
+					gameOver = true;
+					break;
+				}
 				else gameOver = false;
 			}
 		} else {
 			for(int i = 0; i < players.size(); i++) {
-				if(players.get(i).hasWonFour()) gameOver = true;
+				if(players.get(i).hasWonFour()) {
+					gameOver = true;
+					break;
+				}
 				else gameOver = false;
 			}
 		}

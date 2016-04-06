@@ -17,6 +17,7 @@ import view.utilitypanel.CardDisplayPanel;
 import view.utilitypanel.TokenBar;
 
 public class IvanhoeOverlay extends OverlayPanel {	
+	public static final int TIMEOUT = 15000;
 	public static final CustomDraw ARROW = new CustomDraw() {
 			public void draw(Widget w) {
 				draw.setStroke(Color.white, 6);
@@ -163,12 +164,196 @@ public class IvanhoeOverlay extends OverlayPanel {
 				break;
 			}
 			case Card.DODGE: {
+				Canvas arrow1 = new Canvas();
+				arrow1.setCustomDraw(ARROW);
+				
+				Canvas arrow2 = new Canvas();
+				arrow2.setCustomDraw(ARROW);
+				
+				String position = "";
+				int targetGUI = toGUITurn(Integer.parseInt(command[2]));
+				switch (game.getAllPlayers().size()) {
+					case 2:
+						switch (targetGUI) {
+							case 1:
+								position = "";
+								break;
+						}
+						break;
+					case 3:
+						switch (targetGUI) {
+							case 1:
+								position = "(Left)";
+								break;
+							case 2:
+								position = "(Right)";
+								break;
+						}
+						break;
+					case 4:
+						switch (targetGUI) {
+							case 1:
+								position = "(Left)";
+								break;
+							case 2:
+								position = "(Top)";
+								break;
+							case 3: 
+								position = "(Right)";
+								break;
+						}
+						break;
+					case 5:
+						switch (targetGUI) {
+							case 1:
+								position = "(Left)";
+								break;
+							case 2:
+								position = "(Top-Left)";
+								break;
+							case 3: 
+								position = "(Top-Right)";
+								break;
+							case 4: 
+								position = "(Right)";
+								break;
+						}
+						break;
+				}
+				if (toGameTurn(targetGUI) == realPlayerIndex) {
+					position = "You";
+				}
+				Label target = new Label(game.getPlayer(Integer.parseInt(command[2])).getName() + " " + position);
+				target.setTextColor(Color.white);
+				target.setFont(new Font("Arial", Font.PLAIN, 18));
+				target.setAlignment(Alignment.WEST);
+				
+				Card c = game.getDisplay(toGameTurn(targetGUI)).getCard(Integer.parseInt(command[3]));
+				CardWidget targetCard = new CardWidget(c.getCardType(), c.getCardValue());
+				CardDisplayPanel targetDisplay = new CardDisplayPanel(Orientation.UP, true);
+				targetDisplay.addCard(targetCard);
+				
+				addWidget(actionDisplay, 20, 35, 10, 30);
+				addWidget(arrow1, 33, 46, 10, 8);
+				addWidget(target, 45, 40, 12, 20);
+				addWidget(arrow2, 59, 46, 10, 8);
+				addWidget(targetDisplay, 71, 35, 10, 30);
 				break;
 			}
 			case Card.RETREAT: {
+				Canvas arrow = new Canvas();
+				arrow.setCustomDraw(ARROW);
+				
+				Card c = game.getDisplay(game.getTurn()).getCard(Integer.parseInt(command[2]));
+				CardWidget targetCard = new CardWidget(c.getCardType(), c.getCardValue());
+				CardDisplayPanel targetDisplay = new CardDisplayPanel(Orientation.UP, true);
+				targetDisplay.addCard(targetCard);
+				
+				addWidget(actionDisplay, 32, 35, 10, 30);
+				addWidget(arrow, 45, 46, 10, 8);
+				addWidget(targetDisplay, 58, 40, 10, 20);
 				break;
 			}
 			case Card.OUTWIT: {
+				Canvas arrow = new Canvas();
+				arrow.setCustomDraw(ARROW);
+				
+				String position = "";
+				int targetGUI = toGUITurn(Integer.parseInt(command[4]));
+				switch (game.getAllPlayers().size()) {
+					case 2:
+						switch (targetGUI) {
+							case 1:
+								position = "";
+								break;
+						}
+						break;
+					case 3:
+						switch (targetGUI) {
+							case 1:
+								position = "(Left)";
+								break;
+							case 2:
+								position = "(Right)";
+								break;
+						}
+						break;
+					case 4:
+						switch (targetGUI) {
+							case 1:
+								position = "(Left)";
+								break;
+							case 2:
+								position = "(Top)";
+								break;
+							case 3: 
+								position = "(Right)";
+								break;
+						}
+						break;
+					case 5:
+						switch (targetGUI) {
+							case 1:
+								position = "(Left)";
+								break;
+							case 2:
+								position = "(Top-Left)";
+								break;
+							case 3: 
+								position = "(Top-Right)";
+								break;
+							case 4: 
+								position = "(Right)";
+								break;
+						}
+						break;
+				}
+				if (toGameTurn(targetGUI) == realPlayerIndex) {
+					position = "You";
+				}
+				Label target = new Label(game.getPlayer(Integer.parseInt(command[4])).getName() + " " + position);
+				target.setTextColor(Color.white);
+				target.setFont(new Font("Arial", Font.PLAIN, 18));
+				target.setAlignment(Alignment.WEST);
+				
+				addWidget(actionDisplay, 32, 15, 10, 30);
+				addWidget(arrow, 45, 26, 10, 8);
+				addWidget(target, 58, 20, 30, 20);
+				
+				String playerDeck = command[2];
+				String targetDeck = command[5];
+				CardWidget playerCard, targetCard;
+				
+				if (playerDeck.equals(Flag.DISPLAY)) {
+					Card c = game.getDisplay(game.getTurn()).getCard(Integer.parseInt(command[3]));
+					playerCard = new CardWidget(c.getCardType(), c.getCardValue());
+				} else if(playerDeck.equals(Flag.SHIELD)) {
+					playerCard = new CardWidget(Type.ACTION, Card.SHIELD);
+				} else {
+					playerCard = new CardWidget(Type.ACTION, Card.STUNNED);
+				}
+				if (targetDeck.equals(Flag.DISPLAY)) {
+					Card c = game.getDisplay(Integer.parseInt(command[4])).getCard(Integer.parseInt(command[6]));
+					targetCard = new CardWidget(c.getCardType(), c.getCardValue());
+				} else if(playerDeck.equals(Flag.SHIELD)) {
+					targetCard = new CardWidget(Type.ACTION, Card.SHIELD);
+				} else {
+					targetCard = new CardWidget(Type.ACTION, Card.STUNNED);
+				}
+				
+				Label swap = new Label("Swapping for:");
+				swap.setTextColor(Color.white);
+				swap.setFont(new Font("Arial", Font.PLAIN, 18));
+				
+				CardDisplayPanel playerDisplay = new CardDisplayPanel(Orientation.UP, true);
+				CardDisplayPanel targetDisplay = new CardDisplayPanel(Orientation.UP, true);
+				playerDisplay.addCard(playerCard);
+				targetDisplay.addCard(targetCard);
+				
+				addWidget(playerDisplay, 32, 55, 10, 30);
+				addWidget(swap, 45, 66, 10, 8);
+				addWidget(targetDisplay, 58, 55, 10, 30);
+				
 				break;
 			}
 		}
@@ -185,7 +370,7 @@ public class IvanhoeOverlay extends OverlayPanel {
 	public void update() {
 		super.update();
 		if (!overlayActionComplete) {
-			if (System.currentTimeMillis() - startTime > 8000) {
+			if (System.currentTimeMillis() - startTime > TIMEOUT) {
 				finalCommandString = "false";
 				overlayActionComplete = true;
 			}

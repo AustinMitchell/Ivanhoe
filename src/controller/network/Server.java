@@ -13,7 +13,7 @@ import java.io.*;
 
 public class Server{
 	public enum ServerState {
-		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE
+		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE, GAMEOVER, RESTART
 	}
 	
 	static final Logger             log = Logger.getLogger("Server");
@@ -37,11 +37,21 @@ public class Server{
 	private int                     ivanhoePlayed;
 	private int                     ivanhoeResponsesNeeded;
 	
-	public Server(int port) throws IOException {
-		this.maxPlayers = 1;
-		sockets = new ArrayList<Socket>();
-		serverSocket = new ServerSocket(port);
+	private int                     disconnectResponsesNeeded;
+	
+	private boolean run;
+	
+	public Server() throws IOException {
+		serverSocket = new ServerSocket(PORT);
 		serverSocket.setSoTimeout(1000000);
+	}
+	
+	private void setupServer() throws IOException {
+		System.out.println("Setting up new server...");
+		
+		run = true;
+		maxPlayers = 1;
+		sockets = new ArrayList<Socket>();
 		players = new ArrayList<Player>();
 		in  = new ArrayList<InputThread>();
 		out = new ArrayList<OutputThread>();
@@ -241,6 +251,15 @@ public class Server{
 		}
 		
 		updateString = Parser.networkSplitter(updateString, game);
+		for (String command: updateString.split(Flag.NEW_COM)) {
+			splitString = command.split(":");
+			if (splitString[0].equals(Flag.END_GAME)) {
+				serverState = ServerState.GAMEOVER;
+				disconnectResponsesNeeded = players.size();
+				break;
+			}
+		}
+		
 		updateClients(updateString);
 	}
 	
@@ -294,8 +313,16 @@ public class Server{
 		}
 	}
 	
-	public void handleState(ServerState st) throws IOException {
-		switch (st) {
+	public void gameOverIteration() throws IOException {
+		getUpdate();
+		disconnectResponsesNeeded -= 1;
+		if (disconnectResponsesNeeded == 0) {
+			serverState = ServerState.RESTART;
+		}
+	}
+	
+	public void handleState() throws IOException {
+		switch (serverState) {
 			case BEGIN_DRAW_TOKEN:
 				beginDrawTokenIteration();
 				break;
@@ -315,21 +342,35 @@ public class Server{
 			case IVANHOE:
 				ivanhoeIteration();
 				break;
+			case GAMEOVER:
+				gameOverIteration();
+				break;
+			case RESTART:
+				run = false;
+				break;
 		}
 	}
 
 	public void serverLoop() throws IOException {
-		while(true) {
-			handleState(serverState);
+		while(run) {
+			handleState();
 		}
 	}
 	
 	public static void main(String[] args) {
+		Server server = null;
 		try {
-			Server server = new Server(PORT);
-			server.serverLoop();
+			server = new Server();
+			while(true) {
+				server.setupServer();
+				server.serverLoop();
+				System.out.println("Restarting server...");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			if (server != null) {
+				server.killServer();
+			}
 		}
 		
 	}

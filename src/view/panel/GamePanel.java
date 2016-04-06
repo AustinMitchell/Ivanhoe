@@ -23,7 +23,7 @@ import view.utilitypanel.*;
 
 public class GamePanel extends ScaledPanel {
 	public enum OverlayCommand {
-		START_TOURNAMENT, WIN_TOKEN, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE, RETREAT, KNOCKDOWN, STUNNED, OUTWIT
+		START_TOURNAMENT, WIN_TOKEN, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE, RETREAT, KNOCKDOWN, STUNNED, OUTWIT, END_GAME
 	}
 	
 	public static final int THIS_PLAYER = 0;
@@ -321,6 +321,10 @@ public class GamePanel extends ScaledPanel {
 			int guiTurn = toGUITurn(gameTurn);
 			Player player = client.getGame().getAllPlayers().get(gameTurn);
 			switch(command[0]) {
+				case Flag.END_GAME: {
+					prepareOverlay(OverlayCommand.END_GAME, 0);
+					break;
+				}
 				// After drawing, if a player can start a tournament
 				case Flag.CAN_START_TOURNAMENT : {
 					switch(command[1]) {
@@ -691,10 +695,10 @@ public class GamePanel extends ScaledPanel {
 								messageScrollBox.addLine(" > You swapped your " + CardData.getCardName(playerCard.getType(), playerCard.getValue())
 										+ " for " + playerNames.get(target) + "'s " + CardData.getCardName(targetCard.getType(), targetCard.getValue()));
 							} else if (targetGUI == THIS_PLAYER) {
-								messageScrollBox.addLine(" > " + playerNames.get(target) + " swapped their " + CardData.getCardName(playerCard.getType(), playerCard.getValue())
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " swapped their " + CardData.getCardName(playerCard.getType(), playerCard.getValue())
 										+ " for your " + CardData.getCardName(targetCard.getType(), targetCard.getValue()));
 							} else {
-								messageScrollBox.addLine(" > " + playerNames.get(target) + " swapped their " + CardData.getCardName(playerCard.getType(), playerCard.getValue())
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " swapped their " + CardData.getCardName(playerCard.getType(), playerCard.getValue())
 										+ " for " + playerNames.get(target) + "'s " + CardData.getCardName(targetCard.getType(), targetCard.getValue()));
 							}
 							
@@ -1056,10 +1060,12 @@ public class GamePanel extends ScaledPanel {
 				case OUTWIT:
 					currentOverlay = new OutwitOverlay(descriptionBox, game, realPlayerIndex, display);
 					break;
-				case STUNNED: {
+				case STUNNED:
 					currentOverlay = new StunOverlay(descriptionBox, game, realPlayerIndex, hand, display);
 					break;
-				}
+				case END_GAME:
+					currentOverlay = new GameOverOverlay(descriptionBox, game, realPlayerIndex);
+					break;
 				default:
 					break;
 			}
@@ -1107,6 +1113,7 @@ public class GamePanel extends ScaledPanel {
 					case OUTWIT:
 						client.sendMessage(UpdateEngine.outwit(game, overlayCardReferenceIndex, result[0], Integer.parseInt(result[1]),
 								Integer.parseInt(result[2]), result[3], Integer.parseInt(result[4])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
 						break;
 					case STUNNED:
 						client.sendMessage(UpdateEngine.stun(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
@@ -1114,6 +1121,11 @@ public class GamePanel extends ScaledPanel {
 						break;
 					case IVANHOE:
 						client.sendMessage(UpdateEngine.ivanhoe(game, result[0].equals("true")));
+						messageScrollBox.addRepeatedTextLine("** Wait for other opponents to respond **");
+						break;
+					case END_GAME:
+						client.sendMessage(Flag.CLIENT_DISCONNECT);
+						controller.mainScreen();
 						break;
 					default:
 						break;
