@@ -81,7 +81,6 @@ public class RulesEngine {
 		
 		int playerPos = game.getWinningPlayer();
 		game.getPlayer(playerPos).setToken(colour, true); // give player a winning token
-		System.out.println("Giving player " + playerPos + " a token: " + colour);
 		
 		return Flag.AWARD_TOKEN + Flag.COM_SPLIT + colour;
 	}
@@ -106,7 +105,6 @@ public class RulesEngine {
 			result = Flag.END_TURN + withdrawState; 
 		}
 		else {
-			System.out.println("ending tournament");
 			game.nextTurn();
 			String endTournamentCommand = Flag.NEW_COM + endTournament(game);
 			result = Flag.END_TURN + withdrawState + endTournamentCommand;
@@ -430,7 +428,9 @@ public class RulesEngine {
 	//Process Adapt (absolve)
 	public static String adapt(GameState game, int cardPos) {
 		String returnString = Flag.ACTION_CARD + ":" + cardPos;
-		Boolean[] values = new Boolean[8]; //create a boolean array of size 8. it is of size 8 to account for all possible card values
+		// Need to capture values from 2 to 7, for make array from 0 to 7 (i.e. size of 8)
+		Boolean[] values = new Boolean[8];
+
 		int playerPos = game.getTurn();
 		boolean discardedCard = false;
 		
@@ -559,7 +559,8 @@ public class RulesEngine {
 	
 	//Process Stun
 	public static String stun(GameState game, int cardPos, int targetPos) {
-		String returnString = Flag.ACTION_CARD + ":" + cardPos;
+		String returnString = Flag.ACTION_CARD + ":" + cardPos + ":" + targetPos;
+
 		int playerPos = game.getTurn();
 		game.getHand(playerPos).moveCardTo(cardPos, game.getStun(targetPos));
 

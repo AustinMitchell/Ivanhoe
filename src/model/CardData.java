@@ -92,6 +92,22 @@ public class CardData {
 		return cards;
 	}
 	
+	// make sure proportions add up to at least 1.
+	// equal number of proportions to number of action cards
+	public static final Card[] splitActionDeck(float[] proportion, int[] actionCardValue) {
+		Card[] cards = UNMODIFIED_ARRAY();
+		int action = 0;
+		float currentPercentage = 0;
+		for (int i=90; i<110; i++) {
+			if (((i-90)/20f) > proportion[action] + currentPercentage) {
+				currentPercentage += proportion[action];
+				action++;
+			}
+			cards[i] = new Card(Type.ACTION, actionCardValue[action]);
+		}
+		return cards;
+	}
+	
 	private static Image BACK_IMAGE;
 	
 	private static final String DESCRIPTION_PATH = "descriptions.txt";

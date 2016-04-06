@@ -13,7 +13,7 @@ import java.io.*;
 
 public class Server{
 	public enum ServerState {
-		WAITING_FOR_FIRST, WAITING_FOR_SETUP, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE
+		WAITING_FOR_FIRST, WAITING_FOR_SETUP, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE, GAMEOVER, RESTART
 	}
 	
 	static final Logger             log = Logger.getLogger("Server");
@@ -37,11 +37,21 @@ public class Server{
 	private int                     ivanhoePlayed;
 	private int                     ivanhoeResponsesNeeded;
 	
+	private int                     disconnectResponsesNeeded;
+	
+	private boolean run;
+	
 	public Server(int port) throws IOException {
-		this.maxPlayers = 1;
-		sockets = new ArrayList<Socket>();
 		serverSocket = new ServerSocket(port);
 		serverSocket.setSoTimeout(1000000);
+	}
+	
+	public void setupServer() throws IOException {
+		System.out.println("Setting up new server...");
+		
+		run = true;
+		maxPlayers = 1;
+		sockets = new ArrayList<Socket>();
 		players = new ArrayList<Player>();
 		in  = new ArrayList<InputThread>();
 		out = new ArrayList<OutputThread>();
@@ -126,7 +136,7 @@ public class Server{
 			}
 			
             Player p = new Player(name);
-            System.out.println(name);
+            System.out.println("Player connected: " + name);
             players.add(p);
             sockets.add(pSocket);
             result = getPlayerClientInetAddress(players.size()-1);
@@ -241,6 +251,15 @@ public class Server{
 		}
 		
 		updateString = Parser.networkSplitter(updateString, game);
+		for (String command: updateString.split(Flag.NEW_COM)) {
+			splitString = command.split(":");
+			if (splitString[0].equals(Flag.END_GAME)) {
+				serverState = ServerState.GAMEOVER;
+				disconnectResponsesNeeded = players.size();
+				break;
+			}
+		}
+		
 		updateClients(updateString);
 	}
 	
@@ -271,7 +290,7 @@ public class Server{
 		if (splitString[0].equals(Flag.IVANHOE_RESPONSE)) {
 			// If someone played Ivanhoe, update the value to reflect the player who played it
 			if (splitString[1].equals("true")) {
-				ivanhoePlayed = (int)update[0];
+				ivanhoePlayed = (Integer)update[0];
 			}
 			ivanhoeResponsesNeeded--;
 			// If we receive responses equal to 1 less than the number of players (as the instigator does not give input)
@@ -294,6 +313,13 @@ public class Server{
 		}
 	}
 	
+	public void gameOverIteration() throws IOException {
+		getUpdate();
+		disconnectResponsesNeeded -= 1;
+		if (disconnectResponsesNeeded == 0) {
+			serverState = ServerState.RESTART;
+		}
+	}
 	//function to return game instance. purely for testing purposes
 	public GameState getGame() {
 		return game;
@@ -323,21 +349,35 @@ public class Server{
 			case IVANHOE:
 				ivanhoeIteration();
 				break;
+			case GAMEOVER:
+				gameOverIteration();
+				break;
+			case RESTART:
+				run = false;
+				break;
 		}
 	}
 
 	public void serverLoop() throws IOException {
-		while(true) {
+		while(run) {
 			handleState();
 		}
 	}
 	
 	public static void main(String[] args) {
+		Server server = null;
 		try {
-			Server server = new Server(PORT);
-			server.serverLoop();
+			server = new Server(Server.PORT);
+			while(true) {
+				server.setupServer();
+				server.serverLoop();
+				System.out.println("Restarting server...");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			if (server != null) {
+				server.killServer();
+			}
 		}
 		
 	}

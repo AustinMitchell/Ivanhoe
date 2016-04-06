@@ -23,7 +23,7 @@ import view.utilitypanel.*;
 
 public class GamePanel extends ScaledPanel {
 	public enum OverlayCommand {
-		START_TOURNAMENT, WIN_TOKEN, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE, RETREAT, KNOCKDOWN
+		START_TOURNAMENT, WIN_TOKEN, UNHORSE, CHANGE_WEAPON, IVANHOE, BREAK_LANCE, RIPOSTE, DODGE, RETREAT, KNOCKDOWN, STUNNED, OUTWIT, END_GAME
 	}
 	
 	public static final int THIS_PLAYER = 0;
@@ -301,7 +301,7 @@ public class GamePanel extends ScaledPanel {
 		super.draw();
 		
 		StatusBar s = playerStatus[game.getTurn()];
-		draw.setColors(null, new Color(0, 200, 200), 2);
+		draw.setColors(null, new Color(255, 50, 50), 2);
 		draw.rect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
 	}
 	
@@ -321,6 +321,10 @@ public class GamePanel extends ScaledPanel {
 			int guiTurn = toGUITurn(gameTurn);
 			Player player = client.getGame().getAllPlayers().get(gameTurn);
 			switch(command[0]) {
+				case Flag.END_GAME: {
+					prepareOverlay(OverlayCommand.END_GAME, 0);
+					break;
+				}
 				// After drawing, if a player can start a tournament
 				case Flag.CAN_START_TOURNAMENT : {
 					switch(command[1]) {
@@ -503,7 +507,7 @@ public class GamePanel extends ScaledPanel {
 							tournamentColourBar.enableToken(Type.GREEN);
 							tournamentColour = Type.GREEN;
 							for (int i=0; i<numPlayers; i++) {
-								playerStatus[i].setDisplayValue(game.getAllPlayers().get(i).getDisplayValue(tournamentColour));
+								playerStatus[i].setDisplayValue(game.getDisplayValue(i));
 							}
 							break;
 						}
@@ -522,13 +526,13 @@ public class GamePanel extends ScaledPanel {
 							}
 							
 							for (int i=0; i<numPlayers; i++) {
-								playerStatus[i].setDisplayValue(game.getAllPlayers().get(i).getDisplayValue(tournamentColour));
+								playerStatus[i].setDisplayValue(game.getDisplayValue(i));
 							}
 							break;
 						}
 						case Card.RIPOSTE: {
 							int targetIndex = toGUITurn(Integer.parseInt(command[2]));
-							CardWidget stolenCard = (CardWidget)display[targetIndex].removeIndex(display[targetIndex].numWidgets()-1);
+							CardWidget stolenCard = (CardWidget)display[targetIndex].removeIndex(display[targetIndex].size()-1);
 							
 							if (targetIndex == THIS_PLAYER) {
 								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " stole your " + CardData.getCardName(stolenCard.getType(),
@@ -545,7 +549,7 @@ public class GamePanel extends ScaledPanel {
 							display[guiTurn].addCard(stolenCard);
 							
 							for (int i=0; i<numPlayers; i++) {
-								playerStatus[i].setDisplayValue(game.getAllPlayers().get(i).getDisplayValue(tournamentColour));
+								playerStatus[i].setDisplayValue(game.getDisplayValue(i));
 							}
 							break;
 						}
@@ -566,7 +570,7 @@ public class GamePanel extends ScaledPanel {
 																   discardCard.getValue()));
 							}
 														
-							playerStatus[toGameTurn(targetCardIndex)].setDisplayValue(game.getPlayer(toGameTurn(targetCardIndex)).getDisplayValue(tournamentColour));
+							playerStatus[toGameTurn(targetIndex)].setDisplayValue(game.getDisplayValue(toGameTurn(targetIndex)));
 							break;
 						}
 						case Card.RETREAT: {
@@ -580,7 +584,7 @@ public class GamePanel extends ScaledPanel {
 								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " returned their " + CardData.getCardName(discardCard.getType(), discardCard.getValue()) + " to their hand");
 							}
 							
-							playerStatus[gameTurn].setDisplayValue(game.getPlayer(gameTurn).getDisplayValue(tournamentColour));
+							playerStatus[gameTurn].setDisplayValue(game.getDisplayValue(gameTurn));
 							break;
 						}
 						case Card.KNOCKDOWN: {
@@ -601,6 +605,154 @@ public class GamePanel extends ScaledPanel {
 							
 							hand[guiTurn].addCard(stolenCard);
 							
+							break;
+						}
+						case Card.OUTMANEUVER: {
+							for (int i=0; i<display.length; i++) {
+								display[i].clear();
+								for (Card c: game.getDisplay(toGameTurn(i)).getAllCards()) {
+									display[i].addCard(new CardWidget(c.getCardType(), c.getCardValue()));
+								}
+							}
+							for (int i=0; i<playerStatus.length; i++) {
+								playerStatus[i].setDisplayValue(game.getDisplayValue(i));
+							}
+							break;
+						}
+						case Card.CHARGE: {
+							for (int i=0; i<display.length; i++) {
+								display[i].clear();
+								for (Card c: game.getDisplay(toGameTurn(i)).getAllCards()) {
+									display[i].addCard(new CardWidget(c.getCardType(), c.getCardValue()));
+								}
+							}
+							for (int i=0; i<playerStatus.length; i++) {
+								playerStatus[i].setDisplayValue(game.getDisplayValue(i));
+							}
+							break;
+						}
+						case Card.COUNTERCHARGE: {
+							for (int i=0; i<display.length; i++) {
+								display[i].clear();
+								for (Card c: game.getDisplay(toGameTurn(i)).getAllCards()) {
+									display[i].addCard(new CardWidget(c.getCardType(), c.getCardValue()));
+								}
+							}
+							for (int i=0; i<playerStatus.length; i++) {
+								playerStatus[i].setDisplayValue(game.getDisplayValue(i));
+							}
+							break;
+						}
+						case Card.DISGRACE: {
+							for (int i=0; i<display.length; i++) {
+								display[i].clear();
+								for (Card c: game.getDisplay(toGameTurn(i)).getAllCards()) {
+									display[i].addCard(new CardWidget(c.getCardType(), c.getCardValue()));
+								}
+							}
+							for (int i=0; i<playerStatus.length; i++) {
+								playerStatus[i].setDisplayValue(game.getDisplayValue(i));
+							}
+							break;
+						}
+						case Card.ADAPT: {
+							for (int i=0; i<display.length; i++) {
+								display[i].clear();
+								for (Card c: game.getDisplay(toGameTurn(i)).getAllCards()) {
+									display[i].addCard(new CardWidget(c.getCardType(), c.getCardValue()));
+								}
+							}
+							for (int i=0; i<playerStatus.length; i++) {
+								playerStatus[i].setDisplayValue(game.getDisplayValue(i));
+							}
+							break;
+						}
+						case Card.OUTWIT: {
+							String playerDeck = command[2];
+							int playerCardIndex = Integer.parseInt(command[3]);
+							int target = Integer.parseInt(command[4]);
+							int targetGUI = toGUITurn(target);
+							String targetDeck = command[5];
+							int targetCardIndex = Integer.parseInt(command[6]);
+							
+							CardWidget playerCard, targetCard;
+							if (playerDeck.equals(Flag.DISPLAY)) {
+								playerCard = (CardWidget)display[guiTurn].getIndex(playerCardIndex);
+							} else if (playerDeck.equals(Flag.SHIELD)) {
+								playerCard = new CardWidget(Type.ACTION, Card.SHIELD);
+							} else {
+								playerCard = new CardWidget(Type.ACTION, Card.STUNNED);
+							}
+							if (targetDeck.equals(Flag.DISPLAY)) {
+								targetCard = (CardWidget)display[targetGUI].getIndex(targetCardIndex);
+							} else if (targetDeck.equals(Flag.SHIELD)) {
+								targetCard = new CardWidget(Type.ACTION, Card.SHIELD);
+							} else {
+								targetCard = new CardWidget(Type.ACTION, Card.STUNNED);
+							}
+							
+							if (guiTurn == THIS_PLAYER) {
+								messageScrollBox.addLine(" > You swapped your " + CardData.getCardName(playerCard.getType(), playerCard.getValue())
+										+ " for " + playerNames.get(target) + "'s " + CardData.getCardName(targetCard.getType(), targetCard.getValue()));
+							} else if (targetGUI == THIS_PLAYER) {
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " swapped their " + CardData.getCardName(playerCard.getType(), playerCard.getValue())
+										+ " for your " + CardData.getCardName(targetCard.getType(), targetCard.getValue()));
+							} else {
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " swapped their " + CardData.getCardName(playerCard.getType(), playerCard.getValue())
+										+ " for " + playerNames.get(target) + "'s " + CardData.getCardName(targetCard.getType(), targetCard.getValue()));
+							}
+							
+							if (game.getPlayer(gameTurn).hasShield()) {
+								playerStatus[gameTurn].enableShield();
+							} else {
+								playerStatus[gameTurn].disableShield();
+							}
+							if (game.getPlayer(gameTurn).isStunned()) {
+								playerStatus[gameTurn].enableStun();
+							} else {
+								playerStatus[gameTurn].disableStun();
+							}
+							if (game.getPlayer(target).hasShield()) {
+								playerStatus[target].enableShield();
+							} else {
+								playerStatus[target].disableShield();
+							}
+							if (game.getPlayer(target).isStunned()) {
+								playerStatus[target].enableStun();
+							} else {
+								playerStatus[target].disableStun();
+							}
+							
+							display[guiTurn].clear();
+							display[targetGUI].clear();
+							for (Card c: game.getDisplay(gameTurn).getAllCards()) {
+								display[guiTurn].addCard(new CardWidget(c.getCardType(), c.getCardValue()));
+							}
+							for (Card c: game.getDisplay(target).getAllCards()) {
+								display[targetGUI].addCard(new CardWidget(c.getCardType(), c.getCardValue()));
+							}
+							
+							playerStatus[gameTurn].setDisplayValue(game.getDisplayValue(gameTurn));
+							playerStatus[target].setDisplayValue(game.getDisplayValue(target));
+							
+							break;
+						}
+						case Card.SHIELD: {
+							playerStatus[gameTurn].enableShield();
+							break;
+						}
+						case Card.STUNNED: {
+							int target = Integer.parseInt(command[2]);
+							
+							if (toGUITurn(target) == THIS_PLAYER) {
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " stunned you");
+							} else if (guiTurn == THIS_PLAYER) {
+								messageScrollBox.addLine(" > You stunned " + playerNames.get(target));
+							} else {
+								messageScrollBox.addLine(" > " + playerNames.get(gameTurn) + " stunned " + playerNames.get(target));
+							}
+							
+							playerStatus[target].enableStun();
 							break;
 						}
 						default: {
@@ -685,7 +837,7 @@ public class GamePanel extends ScaledPanel {
 							}
 							
 							display[guiTurn].addCard(new CardWidget(type, value));
-							playerStatus[gameTurn].setDisplayValue(game.getAllPlayers().get(gameTurn).getDisplayValue(tournamentColour));
+							playerStatus[gameTurn].setDisplayValue(game.getDisplayValue(gameTurn));
 							if (guiTurn == THIS_PLAYER) {
 								hand[THIS_PLAYER].setEnabled(true);
 								
@@ -809,6 +961,44 @@ public class GamePanel extends ScaledPanel {
 								prepareOverlay(OverlayCommand.KNOCKDOWN, i);
 								break;
 							}
+							case Card.OUTMANEUVER: {
+								client.sendMessage(UpdateEngine.outmaneuver(game, i));
+								messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+								break;
+							}
+							case Card.CHARGE: {
+								client.sendMessage(UpdateEngine.charge(game, i));
+								messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+								break;
+							}
+							case Card.COUNTERCHARGE: {
+								client.sendMessage(UpdateEngine.countercharge(game, i));
+								messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+								break;
+							}
+							case Card.DISGRACE: {
+								client.sendMessage(UpdateEngine.disgrace(game, i));
+								messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+								break;
+							}
+							case Card.ADAPT: {
+								client.sendMessage(UpdateEngine.adapt(game, i));
+								messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+								break;
+							}
+							case Card.OUTWIT: {
+								prepareOverlay(OverlayCommand.OUTWIT, i);
+								break;
+							}
+							case Card.SHIELD: {
+								client.sendMessage(UpdateEngine.shield(game, i));
+								messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+								break;
+							}
+							case Card.STUNNED: {
+								prepareOverlay(OverlayCommand.STUNNED, i);
+								break;
+							}
 							default: {
 								client.sendMessage(UpdateEngine.unimplementedActionCard(game, i));
 							}
@@ -867,6 +1057,15 @@ public class GamePanel extends ScaledPanel {
 				case KNOCKDOWN:
 					currentOverlay = new KnockdownOverlay(descriptionBox, game, realPlayerIndex, hand);
 					break;
+				case OUTWIT:
+					currentOverlay = new OutwitOverlay(descriptionBox, game, realPlayerIndex, display);
+					break;
+				case STUNNED:
+					currentOverlay = new StunOverlay(descriptionBox, game, realPlayerIndex, hand, display);
+					break;
+				case END_GAME:
+					currentOverlay = new GameOverOverlay(descriptionBox, game, realPlayerIndex);
+					break;
 				default:
 					break;
 			}
@@ -876,7 +1075,6 @@ public class GamePanel extends ScaledPanel {
 		} else if (currentOverlay != null) {
 			if (currentOverlay.isOverlayActionComplete()) {
 				String[] result = currentOverlay.getFinalCommandString().split(":");
-				System.out.println(Arrays.toString(result));
 				switch(overlayCommand) {
 					case START_TOURNAMENT:
 						client.sendMessage(Flag.SET_COLOUR + ":" + result[0] + Flag.NEW_COM + Flag.START_TOURNAMENT);
@@ -912,8 +1110,22 @@ public class GamePanel extends ScaledPanel {
 						client.sendMessage(UpdateEngine.knockdown(game, overlayCardReferenceIndex, Integer.parseInt(result[0]), Integer.parseInt(result[1])));
 						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
 						break;
+					case OUTWIT:
+						client.sendMessage(UpdateEngine.outwit(game, overlayCardReferenceIndex, result[0], Integer.parseInt(result[1]),
+								Integer.parseInt(result[2]), result[3], Integer.parseInt(result[4])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+						break;
+					case STUNNED:
+						client.sendMessage(UpdateEngine.stun(game, overlayCardReferenceIndex, Integer.parseInt(result[0])));
+						messageScrollBox.addRepeatedTextLine("** Wait for opponent response **");
+						break;
 					case IVANHOE:
 						client.sendMessage(UpdateEngine.ivanhoe(game, result[0].equals("true")));
+						messageScrollBox.addRepeatedTextLine("** Wait for other opponents to respond **");
+						break;
+					case END_GAME:
+						client.sendMessage(Flag.CLIENT_DISCONNECT);
+						controller.mainScreen();
 						break;
 					default:
 						break;

@@ -21,6 +21,7 @@ public class NetworkTest {
 	
 	private void setup(int numPlayers) throws IOException {
 		server = new Server(PORT);
+		server.setupServer();
 		client = new ArrayList<Client>();
 		for (int i=0; i<numPlayers; i++) {
 			client.add(new Client(PORT));

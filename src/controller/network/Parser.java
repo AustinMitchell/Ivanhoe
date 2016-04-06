@@ -49,7 +49,6 @@ public class Parser {
 	}
 
 	public static String parse(String[] command, GameState game) {
-
 		String result = "";
 		synchronized (game) {
 			switch (command[0]) {
@@ -158,69 +157,108 @@ public class Parser {
 						.getCard(Integer.parseInt(command[1])).getCardValue();
 
 				switch (value) {
-				case Card.UNHORSE: {
-					result = RulesEngine.unhorse(game,
-							Integer.parseInt(command[1]),
-							Integer.parseInt(command[2]));
-					break;
-				}
-				case Card.CHANGE_WEAPON: {
-					result = RulesEngine.changeWeapon(game,
-							Integer.parseInt(command[1]),
-							Integer.parseInt(command[2]));
-					break;
-				}
-				case Card.DROP_WEAPON: {
-					result = RulesEngine.dropWeapon(game,
-							Integer.parseInt(command[1]));
-					break;
-				}
-				case Card.BREAK_LANCE: {
-					result = RulesEngine.breakLance(game,
-							Integer.parseInt(command[1]),
-							Integer.parseInt(command[2]));
-					break;
-				}
-				case Card.RIPOSTE: {
-					result = RulesEngine.riposte(game,
-							Integer.parseInt(command[1]),
-							Integer.parseInt(command[2]));
-					break;
-				}
-				case Card.DODGE: {
-					result = RulesEngine.dodge(game, 
-							Integer.parseInt(command[1]),
-							Integer.parseInt(command[2]),
-							Integer.parseInt(command[3]));
-					break;
-				}
-				case Card.RETREAT: {
-					result = RulesEngine.retreat(game,
-							Integer.parseInt(command[1]),
-							Integer.parseInt(command[2]));
-					break;
-				}
-				case Card.KNOCKDOWN: {
-					result = RulesEngine.knockdown(game, 
-							Integer.parseInt(command[1]),
-							Integer.parseInt(command[2]),
-							Integer.parseInt(command[3]));
-					break;
-				}
-				case Card.IVANHOE: {
-					result = RulesEngine.ivanhoe(game,
-							Integer.parseInt(command[1]),
-							Integer.parseInt(command[2]));
-					break;
-				}
-				default: {
-					result = RulesEngine.unimplementedActionCard(game,
-							Integer.parseInt(command[1]));
-					break;
-				}
+					case Card.UNHORSE: {
+						result = RulesEngine.unhorse(game,
+								Integer.parseInt(command[1]),
+								Integer.parseInt(command[2]));
+						break;
+					}
+					case Card.CHANGE_WEAPON: {
+						result = RulesEngine.changeWeapon(game,
+								Integer.parseInt(command[1]),
+								Integer.parseInt(command[2]));
+						break;
+					}
+					case Card.DROP_WEAPON: {
+						result = RulesEngine.dropWeapon(game,
+								Integer.parseInt(command[1]));
+						break;
+					}
+					case Card.BREAK_LANCE: {
+						result = RulesEngine.breakLance(game,
+								Integer.parseInt(command[1]),
+								Integer.parseInt(command[2]));
+						break;
+					}
+					case Card.RIPOSTE: {
+						result = RulesEngine.riposte(game,
+								Integer.parseInt(command[1]),
+								Integer.parseInt(command[2]));
+						break;
+					}
+					case Card.DODGE: {
+						result = RulesEngine.dodge(game, 
+								Integer.parseInt(command[1]),
+								Integer.parseInt(command[2]),
+								Integer.parseInt(command[3]));
+						break;
+					}
+					case Card.RETREAT: {
+						result = RulesEngine.retreat(game,
+								Integer.parseInt(command[1]),
+								Integer.parseInt(command[2]));
+						break;
+					}
+					case Card.KNOCKDOWN: {
+						result = RulesEngine.knockdown(game, 
+								Integer.parseInt(command[1]),
+								Integer.parseInt(command[2]),
+								Integer.parseInt(command[3]));
+						break;
+					}
+					case Card.OUTMANEUVER: {
+						result = RulesEngine.outmaneuver(game,
+								Integer.parseInt(command[1]));
+						break;
+					}
+					case Card.CHARGE: {
+						result = RulesEngine.charge(game,
+								Integer.parseInt(command[1]));
+						break;
+					}
+					case Card.COUNTERCHARGE: {
+						result = RulesEngine.countercharge(game,
+								Integer.parseInt(command[1]));
+						break;
+					}
+					case Card.DISGRACE: {
+						result = RulesEngine.disgrace(game,
+								Integer.parseInt(command[1]));
+						break;
+					}
+					case Card.ADAPT: {
+						result = RulesEngine.adapt(game,
+								Integer.parseInt(command[1]));
+						break;
+					}
+					case Card.OUTWIT: {
+						result = RulesEngine.outwit(game, 
+								Integer.parseInt(command[1]),
+								command[2],
+								Integer.parseInt(command[3]),
+								Integer.parseInt(command[4]),
+								command[5],
+								Integer.parseInt(command[6]));
+						break;
+					}
+					case Card.SHIELD: {
+						result = RulesEngine.shield(game, 
+								Integer.parseInt(command[1]));
+						break;
+					}
+					case Card.STUNNED: {
+						result = RulesEngine.stun(game, 
+								Integer.parseInt(command[1]),
+								Integer.parseInt(command[2]));
+						break;
+					}
+					default: {
+						result = RulesEngine.unimplementedActionCard(game,
+								Integer.parseInt(command[1]));
+						break;
+					}
 				}
 
-				System.out.println("PARSER: " + result);
 				break;
 			}
 
@@ -228,7 +266,6 @@ public class Parser {
 				result = RulesEngine.ivanhoe(game,
 						Integer.parseInt(command[1]),
 						Integer.parseInt(command[2]));
-				System.out.println("PARSER: " + result);
 				break;
 			}
 

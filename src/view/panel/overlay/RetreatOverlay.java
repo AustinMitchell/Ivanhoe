@@ -1,11 +1,9 @@
 package view.panel.overlay;
 
-import controller.rulesengine.Validator;
 import model.GameState;
 import simple.gui.*;
 import view.*;
 import view.utilitypanel.CardDisplayPanel;
-import view.utilitypanel.TokenBar;
 
 public class RetreatOverlay extends OverlayPanel {
 	private CardDisplayPanel playerDisplay;
@@ -35,7 +33,7 @@ public class RetreatOverlay extends OverlayPanel {
 	@Override
 	public void update() {
 		super.update();
-		for (int i=0; i<playerDisplay.numWidgets(); i++) {
+		for (int i=0; i<playerDisplay.size(); i++) {
 			if (playerDisplay.getIndex(i).isClicked()) {
 				overlayActionComplete = true;
 				finalCommandString = ""+i;

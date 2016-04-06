@@ -37,7 +37,7 @@ public abstract class OverlayPanel extends ScaledPanel {
 		
 		drawContainingPanel = true;
 		borderColor = Color.BLACK;
-		fillColor = new Color(0, 0, 0, 210);
+		fillColor = new Color(0, 0, 0, 230);
 		
 		addWidget(title, 0, 0, 100, 10);
 	}

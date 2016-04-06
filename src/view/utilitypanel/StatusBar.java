@@ -26,9 +26,9 @@ public class StatusBar extends ScaledPanel {
 			} else {
 				baseImage = image.resize(image.getWidth(), image.getHeight());
 				if (w < h) {
-					image = baseImage.resizeScaledWidth(w);
+					this.image = baseImage.resizeScaledWidth(w);
 				} else if (w > h) {
-					image = baseImage.resizeScaledHeight(h);
+					this.image = baseImage.resizeScaledHeight(h);
 				} 
 			}
 		}
@@ -73,8 +73,12 @@ public class StatusBar extends ScaledPanel {
 	
 	private TokenBar tokens;
 	private ConstantRatioImageBox shield, stun;
+	private boolean shielded, stunned;
 	private Label name;
 	private Label displayValue;
+	
+	public boolean isShielded() { return shielded; }
+	public boolean isStunned() { return stunned; }
 	
 	public StatusBar(String name) { 
 		super(); 
@@ -91,6 +95,8 @@ public class StatusBar extends ScaledPanel {
 		tokens = new TokenBar();
 		shield = new ConstantRatioImageBox(SHIELD_EMPTY);
 		stun = new ConstantRatioImageBox(STUN_EMPTY);
+		shielded = false;
+		stunned = false;
 				
 		addWidget(displayValue, 0, 30, 20, 70);
 		addWidget(this.name,    0,  0, 40, 30);
@@ -127,16 +133,20 @@ public class StatusBar extends ScaledPanel {
 	
 	public void enableShield() {
 		shield.setImage(SHIELD_IMAGE);
+		shielded = true;
 	}
 	public void disableShield() {
 		shield.setImage(SHIELD_EMPTY);
+		shielded = false;
 	}
 	
 	public void enableStun() {
 		stun.setImage(STUN_IMAGE);
+		stunned = true;
 	}
 	public void disableStun() {
 		stun.setImage(STUN_EMPTY);
+		stunned = false;
 	}
 	
 	public void clearStatus() {

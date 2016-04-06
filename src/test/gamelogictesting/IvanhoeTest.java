@@ -9,8 +9,6 @@ import org.junit.Test;
 
 import controller.network.Client;
 import controller.network.Server;
-import controller.network.Server.ServerState;
-import controller.rulesengine.RulesEngine;
 import controller.rulesengine.UpdateEngine;
 import model.Card;
 import model.Flag;
@@ -26,6 +24,7 @@ public class IvanhoeTest {
 	
 	private void setup(int numPlayers) throws IOException {
 		server = new Server(PORT);
+		server.setupServer();
 		client = new ArrayList<Client>();
 		for (int i=0; i<numPlayers; i++) {
 			client.add(new Client(PORT));
@@ -40,7 +39,7 @@ public class IvanhoeTest {
 	}
 	
 	@Test
-	public void IvanhoeTest() {
+	public void ivanhoeTest() {
 		Card ivanhoe = new Card(Type.ACTION, Card.IVANHOE);
 		Card unhorse = new Card(Type.ACTION, Card.UNHORSE);
 		int purple = Type.PURPLE;
