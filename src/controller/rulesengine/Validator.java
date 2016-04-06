@@ -1,5 +1,5 @@
 package controller.rulesengine;
-import java.util.ArrayList;
+import java.util.*;
 
 import model.*;
 
@@ -186,9 +186,9 @@ public class Validator {
 			}
 			
 			else if (card.getCardType() == Type.ACTION && card.getCardValue() == Card.OUTWIT) {
-				ArrayList<Boolean> availableTargets = validateOutwit(game);
+				ArrayList<Set<String>> availableTargets = validateOutwit(game);
 				for(int j = 0; j < availableTargets.size(); j++) {
-					if(availableTargets.get(j)) {
+					if(availableTargets.get(j) != null && j != game.getTurn()) {
 						playableCards[i] = true;
 						break;
 					}
@@ -457,26 +457,32 @@ public class Validator {
 	/*
 	 * Function to validate outwit
 	 */
-	public static ArrayList<Boolean> validateOutwit(GameState game) {
-		ArrayList<Boolean> validTargets = new ArrayList<Boolean>();
+	public static ArrayList<Set<String>> validateOutwit(GameState game) {
+		ArrayList<Set<String>> validTargets = new ArrayList<Set<String>>();
 		int playerPos = game.getTurn();
 		if (game.getDisplay(playerPos).deckSize() > 1 || game.getPlayer(playerPos).hasShield()|| game.getPlayer(playerPos).isStunned()) {
 			for(int i = 0; i < game.getAllPlayers().size(); i++) {
-				if(i != playerPos) {
-					if (game.getDisplay(i).deckSize() > 1 || game.getPlayer(i).hasShield()|| game.getPlayer(i).isStunned()) {
-					validTargets.add(true);
-					} else {
-						validTargets.add(false);
-					}
+				Set<String> validAreas = new HashSet<String>();
+				if (game.getDisplay(i).deckSize() > 1) {
+					validAreas.add(Flag.DISPLAY);
+				} 
+				if (game.getPlayer(i).hasShield()) {
+					validAreas.add(Flag.SHIELD);
+				}  
+				if (game.getPlayer(i).isStunned()) {
+					validAreas.add(Flag.STUN);
 				}
-				else {
-					validTargets.add(false);
+				
+				if (validAreas.isEmpty()) {
+					validTargets.add(null);
+				} else {
+					validTargets.add(validAreas);
 				}
 			}
 		}
 		else {
 			for (int i = 0; i < game.getAllPlayers().size(); i ++) {
-				validTargets.add(false);
+				validTargets.add(null);
 			}
 			
 		}

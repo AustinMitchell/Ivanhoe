@@ -16,7 +16,9 @@ public class GameState {
 	private int winningPlayer;
 	private int tokenDrawn;
 		
-	private static final Card[] INITIAL_DECK = CardData.specificActionDeck(Card.KNOCKDOWN);
+	private static final float[] proportions = {0.5f, 0.5f};
+	private static final int[] actionCards = {Card.IVANHOE, Card.RIPOSTE, Card.KNOCKDOWN};
+	private static final Card[] INITIAL_DECK = CardData.splitActionDeck(proportions, actionCards);
 	
 	public static final int TOURNAMENT_NOT_STARTED = -1;
 	
@@ -80,6 +82,10 @@ public class GameState {
 		return player;
 	}
 	
+	public int getDisplayValue(int playerPos) {
+		return players.get(playerPos).getDisplayValue(tournamentColour);
+	}
+	
 	//Function to get player by index
 	public Player getPlayer(int playerPos) {
 		return players.get(playerPos);
@@ -101,9 +107,9 @@ public class GameState {
 	}
 	
 	//Function to get player's shield deck
-		public Deck getShield(int playerPos) {
-			return players.get(playerPos).getShieldDeck();
-		}
+	public Deck getShield(int playerPos) {
+		return players.get(playerPos).getShieldDeck();
+	}
 	
 	public boolean hasTournamentStarted() {
 		return tournamentStarted;

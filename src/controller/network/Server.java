@@ -126,7 +126,7 @@ public class Server{
 			}
 			
             Player p = new Player(name);
-            System.out.println(name);
+            System.out.println("Player connected: " + name);
             players.add(p);
             sockets.add(pSocket);
             result = getPlayerClientInetAddress(players.size()-1);
@@ -271,7 +271,7 @@ public class Server{
 		if (splitString[0].equals(Flag.IVANHOE_RESPONSE)) {
 			// If someone played Ivanhoe, update the value to reflect the player who played it
 			if (splitString[1].equals("true")) {
-				ivanhoePlayed = (int)update[0];
+				ivanhoePlayed = (Integer)update[0];
 			}
 			ivanhoeResponsesNeeded--;
 			// If we receive responses equal to 1 less than the number of players (as the instigator does not give input)

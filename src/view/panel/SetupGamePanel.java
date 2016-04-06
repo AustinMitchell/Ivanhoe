@@ -80,7 +80,6 @@ public class SetupGamePanel extends ScaledPanel {
 			String msg = client.readGuiFlag();
 			String[] command = msg.split(":");
 			
-			System.out.println(msg);
 			switch (command[0]) {
 				case Flag.MAX_PLAYERS_SET:
 					controller.waitForGame();
