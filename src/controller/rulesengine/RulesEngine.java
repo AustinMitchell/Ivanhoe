@@ -430,26 +430,26 @@ public class RulesEngine {
 	//Process Adapt (absolve)
 	public static String adapt(GameState game, int cardPos) {
 		String returnString = Flag.ACTION_CARD + ":" + cardPos;
-		Boolean[] values = new Boolean[8];
+		Boolean[] values = new Boolean[8]; //create a boolean array of size 8. it is of size 8 to account for all possible card values
 		int playerPos = game.getTurn();
 		boolean discardedCard = false;
 		
-		for(int i = 0; i < game.getAllPlayers().size(); i++) {
-			for(int j = 0; j < values.length; j++) {
+		for(int i = 0; i < game.getAllPlayers().size(); i++) { //loop through players list
+			for(int j = 0; j < values.length; j++) { //sets the all values in the boolean array to false
 				values[j] = false;
 			}
-			if(!game.getPlayer(i).hasShield()) {
-				for(int j = game.getDisplay(i).deckSize()-1; j >= 0; j--) {
-					if(values[game.getDisplay(i).getCard(j).getCardValue()] == true) {
+			if(!game.getPlayer(i).hasShield()) { //make sure player doesn't have a shield
+				for(int j = game.getDisplay(i).deckSize()-1; j >= 0; j--) { //loop through display of target player
+					if(values[game.getDisplay(i).getCard(j).getCardValue()] == true) { //check if we have come across this cards value
 						if(discardedCard == false) {
 							game.getHand(playerPos).moveCardTo(cardPos, game.getDiscardDeck()); //Discard the adapt card
 							discardedCard = true;
 						}
-						if(game.getDisplay(i).deckSize() > 1) {
+						if(game.getDisplay(i).deckSize() > 1) { //if the display size is bigger than 1 then discard that card
 							game.getDisplay(i).moveCardTo(j, game.getDiscardDeck());
 						}
 					}
-					else {
+					else { //if we haven't come across this card value then set its position to true in the boolean array
 						values[game.getDisplay(i).getCard(j).getCardValue()] = true;
 					}
 				}
@@ -558,10 +558,10 @@ public class RulesEngine {
 	}
 	
 	//Process Stun
-	public static String stun(GameState game, int cardPos) {
+	public static String stun(GameState game, int cardPos, int targetPos) {
 		String returnString = Flag.ACTION_CARD + ":" + cardPos;
 		int playerPos = game.getTurn();
-		game.getHand(playerPos).moveCardTo(cardPos, game.getStun(playerPos));
+		game.getHand(playerPos).moveCardTo(cardPos, game.getStun(targetPos));
 
 		return returnString;
 	}

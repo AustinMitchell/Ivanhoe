@@ -101,8 +101,8 @@ public class UpdateEngine {
 	}
 	
 	//Process Stun
-	public static String stun(GameState game, int cardPos) {
-		String returnString = Flag.CARD + ":" + cardPos;
+	public static String stun(GameState game, int cardPos, int targetPos) {
+		String returnString = Flag.CARD + ":" + cardPos + ":" + targetPos;
 		return returnString;
 	}
 	
