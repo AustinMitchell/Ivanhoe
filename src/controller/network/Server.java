@@ -13,7 +13,7 @@ import java.io.*;
 
 public class Server{
 	public enum ServerState {
-		WAITING_FOR_FIRST, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE, GAMEOVER, RESTART
+		WAITING_FOR_FIRST, WAITING_FOR_SETUP, WAITING_FOR_ALL, CREATE_GAME, BEGIN_DRAW_TOKEN, IN_GAME, IVANHOE, GAMEOVER, RESTART
 	}
 	
 	static final Logger             log = Logger.getLogger("Server");
@@ -41,12 +41,12 @@ public class Server{
 	
 	private boolean run;
 	
-	public Server() throws IOException {
-		serverSocket = new ServerSocket(PORT);
+	public Server(int port) throws IOException {
+		serverSocket = new ServerSocket(port);
 		serverSocket.setSoTimeout(1000000);
 	}
 	
-	private void setupServer() throws IOException {
+	public void setupServer() throws IOException {
 		System.out.println("Setting up new server...");
 		
 		run = true;
@@ -320,6 +320,10 @@ public class Server{
 			serverState = ServerState.RESTART;
 		}
 	}
+	//function to return game instance. purely for testing purposes
+	public GameState getGame() {
+		return game;
+	}
 	
 	public void handleState() throws IOException {
 		switch (serverState) {
@@ -328,7 +332,10 @@ public class Server{
 				break;
 			case WAITING_FOR_FIRST:
 				waitForPlayer();
-				while(!waitForFirstPlayerSetupInfo()) {}
+				serverState = ServerState.WAITING_FOR_SETUP;
+				break;
+			case WAITING_FOR_SETUP:
+				while(!waitForFirstPlayerSetupInfo());
 				break;
 			case WAITING_FOR_ALL:
 				waitForPlayer();
@@ -360,7 +367,7 @@ public class Server{
 	public static void main(String[] args) {
 		Server server = null;
 		try {
-			server = new Server();
+			server = new Server(Server.PORT);
 			while(true) {
 				server.setupServer();
 				server.serverLoop();

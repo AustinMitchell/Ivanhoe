@@ -14,13 +14,14 @@ import model.Flag;
 
 public class NetworkTest {	
 	public static final String LOCAL = "localhost";
-	public static int PORT = Server.getCurrentPort();
+	public static int PORT = Server.PORT;
 	
 	Server server;
 	ArrayList<Client> client;
 	
 	private void setup(int numPlayers) throws IOException {
 		server = new Server(PORT);
+		server.setupServer();
 		client = new ArrayList<Client>();
 		for (int i=0; i<numPlayers; i++) {
 			client.add(new Client(PORT));
@@ -46,7 +47,7 @@ public class NetworkTest {
 				// Connects client to server on localhost
 				client.get(i).connect(LOCAL, "Player " + (i+1));
 				// Allow server to accept new client
-				server.acceptPlayer();
+				server.waitForPlayer();
 				// Checks that the server sent back a message with the number of players
 				while(!client.get(i).hasFlags());
 				assertEquals(client.get(i).readGuiFlag(), Flag.PLAYER_ID+":"+(i+1));
@@ -80,30 +81,30 @@ public class NetworkTest {
 			assertEquals(server.getServerState(), Server.ServerState.WAITING_FOR_FIRST);
 			
 			client.get(0).connect(LOCAL, "Player 1");
-			server.waitForPlayer();
+			server.handleState();
 			client.get(0).sendMessage(Flag.MAX_PLAYERS_SET + ":2");
 			// This will return true if the transaction was successful
-			while (!server.waitForFirstPlayerSetupInfo());
+			server.handleState();
 			
 			assertEquals(server.getServerState(), Server.ServerState.WAITING_FOR_ALL);
 			
 			client.get(1).connect(LOCAL, "Player 2");
-			server.waitForPlayer();
+			server.handleState();
 			
 			assertEquals(server.getServerState(), Server.ServerState.CREATE_GAME);
 			
-			server.createGame();
+			server.handleState();
 			
 			assertEquals(server.getServerState(), Server.ServerState.BEGIN_DRAW_TOKEN);
 			
 			client.get(0).sendMessage(Flag.DRAW_TOKEN);
 			client.get(1).sendMessage(Flag.DRAW_TOKEN);
-			server.beginDrawTokenIteration();
-			server.beginDrawTokenIteration();
+			server.handleState();
+			server.handleState();
 			client.get(0).sendMessage(Flag.BEGIN_TOKEN_DRAW_CONTINUE);
 			client.get(1).sendMessage(Flag.BEGIN_TOKEN_DRAW_CONTINUE);
-			server.beginDrawTokenIteration();
-			server.beginDrawTokenIteration();
+			server.handleState();
+			server.handleState();
 			
 			assertEquals(server.getServerState(), Server.ServerState.IN_GAME);
 			
@@ -124,9 +125,11 @@ public class NetworkTest {
 			setup(NUM_PLAYERS);
 			
 			client.get(0).connect(LOCAL, "Player 1");
-			server.acceptPlayer();
+			server.handleState();
+			client.get(0).sendMessage(Flag.MAX_PLAYERS_SET + ":2");
+			server.handleState();
 			client.get(1).connect(LOCAL, "Player 2");
-			server.acceptPlayer();
+			server.handleState();
 			
 			client.get(0).sendMessage("test1");
 			assertEquals("test1", (String)server.getUpdate()[1]);

@@ -18,7 +18,7 @@ public class GameState {
 		
 	private static final float[] proportions = {0.3f, 0.7f};
 	private static final int[] actionCards = {Card.IVANHOE, Card.OUTWIT};
-	private static final Card[] INITIAL_DECK = CardData.splitActionDeck(proportions, actionCards);
+	private static final Card[] INITIAL_DECK = CardData.basicDeck();
 	
 	public static final int TOURNAMENT_NOT_STARTED = -1;
 	
