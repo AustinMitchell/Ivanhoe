@@ -7,6 +7,7 @@ import controller.rulesengine.Validator;
 import model.Flag;
 import model.GameState;
 import simple.gui.CustomDraw;
+import simple.gui.Draw;
 import simple.gui.Image;
 import simple.gui.ImageBox;
 import simple.gui.Widget;
@@ -65,24 +66,24 @@ public class OutwitOverlay extends OverlayPanel {
 				return;
 			}
 			if (image != null) {
-				draw.image(this.image, imagex, imagey);
+			    Draw.image(this.image, imagex, imagey);
 			}
 		}
 	}
 	
 	private static final Image greyImage(Image img) {
 		Image returnImage = new Image(img);
-		draw.setColors(new Color(180, 180, 180, 200), null);
-		draw.rect(returnImage, 0, 0, returnImage.getWidth(), returnImage.getHeight());
+		Draw.setColors(new Color(180, 180, 180, 200), null);
+		Draw.rect(returnImage, 0, 0, returnImage.getWidth(), returnImage.getHeight());
 		return returnImage;
 	}
 	
 	private static final CustomDraw DRAW_ON_SELECTION = new CustomDraw() {
 		@Override
 		public void draw(Widget w) {
-			draw.setFill(null);
-			draw.setStroke(Color.CYAN, 3);
-			draw.rect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
+		    Draw.setFill(null);
+		    Draw.setStroke(Color.CYAN, 3);
+		    Draw.rect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
 		}
 	};
 	

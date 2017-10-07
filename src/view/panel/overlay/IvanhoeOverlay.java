@@ -5,6 +5,7 @@ import java.awt.Font;
 
 import simple.gui.Canvas;
 import simple.gui.CustomDraw;
+import simple.gui.Draw;
 import simple.gui.Label;
 import simple.gui.TextArea.Alignment;
 import simple.gui.Widget;
@@ -20,10 +21,10 @@ public class IvanhoeOverlay extends OverlayPanel {
 	public static final int TIMEOUT = 15000;
 	public static final CustomDraw ARROW = new CustomDraw() {
 			public void draw(Widget w) {
-				draw.setStroke(Color.white, 6);
-				draw.line(w.getX(), w.getY() + w.getHeight()/2, w.getX() + w.getWidth(), w.getY() + w.getHeight()/2);
-				draw.line(w.getX() + w.getWidth()*3/4, w.getY(), w.getX() + w.getWidth(), w.getY() + w.getHeight()/2);
-				draw.line(w.getX() + w.getWidth()*3/4, w.getY() + w.getHeight(), w.getX() + w.getWidth(), w.getY() + w.getHeight()/2);
+			    Draw.setStroke(Color.white, 6);
+			    Draw.line(w.getX(), w.getY() + w.getHeight()/2, w.getX() + w.getWidth(), w.getY() + w.getHeight()/2);
+			    Draw.line(w.getX() + w.getWidth()*3/4, w.getY(), w.getX() + w.getWidth(), w.getY() + w.getHeight()/2);
+			    Draw.line(w.getX() + w.getWidth()*3/4, w.getY() + w.getHeight(), w.getX() + w.getWidth(), w.getY() + w.getHeight()/2);
 			}};
 	
 	String cardName;

@@ -22,7 +22,7 @@ public class ConnectPanel extends ScaledPanel {
 	public void setSize(int w, int h) {
 		super.setSize(w, h);
 		ivanhoeImage.setScaledHeight(h);
-		ivanhoeImage.setX(draw.windowWidth()/2 - ivanhoeImage.getWidth()/2);
+		ivanhoeImage.setX(Draw.windowWidth()/2 - ivanhoeImage.getWidth()/2);
 	}
 	
 	public ConnectPanel(GameController controller) {
@@ -85,8 +85,8 @@ public class ConnectPanel extends ScaledPanel {
 	
 	@Override
 	public void draw() {
-		draw.setColors(bgColor, Color.BLACK);
-		draw.rect(0, 0, draw.windowWidth(), draw.windowHeight());
+	    Draw.setColors(bgColor, Color.BLACK);
+	    Draw.rect(0, 0, Draw.windowWidth(), Draw.windowHeight());
 		ivanhoeImage.draw();
 		
 		super.draw();		

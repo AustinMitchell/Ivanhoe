@@ -156,8 +156,8 @@ public class GamePanel extends ScaledPanel {
 			
 			// Image to render when discard is empty
 			emptyDiscard = new Image(144, 200);
-			draw.setColors(new Color(220, 220, 220), null);
-			draw.rect(emptyDiscard, 0, 0, 144, 200);
+			Draw.setColors(new Color(220, 220, 220), null);
+			Draw.rect(emptyDiscard, 0, 0, 144, 200);
 			discard.setImage(emptyDiscard);
 			discard.setMoveOnHover(false);
 			
@@ -216,12 +216,13 @@ public class GamePanel extends ScaledPanel {
 		sidePanel = new ScaledPanel() {{
 			setCustomDraw(new CustomDraw() { 
 				public void draw(Widget w) {
-					draw.setColors(new Color(0xf5f5dc), Color.BLACK);
-					draw.rect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
+				    Draw.setColors(new Color(0xf5f5dc), Color.BLACK);
+				    Draw.rect(w.getX(), w.getY(), w.getWidth(), w.getHeight());
 				}});
 			
 			messageScrollBox = new ScrollDialogBox(); 
 			messageScrollBox.setFont(new Font("Courier", Font.PLAIN, 14));
+			messageScrollBox.getScrollBar().setMouseScrollIncrement(2);
 			
 			tournamentColourLabel = new Label("Tournament Colour");
 			tournamentColourLabel.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -288,21 +289,21 @@ public class GamePanel extends ScaledPanel {
 		for (int i=0; i<display.length; i++) {
 			if (game.getAllPlayers().get(toGameTurn(i)).isInTournament()) {
 				CardDisplayPanel p = display[i];
-				draw.setColors(new Color(255, 255, 255, 30), null);
-				draw.rect(p.getX()-3, p.getY()-3, p.getWidth()+3, p.getHeight()+3);
+				Draw.setColors(new Color(255, 255, 255, 30), null);
+				Draw.rect(p.getX()-3, p.getY()-3, p.getWidth()+3, p.getHeight()+3);
 			}
 		}
 		
 		// Display panel for the current player's turn
 		CardDisplayPanel p = display[toGUITurn(game.getTurn())];
-		draw.setColors(null, new Color(0, 200, 200), 4);
-		draw.rect(p.getX()-3, p.getY()-3, p.getWidth()+3, p.getHeight()+3);
+		Draw.setColors(null, new Color(0, 200, 200), 4);
+		Draw.rect(p.getX()-3, p.getY()-3, p.getWidth()+3, p.getHeight()+3);
 		
 		super.draw();
 		
 		StatusBar s = playerStatus[game.getTurn()];
-		draw.setColors(null, new Color(255, 50, 50), 2);
-		draw.rect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+		Draw.setColors(null, new Color(255, 50, 50), 2);
+		Draw.rect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
 	}
 	
 	private int toGameTurn(int turn) {
@@ -412,10 +413,7 @@ public class GamePanel extends ScaledPanel {
 					}
 					break;
 				}
-				case Flag.END_TOURNAMENT: {
-					int type = Integer.parseInt(command[1]);
-					String colour = Type.toString(type);
-					
+				case Flag.END_TOURNAMENT: {					
 					if (guiTurn == THIS_PLAYER) {
 						messageScrollBox.addLine(" > You won the tournament!");
 					} else {

@@ -17,11 +17,11 @@ public class TokenBar extends ScaledPanel{
 							w.getWidth()/2;
 					
 					if (w.isHovering() || w.isClicking()) {
-						draw.setColors(hoverFill, hoverStroke);
+					    Draw.setColors(hoverFill, hoverStroke);
 					} else {
-						draw.setColors(fill, stroke);
+					    Draw.setColors(fill, stroke);
 					}
-					draw.ovalCentered(w.getX() + w.getWidth()/2, w.getY() + w.getHeight()/2, ovalRadius-2, ovalRadius-2);
+					Draw.ovalCentered(w.getX() + w.getWidth()/2, w.getY() + w.getHeight()/2, ovalRadius-2, ovalRadius-2);
 				}
 			};
 	}

@@ -26,8 +26,8 @@ public class CardWidget extends ImageBox {
 	public void setImage(Image image) {
 		super.setImage(image);
 		if (this.image != null && !enabled) {
-			draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
-			draw.rect(this.image, 0, 0, w, h);
+			Draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
+			Draw.rect(this.image, 0, 0, w, h);
 		}
 	}
 	
@@ -35,8 +35,8 @@ public class CardWidget extends ImageBox {
 	public void setSize(int w, int h) {
 		super.setSize(w, h);
 		if (image != null && !enabled) {
-			draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
-			draw.rect(image, 0, 0, w, h);
+		    Draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
+		    Draw.rect(image, 0, 0, w, h);
 		}
 	}
 	
@@ -44,8 +44,8 @@ public class CardWidget extends ImageBox {
 	public void setScaledWidth(int w) {
 		super.setScaledWidth(w);
 		if (image != null && !enabled) {
-			draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
-			draw.rect(image, 0, 0, w, h);
+		    Draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
+		    Draw.rect(image, 0, 0, w, h);
 		}
 	}
 	
@@ -53,8 +53,8 @@ public class CardWidget extends ImageBox {
 	public void setScaledHeight(int h) {
 		super.setScaledHeight(h);
 		if (image != null && !enabled) {
-			draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
-			draw.rect(image, 0, 0, w, h);
+		    Draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
+		    Draw.rect(image, 0, 0, w, h);
 		}
 	}
 	
@@ -62,16 +62,16 @@ public class CardWidget extends ImageBox {
 	public void setOrientation(Image.Orientation orientation) {
 		super.setOrientation(orientation);
 		if (image != null && !enabled) {
-			draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
-			draw.rect(image, 0, 0, w, h);
+		    Draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
+		    Draw.rect(image, 0, 0, w, h);
 		}
 	}
 	
 	@Override
 	public void setEnabled(boolean enabled) {
 		if (!enabled && this.enabled) {
-			draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
-			draw.rect(image, 0, 0, w, h);
+		    Draw.setColors(new Color(100, 100, 100, GREY_ALPHA), null);
+		    Draw.rect(image, 0, 0, w, h);
 		} else if (enabled && !this.enabled) {
 			image = baseImage.resize(w, h);
 		}
@@ -155,7 +155,7 @@ public class CardWidget extends ImageBox {
 		}
 		
 		if (image != null) {
-			draw.image(this.image, x + xdir*HOVER_SHIFT_VALUE, y + ydir*HOVER_SHIFT_VALUE);
+		    Draw.image(this.image, x + xdir*HOVER_SHIFT_VALUE, y + ydir*HOVER_SHIFT_VALUE);
 		}
 	}
 	

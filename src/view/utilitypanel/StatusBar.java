@@ -10,8 +10,8 @@ import view.ResLoader;
 public class StatusBar extends ScaledPanel {
 	private static final Image greyImage(Image img) {
 		Image returnImage = new Image(img);
-		draw.setColors(new Color(180, 180, 180, 200), null);
-		draw.rect(returnImage, 0, 0, returnImage.getWidth(), returnImage.getHeight());
+		Draw.setColors(new Color(180, 180, 180, 200), null);
+		Draw.rect(returnImage, 0, 0, returnImage.getWidth(), returnImage.getHeight());
 		return returnImage;
 	}
 	
@@ -61,7 +61,7 @@ public class StatusBar extends ScaledPanel {
 				return;
 			}
 			if (image != null) {
-				draw.image(this.image, imagex, imagey);
+			    Draw.image(this.image, imagex, imagey);
 			}
 		}
 	}

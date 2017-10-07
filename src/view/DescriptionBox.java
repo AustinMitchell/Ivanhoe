@@ -80,8 +80,8 @@ public class DescriptionBox extends Widget {
 	public void draw() {
 		if (!visible) return;
 		
-		draw.setColors(Color.BLACK, Color.BLACK);
-		draw.rect(x, y, w, h);
+		Draw.setColors(Color.BLACK, Color.BLACK);
+		Draw.rect(x, y, w, h);
 		name.draw();
 		description.draw();
 	}
